@@ -2,6 +2,7 @@
   "name": "download-manager",
   "version": "0.1.0",
   "private": true,
+  "main": "public/main.js",
   "dependencies": {
     "electron": "^6.0.1",
     "react": "^16.9.0",
