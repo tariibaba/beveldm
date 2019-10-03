@@ -1,5 +1,6 @@
 import React from 'react';
 import ProgressBar from './ProgressBar';
+import { connect } from 'react-redux';
 
 function Download({ url, filename, size, bytesDownloaded }) {
   return (
@@ -12,4 +13,4 @@ function Download({ url, filename, size, bytesDownloaded }) {
   );
 }
 
-export default Download;
+export default connect()(Download);
