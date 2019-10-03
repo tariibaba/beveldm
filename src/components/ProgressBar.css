@@ -1,0 +1,9 @@
+.ProgressBar-progress-bar {
+  height: 15px;
+  border: 1px solid black;
+}
+
+.ProgressBar-progress {
+  height: inherit;
+  background-color: blue;
+}
