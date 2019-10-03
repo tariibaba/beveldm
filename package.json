@@ -13,7 +13,7 @@
     "start": "rescripts start",
     "electron-start": "node_modules/.bin/electron .",
     "build": "rescripts build",
-    "test": "resripts test",
+    "test": "rescripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
