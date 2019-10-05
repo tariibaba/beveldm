@@ -10,8 +10,10 @@ export function downloads(state = [], action) {
           id: v4(),
           url: action.url,
           filename: action.filename,
+          dirname: action.dirname,
           size: action.size,
-          status: action.status
+          status: action.status,
+          bytesDownloaded: action.bytesDownloaded
         }
       ];
     case C.START_DOWNLOAD:
@@ -21,6 +23,16 @@ export function downloads(state = [], action) {
             ...download,
             res: action.res,
             status: action.status
+          };
+        } else return download;
+      });
+    case C.UPDATE_BYTES_DOWNLOADED:
+      return state.map(download => {
+        if (download.id === action.id) {
+          return {
+            ...download,
+            res: action.res,
+            bytesDownloaded: action.bytesDownloaded
           };
         } else return download;
       });

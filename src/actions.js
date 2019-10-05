@@ -1,9 +1,11 @@
 import { v4 } from 'uuid';
+import { resolve } from 'path';
 
 const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
 const START_DOWNLOAD = 'START_DOWNLOAD';
+const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 
-const C = { ADD_NEW_DOWNLOAD, START_DOWNLOAD };
+const C = { ADD_NEW_DOWNLOAD, START_DOWNLOAD, UPDATE_BYTES_DOWNLOADED };
 
 export function addNewDownload(url, filename, size) {
   return {
@@ -11,8 +13,10 @@ export function addNewDownload(url, filename, size) {
     id: v4(),
     url,
     filename,
+    dirname: resolve('downloads'),
     size,
-    status: 'notstarted'
+    status: 'notstarted',
+    bytesDownloaded: 0
   };
 }
 
@@ -22,6 +26,14 @@ export function startDownload(id, res) {
     id,
     res,
     status: 'started'
+  };
+}
+
+export function updateBytesDownloaded(id, bytesDownloaded) {
+  return {
+    type: UPDATE_BYTES_DOWNLOADED,
+    id,
+    bytesDownloaded
   };
 }
 

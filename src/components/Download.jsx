@@ -7,6 +7,7 @@ function Download({
   id,
   url,
   filename,
+  dirname,
   size,
   bytesDownloaded,
   status,
@@ -34,6 +35,8 @@ function Download({
       Url: {url}
       <br />
       Name: {filename}
+      <br />
+      Directory: {dirname}
       <br />
       Size: {size}
       <ProgressBar value={bytesDownloaded / size} />
