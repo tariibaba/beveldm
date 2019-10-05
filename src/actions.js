@@ -4,8 +4,9 @@ import { resolve } from 'path';
 const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
 const START_DOWNLOAD = 'START_DOWNLOAD';
 const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
+const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
 
-const C = { ADD_NEW_DOWNLOAD, START_DOWNLOAD, UPDATE_BYTES_DOWNLOADED };
+const C = { ADD_NEW_DOWNLOAD, START_DOWNLOAD, UPDATE_BYTES_DOWNLOADED, PAUSE_DOWNLOAD };
 
 export function addNewDownload(url, filename, size) {
   return {
@@ -35,6 +36,14 @@ export function updateBytesDownloaded(id, bytesDownloaded) {
     id,
     bytesDownloaded
   };
+}
+
+export function pauseDownload(id) {
+  return {
+    type: PAUSE_DOWNLOAD,
+    id,
+    status: 'paused'
+  }
 }
 
 export default C;

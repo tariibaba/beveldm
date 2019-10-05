@@ -1,4 +1,4 @@
-import { startDownload, updateBytesDownloaded } from './actions';
+import { startDownload, updateBytesDownloaded, pauseDownload } from './actions';
 import httpPromise from './http-promise';
 import { ipcRenderer } from 'electron';
 import { resolve } from 'path';
@@ -26,5 +26,13 @@ export function thunkStartDownload(id) {
       );
       res.resume();
     });
+  };
+}
+
+export function thunkPauseDownload(id) {
+  return (dispatch, getState) => {
+    const download = getState().downloads.find(download => download.id === id);
+    download.res.destroy();
+    dispatch(pauseDownload(id));
   };
 }

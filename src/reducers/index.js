@@ -31,8 +31,16 @@ export function downloads(state = [], action) {
         if (download.id === action.id) {
           return {
             ...download,
-            res: action.res,
             bytesDownloaded: action.bytesDownloaded
+          };
+        } else return download;
+      });
+    case C.PAUSE_DOWNLOAD:
+      return state.map(download => {
+        if (download.id === action.id) {
+          return {
+            ...download,
+            status: action.status
           };
         } else return download;
       });
