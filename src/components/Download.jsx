@@ -20,11 +20,25 @@ function Download({
       <br />
       Directory: {dirname}
       <br />
-      {bytesDownloaded} of {size}
+      {getFriendlyStorage(bytesDownloaded).size}&nbsp;
+      {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
+      {getFriendlyStorage(size).size}&nbsp;
+      {getFriendlyStorage(size).unit}
       <ProgressBar value={bytesDownloaded / size} />
       <DownloadActionButton id={id} status={status} />
     </div>
   );
+}
+
+function getFriendlyStorage(bytes) {
+  const units = ['b', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb'];
+  let unitIndex = 0;
+  let size = bytes;
+  while (size >= 1024) {
+    size /= 1024;
+    unitIndex++;
+  }
+  return { size: size.toPrecision(3), unit: units[unitIndex] };
 }
 
 export default connect()(Download);
