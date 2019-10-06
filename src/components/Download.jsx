@@ -20,7 +20,7 @@ function Download({
       <br />
       Directory: {dirname}
       <br />
-      Size: {size}
+      {bytesDownloaded} of {size}
       <ProgressBar value={bytesDownloaded / size} />
       <DownloadActionButton id={id} status={status} />
     </div>
