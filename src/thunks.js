@@ -1,7 +1,7 @@
-import { startDownload, updateBytesDownloaded, pauseDownload } from './actions';
+import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload } from './actions';
 import httpPromise from './http-promise';
-import { ipcRenderer } from 'electron';
 import { resolve } from 'path';
+import fs from 'fs';
 
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
@@ -9,22 +9,15 @@ export function thunkStartDownload(id) {
     const res = await httpPromise(download.url);
     dispatch(startDownload(id, res));
 
-    let data;
     res.on('data', chunk => {
-      data = chunk;
       res.pause();
       download = getState().downloads.find(download => download.id === id);
-      ipcRenderer.send('write-file', {
-        path: resolve(download.dirname, download.filename),
-        data
+      fs.appendFile(resolve(download.dirname, download.filename), chunk, err => {
+        dispatch(
+          updateBytesDownloaded(id, download.bytesDownloaded + chunk.length)
+        );
+        res.resume();
       });
-    });
-
-    ipcRenderer.on('written-file', () => {
-      dispatch(
-        updateBytesDownloaded(id, download.bytesDownloaded + data.length)
-      );
-      res.resume();
     });
   };
 }
@@ -34,5 +27,31 @@ export function thunkPauseDownload(id) {
     const download = getState().downloads.find(download => download.id === id);
     download.res.destroy();
     dispatch(pauseDownload(id));
+  };
+}
+
+export function thunkResumeDownload(id) {
+  return async (dispatch, getState) => {
+    let download = getState().downloads.find(download => download.id === id);
+    const url = new URL(download.url);
+    const res = await httpPromise({
+      host: url.hostname,
+      port: url.port,
+      headers: {
+        'Range':  `bytes=${download.bytesDownloaded}-`
+      }
+    });
+    dispatch(resumeDownload(id, res));
+
+    res.on('data', chunk => {
+      res.pause();
+      download = getState().downloads.find(download => download.id === id);
+      fs.appendFile(resolve(download.dirname, download.filename), chunk, err => {
+        dispatch(
+          updateBytesDownloaded(id, download.bytesDownloaded + chunk.length)
+        );
+        res.resume();
+      });
+    });
   };
 }

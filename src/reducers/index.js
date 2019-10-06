@@ -44,6 +44,16 @@ export function downloads(state = [], action) {
           };
         } else return download;
       });
+    case C.RESUME_DOWNLOAD:
+      return state.map(download => {
+        if (download.id === action.id) {
+          return {
+            ...download,
+            res: action.res,
+            status: action.status
+          };
+        } else return download;
+      });
     default:
       return state;
   }

@@ -5,8 +5,15 @@ const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
 const START_DOWNLOAD = 'START_DOWNLOAD';
 const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
+const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
 
-const C = { ADD_NEW_DOWNLOAD, START_DOWNLOAD, UPDATE_BYTES_DOWNLOADED, PAUSE_DOWNLOAD };
+const C = {
+  ADD_NEW_DOWNLOAD,
+  START_DOWNLOAD,
+  UPDATE_BYTES_DOWNLOADED,
+  PAUSE_DOWNLOAD,
+  RESUME_DOWNLOAD
+};
 
 export function addNewDownload(url, filename, size) {
   return {
@@ -43,6 +50,15 @@ export function pauseDownload(id) {
     type: PAUSE_DOWNLOAD,
     id,
     status: 'paused'
+  };
+}
+
+export function resumeDownload(id, res) {
+  return {
+    type: RESUME_DOWNLOAD,
+    id,
+    res,
+    status: 'started'
   }
 }
 

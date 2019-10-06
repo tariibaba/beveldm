@@ -1,7 +1,7 @@
 import React from 'react';
 import ProgressBar from './ProgressBar';
 import { connect } from 'react-redux';
-import { thunkStartDownload, thunkPauseDownload } from '../thunks';
+import { thunkStartDownload, thunkPauseDownload, thunkResumeDownload } from '../thunks';
 
 function Download({
   id,
@@ -36,6 +36,9 @@ function Download({
         break;
       case 'started':
         dispatch(thunkPauseDownload(id));
+        break;
+      case 'paused':
+        dispatch(thunkResumeDownload(id));
         break;
       default:
         break;
