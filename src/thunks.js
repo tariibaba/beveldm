@@ -1,4 +1,4 @@
-import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload } from './actions';
+import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload, completeDownload } from './actions';
 import httpPromise from './http-promise';
 import { resolve } from 'path';
 import fs from 'fs';
@@ -13,9 +13,12 @@ export function thunkStartDownload(id) {
       res.pause();
       download = getState().downloads.find(download => download.id === id);
       fs.appendFile(resolve(download.dirname, download.filename), chunk, err => {
+        const received = download.bytesDownloaded + chunk.length;
         dispatch(
-          updateBytesDownloaded(id, download.bytesDownloaded + chunk.length)
+          updateBytesDownloaded(id, received)
         );
+        if (received === download.size)
+          dispatch(completeDownload(id))
         res.resume();
       });
     });
@@ -47,9 +50,12 @@ export function thunkResumeDownload(id) {
       res.pause();
       download = getState().downloads.find(download => download.id === id);
       fs.appendFile(resolve(download.dirname, download.filename), chunk, err => {
+        const received = download.bytesDownloaded + chunk.length;
         dispatch(
-          updateBytesDownloaded(id, download.bytesDownloaded + chunk.length)
+          updateBytesDownloaded(id, received)
         );
+        if (received === download.size)
+          dispatch(completeDownload(id));
         res.resume();
       });
     });

@@ -6,16 +6,18 @@ const START_DOWNLOAD = 'START_DOWNLOAD';
 const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
 const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
+const COMPLETE_DOWNLOAD = 'COMPLETE_DOWNLOAD';
 
 const C = {
   ADD_NEW_DOWNLOAD,
   START_DOWNLOAD,
   UPDATE_BYTES_DOWNLOADED,
   PAUSE_DOWNLOAD,
-  RESUME_DOWNLOAD
+  RESUME_DOWNLOAD,
+  COMPLETE_DOWNLOAD
 };
 
-export function addNewDownload(url, filename, size) {
+export function addNewDownload(url, dirname, filename, size) {
   return {
     type: ADD_NEW_DOWNLOAD,
     id: v4(),
@@ -60,6 +62,14 @@ export function resumeDownload(id, res) {
     res,
     status: 'started'
   }
+}
+
+export function completeDownload(id) {
+  return {
+    type: COMPLETE_DOWNLOAD,
+    id,
+    status: 'complete'
+  };
 }
 
 export default C;

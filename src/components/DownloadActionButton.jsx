@@ -36,7 +36,7 @@ function DownloadActionButton({ id, status, dispatch }) {
   }
 
   return (
-    <button onClick={handleClick}>{action}</button>
+    status !== 'complete' && <button onClick={handleClick}>{action}</button>
   );
 }
 
