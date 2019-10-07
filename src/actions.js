@@ -23,7 +23,7 @@ export function addNewDownload(url, dirname, filename, size) {
     id: v4(),
     url,
     filename,
-    dirname: resolve('downloads'),
+    dirname,
     size,
     status: 'notstarted',
     bytesDownloaded: 0
