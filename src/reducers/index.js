@@ -1,5 +1,4 @@
 import C from '../actions';
-import { v4 } from 'uuid';
 
 export function downloads(state = [], action) {
   switch (action.type) {
@@ -7,7 +6,7 @@ export function downloads(state = [], action) {
       return [
         ...state,
         {
-          id: v4(),
+          id: action.id,
           url: action.url,
           filename: action.filename,
           dirname: action.dirname,
