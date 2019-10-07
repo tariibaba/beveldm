@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { connect } from 'react-redux';
 import request from 'request';
 import { addNewDownload } from '../actions';
 
 function AddNewDownload({ onAdd = () => { } }) {
+  const url = createRef();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd(e.target['url'].value);
-    e.target['url'].value = null;
+    onAdd(url.current.value);
+    url.current.value = null;
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input name="url" type="text" placeholder="Enter url" />
+        <input name="url" type="text" placeholder="Enter url" ref={url} />
         <button type="submit">Add</button>
       </form>
     </div>
