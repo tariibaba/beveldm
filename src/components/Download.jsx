@@ -3,6 +3,7 @@ import ProgressBar from './ProgressBar';
 import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
 import PeriodicUpdate from './PeriodicUpdate';
+import getFriendlyStorage from '../friendly-storage';
 
 function Download({
   id,
@@ -31,17 +32,6 @@ function Download({
       <DownloadActionButton id={id} status={status} />
     </div>
   );
-}
-
-function getFriendlyStorage(bytes) {
-  const units = ['b', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb'];
-  let unitIndex = 0;
-  let size = bytes;
-  while (size >= 1024) {
-    size /= 1024;
-    unitIndex++;
-  }
-  return { size: size.toPrecision(3), unit: units[unitIndex] };
 }
 
 export default connect()(Download);
