@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
 import PeriodicUpdate from './PeriodicUpdate';
 import getFriendlyStorage from '../friendly-storage';
+import DownloadSpeed from './DownloadSpeed';
 
 function Download({
   id,
@@ -23,6 +24,7 @@ function Download({
       Directory: {dirname}
       <br />
       <PeriodicUpdate start={status === 'started'}>
+        <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
         {getFriendlyStorage(bytesDownloaded).size}&nbsp;
         {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
         {getFriendlyStorage(size).size}&nbsp;
