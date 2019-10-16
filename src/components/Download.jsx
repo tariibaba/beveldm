@@ -24,9 +24,9 @@ function Download({
 
   return (
     <div>
-      Url: {url}
+      {url}
       <br />
-      Name: {filename}
+      {filename}
       <br />
       {status !== 'complete' && (
         <PeriodicUpdate start={status === 'started'}>
