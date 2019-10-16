@@ -21,8 +21,6 @@ function Download({
       <br />
       Name: {filename}
       <br />
-      Directory: {dirname}
-      <br />
       <PeriodicUpdate start={status === 'started'}>
         <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
         {getFriendlyStorage(bytesDownloaded).size}&nbsp;
