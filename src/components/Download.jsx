@@ -5,6 +5,8 @@ import DownloadActionButton from './DownloadActionButton';
 import PeriodicUpdate from './PeriodicUpdate';
 import getFriendlyStorage from '../friendly-storage';
 import DownloadSpeed from './DownloadSpeed';
+import { shell } from 'electron';
+import path from 'path';
 
 function Download({
   id,
@@ -15,6 +17,11 @@ function Download({
   bytesDownloaded,
   status
 }) {
+  const openFolder = () => {
+    const fullPath = path.resolve(dirname, filename);
+    shell.showItemInFolder(fullPath);
+  };
+
   return (
     <div>
       Url: {url}
@@ -31,6 +38,7 @@ function Download({
           <br />
         </PeriodicUpdate>
       )}
+      {status === 'complete' && <button onClick={openFolder}>Show in folder</button>}
       {status !== 'complete' && <ProgressBar value={bytesDownloaded / size} />}
       <DownloadActionButton id={id} status={status} />
     </div>
