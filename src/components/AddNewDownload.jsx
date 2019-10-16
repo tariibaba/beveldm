@@ -50,15 +50,17 @@ function getFileSize(headers) {
 
 async function getAvailableFileName(dirname, filename, downloads) {
   const extension = path.extname(filename);
-  let fullPath = path.resolve(dirname, filename);
-  let nameWithoutExtension = filename.replace(extension, '');
+  const nameWithoutExtension = filename.replace(extension, '');
   let suffix = 0;
-  let availableFilename;
+  let availableFilename = filename;
+  let fullPath = path.resolve(dirname, availableFilename);
+
   while (await fsExistsPromise(fullPath)) {
     suffix++;
     availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
     fullPath = path.resolve(dirname, availableFilename);
   }
+
   downloads.forEach(download => {
     const downloadPath = path.resolve(download.dirname, download.filename);
     if (downloadPath === fullPath) {
@@ -67,6 +69,7 @@ async function getAvailableFileName(dirname, filename, downloads) {
       fullPath = path.resolve(dirname, availableFilename);
     }
   });
+  
   return availableFilename;
 }
 
