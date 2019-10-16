@@ -21,14 +21,17 @@ function Download({
       <br />
       Name: {filename}
       <br />
-      <PeriodicUpdate start={status === 'started'}>
-        <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
-        {getFriendlyStorage(bytesDownloaded).size}&nbsp;
-        {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
-        {getFriendlyStorage(size).size}&nbsp;
-        {getFriendlyStorage(size).unit}
-      </PeriodicUpdate>
-      <ProgressBar value={bytesDownloaded / size} />
+      {status !== 'complete' && (
+        <PeriodicUpdate start={status === 'started'}>
+          <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
+          {getFriendlyStorage(bytesDownloaded).size}&nbsp;
+          {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
+          {getFriendlyStorage(size).size}&nbsp;
+          {getFriendlyStorage(size).unit}
+          <br />
+        </PeriodicUpdate>
+      )}
+      {status !== 'complete' && <ProgressBar value={bytesDownloaded / size} />}
       <DownloadActionButton id={id} status={status} />
     </div>
   );
