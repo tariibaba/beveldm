@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import request from 'request';
 import { addNewDownload } from '../actions';
 import { ipcRenderer } from 'electron';
+import path from 'path';
+import { fsExistsPromise } from '../promisified';
 
 function AddNewDownload({ onAdd = () => { } }) {
   const url = createRef();
@@ -46,17 +48,43 @@ function getFileSize(headers) {
   return parseInt(headers['content-length']);
 }
 
+async function getAvailableFileName(dirname, filename, downloads) {
+  const extension = path.extname(filename);
+  let fullPath = path.resolve(dirname, filename);
+  let nameWithoutExtension = filename.replace(extension, '');
+  let suffix = 0;
+  let availableFilename;
+  while (await fsExistsPromise(fullPath)) {
+    suffix++;
+    availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
+    fullPath = path.resolve(dirname, availableFilename);
+  }
+  downloads.forEach(download => {
+    const downloadPath = path.resolve(download.dirname, download.filename);
+    if (downloadPath === fullPath) {
+      suffix++;
+      availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
+      fullPath = path.resolve(dirname, availableFilename);
+    }
+  });
+  return availableFilename;
+}
+
+let downloads;
 export default connect(
-  null,
+  state => { 
+    downloads = state.downloads;
+    return {};
+  },
   dispatch => ({
     onAdd: (url, dirname) => {
       request.get(url)
-        .on('response', res => {
+        .on('response', async res => {
           dispatch(
             addNewDownload(
               url,
               dirname,
-              getFileName(res.headers),
+              await getAvailableFileName(dirname, getFileName(res.headers), downloads),
               getFileSize(res.headers)
             )
           );
