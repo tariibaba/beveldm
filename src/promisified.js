@@ -7,10 +7,8 @@ export function fsExistsPromise(path) {
   });
 }
 
-export default function (options) {
+export function httpGetPromise(options) {
   return new Promise(resolve => {
-    http.get(options, res => {
-      resolve(res);
-    });
+    http.get(options, res => resolve(res));
   });
 }

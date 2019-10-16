@@ -1,12 +1,12 @@
 import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload, completeDownload } from './actions';
-import httpPromise from './http-promise';
+import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
 import fs from 'fs';
 
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    const res = await httpPromise(download.url);
+    const res = await httpGetPromise(download.url);
     dispatch(startDownload(id, res));
 
     res.on('data', chunk => {
@@ -37,7 +37,7 @@ export function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     const url = new URL(download.url);
-    const res = await httpPromise({
+    const res = await httpGetPromise({
       host: url.hostname,
       port: url.port,
       headers: {
