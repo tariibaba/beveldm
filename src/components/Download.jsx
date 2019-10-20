@@ -22,11 +22,16 @@ function Download({
     shell.showItemInFolder(fullPath);
   };
 
+  const openFile = () => {
+    const fullPath = path.resolve(dirname, filename);
+    shell.openItem(fullPath);
+  };
+
   return (
     <div>
       {url}
       <br />
-      {filename}
+      {status === 'complete' ? <button onClick={openFile}>{filename}</button> : filename}
       <br />
       {status !== 'complete' && (
         <PeriodicUpdate start={status === 'started'}>
