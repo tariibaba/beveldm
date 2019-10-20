@@ -7,6 +7,7 @@ import getFriendlyStorage from '../friendly-storage';
 import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
+import { thunkCancelDownload } from '../thunks';
 
 function Download({
   id,
@@ -16,6 +17,7 @@ function Download({
   size,
   bytesDownloaded,
   status,
+  dispatch
 }) {
   const openFolder = () => {
     const fullPath = path.resolve(dirname, filename);
@@ -27,13 +29,17 @@ function Download({
     shell.openItem(fullPath);
   };
 
+  const cancel = () => {
+    dispatch(thunkCancelDownload(id));
+  };
+
   return (
     <div>
       {url}
       <br />
       {status === 'complete' ? <button onClick={openFile}>{filename}</button> : filename}
       <br />
-      {status !== 'complete' && (
+      {(status !== 'complete' && status !== 'canceled') && (
         <PeriodicUpdate start={status === 'started'} interval={500}>
           <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
           {getFriendlyStorage(bytesDownloaded).size}&nbsp;
@@ -44,8 +50,10 @@ function Download({
         </PeriodicUpdate>
       )}
       {status === 'complete' && <button onClick={openFolder}>Show in folder</button>}
-      {status !== 'complete' && <ProgressBar value={bytesDownloaded / size} />}
-      <DownloadActionButton id={id} status={status} />
+      {(status !== 'complete' && status !== 'canceled') && <ProgressBar value={bytesDownloaded / size} />}
+      {status !== 'canceled' && <DownloadActionButton id={id} status={status} />}
+      {status === 'canceled' && <span>Canceled</span>}
+      {status !== 'canceled' && <button onClick={cancel}>Cancel</button>}
     </div>
   );
 }

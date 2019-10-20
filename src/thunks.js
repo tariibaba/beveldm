@@ -1,4 +1,4 @@
-import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload, completeDownload } from './actions';
+import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload, completeDownload, cancelDownload } from './actions';
 import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
 import fs from 'fs';
@@ -47,5 +47,13 @@ export function thunkResumeDownload(id) {
     let download = getState().downloads.find(download => download.id === id);
     download.res.resume();
     dispatch(resumeDownload(id, download.res));
+  };
+}
+
+export function thunkCancelDownload(id) {
+  return async (dispatch, getState) => {
+    let download = getState().downloads.find(download => download.id === id);
+    download.res.destroy();
+    dispatch(cancelDownload(id));
   };
 }

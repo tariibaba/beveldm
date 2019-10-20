@@ -62,6 +62,15 @@ export function downloads(state = [], action) {
           };
         } else return download;
       });
+    case C.CANCEL_DOWNLOAD:
+      return state.map(download => {
+        if (download.id === action.id) {
+          return {
+            ...download,
+            status: action.status
+          };
+        } else return download;
+      });
     default:
       return state;
   }

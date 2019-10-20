@@ -6,6 +6,7 @@ const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
 const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
 const COMPLETE_DOWNLOAD = 'COMPLETE_DOWNLOAD';
+const CANCEL_DOWNLOAD = 'CANCEL_DOWNLOAD';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -13,7 +14,8 @@ const C = {
   UPDATE_BYTES_DOWNLOADED,
   PAUSE_DOWNLOAD,
   RESUME_DOWNLOAD,
-  COMPLETE_DOWNLOAD
+  COMPLETE_DOWNLOAD,
+  CANCEL_DOWNLOAD
 };
 
 export function addNewDownload(url, dirname, filename, size) {
@@ -68,6 +70,14 @@ export function completeDownload(id) {
     type: COMPLETE_DOWNLOAD,
     id,
     status: 'complete'
+  };
+}
+
+export function cancelDownload(id) {
+  return {
+    type: CANCEL_DOWNLOAD,
+    id,
+    status: 'canceled'
   };
 }
 
