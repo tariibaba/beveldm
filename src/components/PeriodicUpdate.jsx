@@ -24,6 +24,10 @@ class PeriodicUpdate extends Component {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
     return this.props.children;
   }
