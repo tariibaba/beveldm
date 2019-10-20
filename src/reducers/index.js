@@ -21,7 +21,8 @@ export function downloads(state = [], action) {
           return {
             ...download,
             res: action.res,
-            status: action.status
+            status: action.status,
+            resumable: action.resumable
           };
         } else return download;
       });

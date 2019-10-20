@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { thunkStartDownload, thunkPauseDownload, thunkResumeDownload } from '../thunks';
 
-function DownloadActionButton({ id, status, dispatch }) {
+function DownloadActionButton({ id, status, dispatch, resumable }) {
   let action;
   switch (status) {
     case 'notstarted':
@@ -35,9 +35,10 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   }
 
-  return (
-    status !== 'complete' && <button onClick={handleClick}>{action}</button>
-  );
+  if ((!resumable && status !== 'notstarted') || status === 'complete')
+    return null;
+  else
+    return <button onClick={handleClick}>{action}</button>
 }
 
 export default connect()(DownloadActionButton);

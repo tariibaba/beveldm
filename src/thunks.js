@@ -6,8 +6,15 @@ import fs from 'fs';
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    const res = await httpGetPromise(download.url);
-    dispatch(startDownload(id, res));
+    const res = await httpGetPromise(
+      download.url,
+      {
+        headers: {
+          Range: 'bytes=0-'
+        }
+      }
+    );
+    dispatch(startDownload(id, res, res.statusCode === 206));
 
     res.on('data', chunk => {
       res.pause();

@@ -15,7 +15,8 @@ function Download({
   dirname,
   size,
   bytesDownloaded,
-  status
+  status,
+  resumable
 }) {
   const openFolder = () => {
     const fullPath = path.resolve(dirname, filename);
@@ -45,7 +46,7 @@ function Download({
       )}
       {status === 'complete' && <button onClick={openFolder}>Show in folder</button>}
       {status !== 'complete' && <ProgressBar value={bytesDownloaded / size} />}
-      <DownloadActionButton id={id} status={status} />
+      <DownloadActionButton id={id} status={status} resumable={resumable}/>
     </div>
   );
 }
