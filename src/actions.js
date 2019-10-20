@@ -1,5 +1,4 @@
 import { v4 } from 'uuid';
-import { resolve } from 'path';
 
 const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
 const START_DOWNLOAD = 'START_DOWNLOAD';
