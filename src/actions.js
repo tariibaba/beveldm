@@ -30,13 +30,12 @@ export function addNewDownload(url, dirname, filename, size) {
   };
 }
 
-export function startDownload(id, res, resumable) {
+export function startDownload(id, res) {
   return {
     type: START_DOWNLOAD,
     id,
     res,
     status: 'started',
-    resumable
   };
 }
 
