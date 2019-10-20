@@ -21,18 +21,17 @@ function Download({
   status,
   dispatch
 }) {
+  const fullPath = path.resolve(dirname, filename);
+  
   const openFolder = () => {
-    const fullPath = path.resolve(dirname, filename);
     shell.showItemInFolder(fullPath);
   };
 
   const openFile = () => {
-    const fullPath = path.resolve(dirname, filename);
     shell.openItem(fullPath);
   };
 
   const cancel = () => {
-    const fullPath = path.resolve(dirname, filename);
     dispatch(thunkCancelDownload(id));
     fs.unlink(fullPath, () => {});
   };
