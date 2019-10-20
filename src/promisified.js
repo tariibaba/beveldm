@@ -1,4 +1,5 @@
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 
 export function fsExistsPromise(path) {
@@ -7,8 +8,9 @@ export function fsExistsPromise(path) {
   });
 }
 
-export function httpGetPromise(options) {
+export function httpGetPromise(url, options) {
   return new Promise(resolve => {
-    http.get(options, res => resolve(res));
+    const protocol = new URL(url).protocol === 'http:' ? http : https;
+    protocol.get(url, options, res => resolve(res));
   });
 }

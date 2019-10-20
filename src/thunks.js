@@ -36,14 +36,14 @@ export function thunkPauseDownload(id) {
 export function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    const url = new URL(download.url);
-    const res = await httpGetPromise({
-      host: url.hostname,
-      port: url.port,
-      headers: {
-        'Range':  `bytes=${download.bytesDownloaded}-`
+    const res = await httpGetPromise(
+      download.url,
+      {
+        headers: {
+          Range: `bytes=${download.bytesDownloaded}-`
+        }
       }
-    });
+    );
     dispatch(resumeDownload(id, res));
 
     res.on('data', chunk => {
