@@ -16,7 +16,7 @@ class PeriodicUpdate extends Component {
         this.intervalStarted = true;
         this.interval = setInterval(() => {
           this.forceUpdate();
-        }, 1000);
+        }, this.props.interval);
       }
     } else {
       this.intervalStarted = false;

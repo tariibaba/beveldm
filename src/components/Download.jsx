@@ -35,7 +35,7 @@ function Download({
       {status === 'complete' ? <button onClick={openFile}>{filename}</button> : filename}
       <br />
       {status !== 'complete' && (
-        <PeriodicUpdate start={status === 'started'}>
+        <PeriodicUpdate start={status === 'started'} interval={1000}>
           <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
           {getFriendlyStorage(bytesDownloaded).size}&nbsp;
           {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
