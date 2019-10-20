@@ -12,7 +12,7 @@ class DownloadSpeed extends Component {
   }
 
   render() {
-    const friendlySpeed = getFriendlyStorage(this.speed);
+    const friendlySpeed = getFriendlyStorage(this.speed * 2);
     return (
       this.props.status === 'started' &&
       friendlySpeed.size + friendlySpeed.unit + '/s - '
