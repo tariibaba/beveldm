@@ -71,6 +71,8 @@ export function downloads(state = [], action) {
           };
         } else return download;
       });
+    case C.REMOVE_DOWNLOAD:
+      return state.filter(download => download.id !== action.id);
     default:
       return state;
   }

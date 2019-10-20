@@ -8,6 +8,8 @@ import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
 import { thunkCancelDownload } from '../thunks';
+import { removeDownload } from '../actions';
+import fs from 'fs';
 
 function Download({
   id,
@@ -30,7 +32,13 @@ function Download({
   };
 
   const cancel = () => {
+    const fullPath = path.resolve(dirname, filename);
     dispatch(thunkCancelDownload(id));
+    fs.unlink(fullPath, () => {});
+  };
+
+  const remove = () => {
+    dispatch(removeDownload(id));
   };
 
   return (
@@ -53,7 +61,8 @@ function Download({
       {(status !== 'complete' && status !== 'canceled') && <ProgressBar value={bytesDownloaded / size} />}
       {status !== 'canceled' && <DownloadActionButton id={id} status={status} />}
       {status === 'canceled' && <span>Canceled</span>}
-      {status !== 'canceled' && <button onClick={cancel}>Cancel</button>}
+      {status !== 'canceled' && <button onClick={cancel}>Cancel</button>}<br />
+      {status === 'canceled' && <button onClick={remove}>Remove</button>}
     </div>
   );
 }
