@@ -7,14 +7,11 @@ class PeriodicUpdate extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    console.log('should component update');
     return this.props.start !== nextProps.start;
   }
 
   componentDidUpdate() {
-    console.log('component did update');
     if (this.props.start) {
-      console.log('this.props.start === true');
       if (!this.intervalStarted) {
         this.intervalStarted = true;
         this.interval = setInterval(() => {
