@@ -61,7 +61,7 @@ function Download({
       {status !== 'canceled' && <DownloadActionButton id={id} status={status} />}
       {status === 'canceled' && <span>Canceled</span>}
       {status !== 'canceled' && <button onClick={cancel}>Cancel</button>}<br />
-      {status === 'canceled' && <button onClick={remove}>Remove</button>}
+      {(status === 'canceled' || status === 'complete') && <button onClick={remove}>Remove</button>}
     </div>
   );
 }
