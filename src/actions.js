@@ -46,7 +46,7 @@ export function startDownload(id, res) {
     type: START_DOWNLOAD,
     id,
     res,
-    status: 'started',
+    status: 'started'
   };
 }
 
@@ -72,7 +72,7 @@ export function resumeDownload(id, res) {
     id,
     res,
     status: 'started'
-  }
+  };
 }
 
 export function completeDownload(id) {

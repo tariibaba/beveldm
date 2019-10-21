@@ -6,11 +6,11 @@ import { ipcRenderer } from 'electron';
 import path from 'path';
 import { fsExistsPromise } from '../promisified';
 
-function AddNewDownload({ onAdd = () => { } }) {
+function AddNewDownload({ onAdd = () => {} }) {
   const url = createRef();
   const filePath = createRef();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     onAdd(url.current.value, filePath.current.value);
     url.current.value = null;
@@ -28,7 +28,9 @@ function AddNewDownload({ onAdd = () => { } }) {
     <div>
       <form onSubmit={handleSubmit}>
         <input name="file" type="text" placeholder="Save path" ref={filePath} />
-        <button type="button" onClick={chooseFile}>Choose file</button>
+        <button type="button" onClick={chooseFile}>
+          Choose file
+        </button>
         <br />
         <input name="url" type="text" placeholder="Enter url" ref={url} />
         <button type="submit">Add</button>
@@ -69,29 +71,32 @@ async function getAvailableFileName(dirname, filename, downloads) {
       fullPath = path.resolve(dirname, availableFilename);
     }
   });
-  
+
   return availableFilename;
 }
 
 let downloads;
 export default connect(
-  state => { 
+  state => {
     downloads = state.downloads;
     return {};
   },
   dispatch => ({
     onAdd: (url, dirname) => {
-      request.get(url)
-        .on('response', async res => {
-          dispatch(
-            addNewDownload(
-              url,
+      request.get(url).on('response', async res => {
+        dispatch(
+          addNewDownload(
+            url,
+            dirname,
+            await getAvailableFileName(
               dirname,
-              await getAvailableFileName(dirname, getFileName(res.headers), downloads),
-              getFileSize(res.headers)
-            )
-          );
-        });
+              getFileName(res.headers),
+              downloads
+            ),
+            getFileSize(res.headers)
+          )
+        );
+      });
     }
   })
 )(AddNewDownload);

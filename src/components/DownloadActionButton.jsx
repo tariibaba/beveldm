@@ -1,6 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { thunkStartDownload, thunkPauseDownload, thunkResumeDownload } from '../thunks';
+import {
+  thunkStartDownload,
+  thunkPauseDownload,
+  thunkResumeDownload
+} from '../thunks';
 
 function DownloadActionButton({ id, status, dispatch }) {
   let action;
@@ -33,10 +37,10 @@ function DownloadActionButton({ id, status, dispatch }) {
       default:
         break;
     }
-  }
+  };
 
-  return status !== 'complete' && (
-    <button onClick={handleClick}>{action}</button>
+  return (
+    status !== 'complete' && <button onClick={handleClick}>{action}</button>
   );
 }
 

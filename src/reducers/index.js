@@ -85,7 +85,7 @@ export function interval(state = null, action) {
     default:
       return state;
   }
-} 
+}
 
 export function intervalSubscribers(state = [], action) {
   switch (action.type) {

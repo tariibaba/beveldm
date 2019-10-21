@@ -22,7 +22,7 @@ function Download({
   dispatch
 }) {
   const fullPath = path.resolve(dirname, filename);
-  
+
   const openFolder = () => {
     shell.showItemInFolder(fullPath);
   };
@@ -44,9 +44,13 @@ function Download({
     <div>
       {url}
       <br />
-      {status === 'complete' ? <button onClick={openFile}>{filename}</button> : filename}
+      {status === 'complete' ? (
+        <button onClick={openFile}>{filename}</button>
+      ) : (
+        filename
+      )}
       <br />
-      {(status !== 'complete' && status !== 'canceled') && (
+      {status !== 'complete' && status !== 'canceled' && (
         <PeriodicUpdate start={status === 'started'} interval={500}>
           <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
           {getFriendlyStorage(bytesDownloaded).size}&nbsp;
@@ -56,12 +60,23 @@ function Download({
           <br />
         </PeriodicUpdate>
       )}
-      {status === 'complete' && <button onClick={openFolder}>Show in folder</button>}
-      {(status !== 'complete' && status !== 'canceled') && <ProgressBar value={bytesDownloaded / size} />}
-      {status !== 'canceled' && <DownloadActionButton id={id} status={status} />}
+      {status === 'complete' && (
+        <button onClick={openFolder}>Show in folder</button>
+      )}
+      {status !== 'complete' && status !== 'canceled' && (
+        <ProgressBar value={bytesDownloaded / size} />
+      )}
+      {status !== 'canceled' && (
+        <DownloadActionButton id={id} status={status} />
+      )}
       {status === 'canceled' && <span>Canceled</span>}
-      {(status !== 'canceled' && status !== 'complete') && <button onClick={cancel}>Cancel</button>}<br />
-      {(status === 'canceled' || status === 'complete') && <button onClick={remove}>Remove</button>}
+      {status !== 'canceled' && status !== 'complete' && (
+        <button onClick={cancel}>Cancel</button>
+      )}
+      <br />
+      {(status === 'canceled' || status === 'complete') && (
+        <button onClick={remove}>Remove</button>
+      )}
     </div>
   );
 }

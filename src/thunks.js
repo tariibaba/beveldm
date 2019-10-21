@@ -1,4 +1,14 @@
-import { startDownload, updateBytesDownloaded, pauseDownload, resumeDownload, completeDownload, cancelDownload, setDownloadInterval, unsubscribeFromInterval, subscribeToInterval } from './actions';
+import {
+  startDownload,
+  updateBytesDownloaded,
+  pauseDownload,
+  resumeDownload,
+  completeDownload,
+  cancelDownload,
+  setDownloadInterval,
+  unsubscribeFromInterval,
+  subscribeToInterval
+} from './actions';
 import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
 import fs from 'fs';
@@ -6,30 +16,27 @@ import fs from 'fs';
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    const res = await httpGetPromise(
-      download.url,
-      {
-        headers: {
-          Range: 'bytes=0-',
-          Connection: 'keep-alive',
-        }
+    const res = await httpGetPromise(download.url, {
+      headers: {
+        Range: 'bytes=0-',
+        Connection: 'keep-alive'
       }
-    );
+    });
     dispatch(startDownload(id, res));
 
     res.on('data', chunk => {
       res.pause();
       download = getState().downloads.find(download => download.id === id);
-      fs.appendFile(resolve(download.dirname, download.filename), chunk, err => {
-        const received = download.bytesDownloaded + chunk.length;
-        dispatch(
-          updateBytesDownloaded(id, received)
-        );
-        if (received === download.size)
-          dispatch(completeDownload(id))
-        if (download.status !== 'paused')
-          res.resume();
-      });
+      fs.appendFile(
+        resolve(download.dirname, download.filename),
+        chunk,
+        err => {
+          const received = download.bytesDownloaded + chunk.length;
+          dispatch(updateBytesDownloaded(id, received));
+          if (received === download.size) dispatch(completeDownload(id));
+          if (download.status !== 'paused') res.resume();
+        }
+      );
     });
   };
 }
@@ -64,7 +71,7 @@ export function thunkSubscribeToInterval(id, action) {
       dispatch(thunkSetDownloadInterval());
     }
     dispatch(subscribeToInterval(id, action));
-  }
+  };
 }
 
 function thunkSetDownloadInterval() {
