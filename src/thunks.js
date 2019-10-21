@@ -6,7 +6,6 @@ import {
   completeDownload,
   cancelDownload,
   setDownloadInterval,
-  unsubscribeFromInterval,
   subscribeToInterval
 } from './actions';
 import { httpGetPromise } from './promisified';
