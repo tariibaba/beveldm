@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import getFriendlyStorage from '../friendly-storage';
+import prettyBytes from 'pretty-bytes';
 
 class DownloadSpeed extends Component {
   constructor(props) {
@@ -12,10 +12,8 @@ class DownloadSpeed extends Component {
   }
 
   render() {
-    const friendlySpeed = getFriendlyStorage(this.speed * 2);
     return (
-      this.props.status === 'started' &&
-      friendlySpeed.size + friendlySpeed.unit + '/s - '
+      this.props.status === 'started' && prettyBytes(this.speed * 2) + '/s - '
     );
   }
 }

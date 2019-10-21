@@ -3,11 +3,11 @@ import ProgressBar from './ProgressBar';
 import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
 import PeriodicUpdate from './PeriodicUpdate';
-import getFriendlyStorage from '../friendly-storage';
 import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
 import { thunkCancelDownload, thunkRemoveDownload } from '../thunks';
+import prettyBytes from 'pretty-bytes';
 
 function Download({
   id,
@@ -50,10 +50,7 @@ function Download({
       {status !== 'complete' && status !== 'canceled' && (
         <PeriodicUpdate start={status === 'started'} interval={500}>
           <DownloadSpeed bytesDownloaded={bytesDownloaded} status={status} />
-          {getFriendlyStorage(bytesDownloaded).size}&nbsp;
-          {getFriendlyStorage(bytesDownloaded).unit} of&nbsp;
-          {getFriendlyStorage(size).size}&nbsp;
-          {getFriendlyStorage(size).unit}
+          {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
           <br />
         </PeriodicUpdate>
       )}
