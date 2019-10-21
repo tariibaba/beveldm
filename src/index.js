@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { downloads } from './reducers';
+import { downloads, interval, intervalSubscribers } from './reducers';
 import reduxThunk from 'redux-thunk';
 
 const store = createStore(
-  combineReducers({ downloads }),
+  combineReducers({ downloads, interval, intervalSubscribers }),
   applyMiddleware(reduxThunk)
 );
 

@@ -1,9 +1,15 @@
 import { Component } from 'react';
+import { unsubscribeFromInterval } from '../actions';
+import { connect } from 'react-redux';
+import { v4 } from 'uuid';
+import { thunkSubscribeToInterval } from '../thunks';
+
 
 class PeriodicUpdate extends Component {
   constructor(props) {
     super(props);
-    this.intervalStarted = false;
+    this.subscribed = false;
+    this.id = v4();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -12,20 +18,18 @@ class PeriodicUpdate extends Component {
 
   componentDidUpdate() {
     if (this.props.start) {
-      if (!this.intervalStarted) {
-        this.intervalStarted = true;
-        this.interval = setInterval(() => {
-          this.forceUpdate();
-        }, this.props.interval);
+      if (!this.subscribed) {
+        this.props.dispatch(thunkSubscribeToInterval(this.id, () => this.forceUpdate()));
+        this.subscribed = true;
       }
     } else {
-      this.intervalStarted = false;
-      clearInterval(this.interval);
+      this.props.dispatch(unsubscribeFromInterval(this.id));
+      this.subscribed = false;
     }
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    this.props.dispatch(unsubscribeFromInterval(this.id));
   }
 
   render() {
@@ -33,4 +37,4 @@ class PeriodicUpdate extends Component {
   }
 }
 
-export default PeriodicUpdate;
+export default connect()(PeriodicUpdate);

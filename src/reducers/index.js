@@ -77,3 +77,23 @@ export function downloads(state = [], action) {
       return state;
   }
 }
+
+export function interval(state = null, action) {
+  switch (action.type) {
+    case C.SET_INTERVAL:
+      return action.interval;
+    default:
+      return state;
+  }
+} 
+
+export function intervalSubscribers(state = [], action) {
+  switch (action.type) {
+    case C.SUBSCRIBE_TO_INTERVAL:
+      return [...state, { id: action.id, action: action.action }];
+    case C.UNSUBSCRIBE_FROM_INTERVAL:
+      return state.filter(subscriber => subscriber.id !== action.id);
+    default:
+      return state;
+  }
+}

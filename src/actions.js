@@ -8,6 +8,10 @@ const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
 const COMPLETE_DOWNLOAD = 'COMPLETE_DOWNLOAD';
 const CANCEL_DOWNLOAD = 'CANCEL_DOWNLOAD';
 const REMOVE_DOWNLOAD = 'REMOVE_DOWNLOAD';
+const SET_INTERVAL = 'SET_INTERVAL';
+const CLEAR_INTERVAL = 'CLEAR_INTERVAL';
+const SUBSCRIBE_TO_INTERVAL = 'SUBSCRIBE_TO_INTERVAL';
+const UNSUBSCRIBE_FROM_INTERVAL = 'UNSUBSCRIBE_FROM_INTERVAL';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -17,7 +21,11 @@ const C = {
   RESUME_DOWNLOAD,
   COMPLETE_DOWNLOAD,
   CANCEL_DOWNLOAD,
-  REMOVE_DOWNLOAD
+  REMOVE_DOWNLOAD,
+  SET_INTERVAL,
+  CLEAR_INTERVAL,
+  SUBSCRIBE_TO_INTERVAL,
+  UNSUBSCRIBE_FROM_INTERVAL
 };
 
 export function addNewDownload(url, dirname, filename, size) {
@@ -86,6 +94,28 @@ export function cancelDownload(id) {
 export function removeDownload(id) {
   return {
     type: REMOVE_DOWNLOAD,
+    id
+  };
+}
+
+export function setDownloadInterval(interval) {
+  return {
+    type: SET_INTERVAL,
+    interval
+  };
+}
+
+export function subscribeToInterval(id, action) {
+  return {
+    type: SUBSCRIBE_TO_INTERVAL,
+    id,
+    action
+  };
+}
+
+export function unsubscribeFromInterval(id) {
+  return {
+    type: UNSUBSCRIBE_FROM_INTERVAL,
     id
   };
 }
