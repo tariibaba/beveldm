@@ -7,9 +7,7 @@ import getFriendlyStorage from '../friendly-storage';
 import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
-import { thunkCancelDownload } from '../thunks';
-import { removeDownload } from '../actions';
-import fs from 'fs';
+import { thunkCancelDownload, thunkRemoveDownload } from '../thunks';
 
 function Download({
   id,
@@ -33,11 +31,10 @@ function Download({
 
   const cancel = () => {
     dispatch(thunkCancelDownload(id));
-    fs.unlink(fullPath, () => {});
   };
 
   const remove = () => {
-    dispatch(removeDownload(id));
+    dispatch(thunkRemoveDownload(id));
   };
 
   return (

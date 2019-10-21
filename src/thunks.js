@@ -6,7 +6,8 @@ import {
   completeDownload,
   cancelDownload,
   setDownloadInterval,
-  subscribeToInterval
+  subscribeToInterval,
+  removeDownload
 } from './actions';
 import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
@@ -61,6 +62,15 @@ export function thunkCancelDownload(id) {
     let download = getState().downloads.find(download => download.id === id);
     download.res.destroy();
     dispatch(cancelDownload(id));
+  };
+}
+
+export function thunkRemoveDownload(id) {
+  return async (dispatch, getState) => {
+    let download = getState().downloads.find(download => download.id === id);
+    const fullPath = resolve(download.dirname, download.filename);
+    dispatch(removeDownload(id));
+    if (download.status === 'canceled') fs.unlink(fullPath, _err => {});
   };
 }
 
