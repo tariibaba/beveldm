@@ -24,20 +24,23 @@ export function thunkStartDownload(id) {
     });
     dispatch(startDownload(id, res));
 
-    res.on('data', chunk => {
-      res.pause();
-      download = getState().downloads.find(download => download.id === id);
-      fs.appendFile(
-        resolve(download.dirname, download.filename),
-        chunk,
-        err => {
+    const fullPath = resolve(download.dirname, download.filename);
+    const stream = fs.createWriteStream(fullPath);
+    res
+      .on('data', chunk => {
+        res.pause();
+        download = getState().downloads.find(download => download.id === id);
+        stream.write(chunk, err => {
+          if (err) throw err;
           const received = download.bytesDownloaded + chunk.length;
           dispatch(updateBytesDownloaded(id, received));
           if (received === download.size) dispatch(completeDownload(id));
           if (download.status !== 'paused') res.resume();
-        }
-      );
-    });
+        });
+      })
+      .on('end', () => {
+        stream.close();
+      });
   };
 }
 
