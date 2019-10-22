@@ -4,7 +4,9 @@
   "private": true,
   "main": "public/main.js",
   "dependencies": {
+    "content-disposition-filename": "^0.0.1",
     "electron": "^6.0.12",
+    "path-exists": "^4.0.0",
     "pretty-bytes": "^5.3.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

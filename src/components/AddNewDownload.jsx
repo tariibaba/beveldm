@@ -4,7 +4,8 @@ import request from 'request';
 import { addNewDownload } from '../actions';
 import { ipcRenderer } from 'electron';
 import path from 'path';
-import { fsExistsPromise } from '../promisified';
+import contentDipositionFilename from 'content-disposition-filename';
+import pathExists from 'path-exists';
 
 function AddNewDownload({ onAdd = () => {} }) {
   const url = createRef();
@@ -40,10 +41,7 @@ function AddNewDownload({ onAdd = () => {} }) {
 }
 
 function getFileName(headers) {
-  const regex = /filename=(.+)/i;
-  const MATCH_INDEX = 1;
-  const matchArray = headers['content-disposition'].match(regex);
-  return matchArray[MATCH_INDEX];
+  return contentDipositionFilename(headers['content-disposition']);
 }
 
 function getFileSize(headers) {
@@ -57,7 +55,7 @@ async function getAvailableFileName(dirname, filename, downloads) {
   let availableFilename = filename;
   let fullPath = path.resolve(dirname, availableFilename);
 
-  while (await fsExistsPromise(fullPath)) {
+  while (await pathExists(fullPath)) {
     suffix++;
     availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
     fullPath = path.resolve(dirname, availableFilename);
