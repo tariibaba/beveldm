@@ -29,6 +29,15 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  mainWindow.on('close', (e) => {
+    e.preventDefault();
+    mainWindow.webContents.send('close', null);
+  });
+
+  ipcMain.on('saved', () => {
+    mainWindow.destroy();
+  });
 }
 
 // This method will be called when Electron has finished

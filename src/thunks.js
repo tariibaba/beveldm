@@ -12,6 +12,7 @@ import {
 import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
 import fs from 'fs';
+import Store from 'electron-store';
 
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
@@ -137,5 +138,33 @@ function thunkSetDownloadInterval() {
       }
     }, 500);
     dispatch(setDownloadInterval(interval));
+  };
+}
+
+export function saveState() {
+  return async (dispatch, getState) => {
+    getState().downloads.forEach(async download => {
+      await dispatch(thunkPauseDownload(download.id));
+    });
+    const store = new Store();
+    return new Promise(resolve => {
+      setTimeout(() => {
+        store.set(
+          'downloads',
+          getState().downloads.map(download => {
+            const { res, ...d } = { ...download };
+            return d;
+          })
+        );
+        resolve();
+      }, 50);
+    });
+  };
+}
+
+export function loadState() {
+  return async (_dispatch, getState) => {
+    const store = new Store();
+    getState().downloads = store.get('downloads') || [];
   };
 }
