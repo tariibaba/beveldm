@@ -40,8 +40,13 @@ function AddNewDownload({ onAdd = () => {} }) {
   );
 }
 
-function getFileName(headers) {
-  return contentDipositionFilename(headers['content-disposition']);
+function getFileName(url, headers) {
+  if (headers['content-disposition'])
+    return contentDipositionFilename(headers['content-disposition']);
+  else {
+    const urlobj = new URL(url);
+    return path.basename(urlobj.origin + urlobj.pathname);
+  }
 }
 
 function getFileSize(headers) {
@@ -88,7 +93,7 @@ export default connect(
             dirname,
             await getAvailableFileName(
               dirname,
-              getFileName(res.headers),
+              getFileName(url, res.headers),
               downloads
             ),
             getFileSize(res.headers)
