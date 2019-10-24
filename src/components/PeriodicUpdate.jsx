@@ -15,7 +15,7 @@ class PeriodicUpdate extends Component {
     return this.props.start !== nextProps.start;
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     if (this.props.start) {
       if (!this.subscribed) {
         this.props.dispatch(
@@ -27,6 +27,10 @@ class PeriodicUpdate extends Component {
       this.props.dispatch(unsubscribeFromInterval(this.id));
       this.subscribed = false;
     }
+  }
+
+  componentDidUpdate() {
+    this.componentDidMount();
   }
 
   componentWillUnmount() {
