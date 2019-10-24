@@ -7,8 +7,9 @@ class DownloadSpeed extends Component {
     this.speed = 0;
   }
 
-  componentDidUpdate(prevProps) {
+  getSnapshotBeforeUpdate(prevProps) {
     this.speed = this.props.bytesDownloaded - prevProps.bytesDownloaded;
+    if (this.speed < 0) this.speed = this.props.bytesDownloaded;
   }
 
   render() {
