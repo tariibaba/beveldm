@@ -100,7 +100,7 @@ export function thunkResumeDownload(id) {
 export function thunkCancelDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    download.res.destroy();
+    if (download.res) download.res.destroy();
     dispatch(cancelDownload(id));
   };
 }
