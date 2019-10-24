@@ -3,11 +3,15 @@ import './ProgressBar.css';
 
 class ProgressBar extends Component {
   shouldComponentUpdate(nextProps) {
+    let shouldUpdate;
     if (nextProps.value - this.valueBeforeUpdate > 0.01) {
       this.valueBeforeUpdate += 0.01;
-      return true;
+      shouldUpdate = true;
+    } else if (nextProps.value < this.valueBeforeUpdate) {
+      this.valueBeforeUpdate = this.fractionFloor(nextProps.value, 2);
+      shouldUpdate = false;
     }
-    return false;
+    return shouldUpdate;
   }
 
   fractionFloor(num, fractionDigits) {
