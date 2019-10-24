@@ -41,12 +41,13 @@ export function addNewDownload(url, dirname, filename, size) {
   };
 }
 
-export function startDownload(id, res) {
+export function startDownload(id, res, resumable) {
   return {
     type: START_DOWNLOAD,
     id,
     res,
-    status: 'started'
+    status: 'started',
+    resumable
   };
 }
 

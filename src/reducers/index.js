@@ -21,7 +21,8 @@ export function downloads(state = [], action) {
           return {
             ...download,
             res: action.res,
-            status: action.status
+            status: action.status,
+            resumable: action.resumable
           };
         } else return download;
       });
@@ -67,7 +68,8 @@ export function downloads(state = [], action) {
         if (download.id === action.id) {
           return {
             ...download,
-            status: action.status
+            status: action.status,
+            res: undefined
           };
         } else return download;
       });

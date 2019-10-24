@@ -60,10 +60,13 @@ function Download({
       {status !== 'complete' && status !== 'canceled' && (
         <ProgressBar value={bytesDownloaded / size} />
       )}
-      {status !== 'canceled' && (
-        <DownloadActionButton id={id} status={status} />
+      {status === 'canceled' && (
+        <>
+          Canceled
+          <br />
+        </>
       )}
-      {status === 'canceled' && <span>Canceled</span>}
+      <DownloadActionButton id={id} status={status} />
       {status !== 'canceled' && status !== 'complete' && (
         <button onClick={cancel}>Cancel</button>
       )}

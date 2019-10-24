@@ -22,7 +22,7 @@ export function thunkStartDownload(id) {
         Connection: 'keep-alive'
       }
     });
-    dispatch(startDownload(id, res));
+    dispatch(startDownload(id, res, res.statusCode === 206));
 
     const fullPath = resolve(download.dirname, download.filename);
     const stream = fs.createWriteStream(fullPath);
@@ -55,8 +55,45 @@ export function thunkPauseDownload(id) {
 export function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    download.res.resume();
-    dispatch(resumeDownload(id, download.res));
+
+    if (download.res) {
+      download.res.resume();
+      dispatch(resumeDownload(id, download.res));
+    } else {
+      let download = getState().downloads.find(download => download.id === id);
+
+      const res = await httpGetPromise(download.url, {
+        headers: {
+          Range: `bytes=${download.bytesDownloaded}-`,
+          Connection: 'keep-alive'
+        }
+      });
+      dispatch(resumeDownload(id, res));
+
+      const fullPath = resolve(download.dirname, download.filename);
+      let stream;
+      if (!download.resumable) {
+        dispatch(updateBytesDownloaded(id, 0));
+        stream = fs.createWriteStream(fullPath);
+      } else stream = fs.createWriteStream(fullPath, { flags: 'a' });
+
+      res
+        .on('data', chunk => {
+          res.pause();
+          download = getState().downloads.find(download => download.id === id);
+          console.log('bytesDownloaded: ' + download.bytesDownloaded);
+          stream.write(chunk, err => {
+            if (err) throw err;
+            const received = download.bytesDownloaded + chunk.length;
+            dispatch(updateBytesDownloaded(id, received));
+            if (received === download.size) dispatch(completeDownload(id));
+            if (download.status !== 'paused') res.resume();
+          });
+        })
+        .on('end', () => {
+          stream.close();
+        });
+    }
   };
 }
 

@@ -18,6 +18,9 @@ function DownloadActionButton({ id, status, dispatch }) {
     case 'paused':
       action = 'Resume';
       break;
+    case 'canceled':
+      action = 'Retry';
+      break;
     default:
       action = 'Start';
       break;
@@ -32,6 +35,9 @@ function DownloadActionButton({ id, status, dispatch }) {
         dispatch(thunkPauseDownload(id));
         break;
       case 'paused':
+        dispatch(thunkResumeDownload(id));
+        break;
+      case 'canceled':
         dispatch(thunkResumeDownload(id));
         break;
       default:
