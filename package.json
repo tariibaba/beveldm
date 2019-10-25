@@ -4,6 +4,7 @@
   "private": true,
   "main": "public/main.js",
   "dependencies": {
+    "@material-ui/core": "^4.5.1",
     "content-disposition-filename": "^0.0.1",
     "electron": "^6.0.12",
     "electron-store": "^5.0.0",
@@ -16,6 +17,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "request": "^2.88.0",
+    "typeface-roboto": "^0.0.75",
     "uuid": "^3.3.2"
   },
   "scripts": {
