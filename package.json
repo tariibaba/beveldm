@@ -5,6 +5,7 @@
   "main": "public/main.js",
   "dependencies": {
     "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
     "content-disposition-filename": "^0.0.1",
     "electron": "^6.0.12",
     "electron-store": "^5.0.0",
