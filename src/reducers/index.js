@@ -26,6 +26,15 @@ export function downloads(state = [], action) {
           };
         } else return download;
       });
+    case C.STARTING_DOWNLOAD:
+      return state.map(download => {
+        if (download.id === action.id) {
+          return {
+            ...download,
+            status: 'starting'
+          };
+        } else return download;
+      });
     case C.UPDATE_BYTES_DOWNLOADED:
       return state.map(download => {
         if (download.id === action.id) {

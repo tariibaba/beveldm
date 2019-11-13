@@ -7,7 +7,8 @@ import {
   cancelDownload,
   setDownloadInterval,
   subscribeToInterval,
-  removeDownload
+  removeDownload,
+  startingDownload
 } from './actions';
 import { httpGetPromise } from './promisified';
 import { resolve } from 'path';
@@ -17,6 +18,9 @@ import Store from 'electron-store';
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
+    if (download.status === 'starting') return;
+    dispatch(startingDownload(id));
+
     const res = await httpGetPromise(download.url, {
       headers: {
         Range: 'bytes=0-',
@@ -57,6 +61,8 @@ export function thunkPauseDownload(id) {
 export function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
+    if (download.id === 'starting') return;
+    dispatch(startingDownload(id));
 
     if (download.res) {
       download.res.resume();

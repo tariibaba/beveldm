@@ -12,6 +12,7 @@ const SET_INTERVAL = 'SET_INTERVAL';
 const CLEAR_INTERVAL = 'CLEAR_INTERVAL';
 const SUBSCRIBE_TO_INTERVAL = 'SUBSCRIBE_TO_INTERVAL';
 const UNSUBSCRIBE_FROM_INTERVAL = 'UNSUBSCRIBE_FROM_INTERVAL';
+const STARTING_DOWNLOAD = 'STARTING_DOWNLOAD';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -25,7 +26,8 @@ const C = {
   SET_INTERVAL,
   CLEAR_INTERVAL,
   SUBSCRIBE_TO_INTERVAL,
-  UNSUBSCRIBE_FROM_INTERVAL
+  UNSUBSCRIBE_FROM_INTERVAL,
+  STARTING_DOWNLOAD
 };
 
 export function addNewDownload(url, dirname, filename, size) {
@@ -48,6 +50,14 @@ export function startDownload(id, res, resumable) {
     res,
     status: 'started',
     resumable
+  };
+}
+
+export function startingDownload(id) {
+  return {
+    type: STARTING_DOWNLOAD,
+    id,
+    status: 'starting'
   };
 }
 

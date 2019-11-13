@@ -12,6 +12,7 @@ function DownloadActionButton({ id, status, dispatch }) {
     case 'notstarted':
       action = 'Start';
       break;
+    case 'starting':
     case 'started':
       action = 'Pause';
       break;
