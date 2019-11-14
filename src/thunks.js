@@ -8,12 +8,88 @@ import {
   setDownloadInterval,
   subscribeToInterval,
   removeDownload,
-  startingDownload
+  startingDownload,
+  addNewDownload
 } from './actions';
 import { httpGetPromise } from './promisified';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import fs from 'fs';
 import Store from 'electron-store';
+import pathExists from 'path-exists';
+import contentDipositionFilename from 'content-disposition-filename';
+import { PARTIAL_DOWNLOAD_EXTENSION } from './constants';
+import pify from 'pify';
+
+export function thunkAddNewDownload(url, dirname) {
+  return async (dispatch, getState) => {
+    const res = await httpGetPromise(url);
+    const downloads = getState().downloads;
+    dispatch(
+      addNewDownload(
+        url,
+        dirname,
+        await getAvailableFileName(
+          dirname,
+          getFileName(url, res.headers),
+          downloads
+        ),
+        getFileSize(res.headers)
+      )
+    );
+  };
+}
+
+async function getAvailableFileName(dirname, filename, downloads) {
+  const extension = path.extname(filename);
+  const nameWithoutExtension = filename.replace(extension, '');
+  let availableWithoutExtension;
+  let suffix = 0;
+  let availableFilename = filename;
+  let fullPath = path.resolve(dirname, availableFilename);
+  let partialDownloadFullPath = path.resolve(dirname, nameWithoutExtension);
+
+  while (
+    (await pathExists(fullPath)) ||
+    (await pathExists(partialDownloadFullPath))
+  ) {
+    suffix++;
+    availableWithoutExtension = `${nameWithoutExtension} (${suffix})`;
+    availableFilename = availableWithoutExtension + extension;
+    fullPath = path.resolve(dirname, availableFilename);
+    partialDownloadFullPath = path.resolve(
+      dirname,
+      availableWithoutExtension + PARTIAL_DOWNLOAD_EXTENSION
+    );
+  }
+
+  downloads.forEach(download => {
+    const downloadPath = path.resolve(download.dirname, download.filename);
+    if (downloadPath === fullPath || downloadPath === partialDownloadFullPath) {
+      suffix++;
+      availableWithoutExtension = `${nameWithoutExtension} (${suffix})`;
+      availableFilename = availableWithoutExtension + extension;
+      fullPath = path.resolve(dirname, availableFilename);
+      partialDownloadFullPath = path.resolve(
+        dirname,
+        availableWithoutExtension + PARTIAL_DOWNLOAD_EXTENSION
+      );
+    }
+  });
+  return availableFilename;
+}
+
+function getFileName(url, headers) {
+  if (headers['content-disposition'])
+    return contentDipositionFilename(headers['content-disposition']);
+  else {
+    const urlobj = new URL(url);
+    return path.basename(urlobj.origin + urlobj.pathname);
+  }
+}
+
+function getFileSize(headers) {
+  return parseInt(headers['content-length']);
+}
 
 export function thunkStartDownload(id) {
   return async (dispatch, getState) => {
@@ -29,7 +105,10 @@ export function thunkStartDownload(id) {
     });
     dispatch(startDownload(id, res, res.statusCode === 206));
 
-    const fullPath = resolve(download.dirname, download.filename);
+    const fullPath = resolve(
+      download.dirname,
+      replaceFileExt(download.filename, PARTIAL_DOWNLOAD_EXTENSION)
+    );
     const stream = fs.createWriteStream(fullPath);
     res
       .on('data', chunk => {
@@ -39,7 +118,7 @@ export function thunkStartDownload(id) {
           if (err) throw err;
           const received = download.bytesDownloaded + chunk.length;
           dispatch(updateBytesDownloaded(id, received));
-          if (received === download.size) dispatch(completeDownload(id));
+          if (received === download.size) dispatch(thunkCompleteDownload(id));
           if (download.status !== 'paused') res.resume();
         });
       })
@@ -47,6 +126,10 @@ export function thunkStartDownload(id) {
         stream.close();
       });
   };
+}
+
+function replaceFileExt(filepath, newExt) {
+  return filepath.replace(path.extname(filepath), newExt);
 }
 
 export function thunkPauseDownload(id) {
@@ -78,7 +161,10 @@ export function thunkResumeDownload(id) {
       });
       dispatch(resumeDownload(id, res));
 
-      const fullPath = resolve(download.dirname, download.filename);
+      const fullPath = resolve(
+        download.dirname,
+        replaceFileExt(download.filename, PARTIAL_DOWNLOAD_EXTENSION)
+      );
       let stream;
       if (!download.resumable) {
         dispatch(updateBytesDownloaded(id, 0));
@@ -94,7 +180,7 @@ export function thunkResumeDownload(id) {
             if (err) throw err;
             const received = download.bytesDownloaded + chunk.length;
             dispatch(updateBytesDownloaded(id, received));
-            if (received === download.size) dispatch(completeDownload(id));
+            if (received === download.size) dispatch(thunkCompleteDownload(id));
             if (download.status !== 'paused') res.resume();
           });
         })
@@ -118,7 +204,27 @@ export function thunkRemoveDownload(id) {
     let download = getState().downloads.find(download => download.id === id);
     const fullPath = resolve(download.dirname, download.filename);
     dispatch(removeDownload(id));
-    if (download.status === 'canceled') fs.unlink(fullPath, _err => {});
+    if (download.status === 'canceled')
+      fs.unlink(
+        replaceFileExt(fullPath, PARTIAL_DOWNLOAD_EXTENSION),
+        _err => {}
+      );
+  };
+}
+
+export function thunkCompleteDownload(id) {
+  return async (dispatch, getState) => {
+    const rename = pify(fs.rename, { multiArgs: true });
+    const download = getState().downloads.find(download => download.id === id);
+    await rename(
+      replaceFileExt(
+        path.resolve(download.dirname, download.filename),
+        PARTIAL_DOWNLOAD_EXTENSION
+      ),
+      path.resolve(download.dirname, download.filename)
+    );
+    dispatch(completeDownload(id));
+    return Promise.resolve();
   };
 }
 

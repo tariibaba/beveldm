@@ -1,11 +1,7 @@
 import React, { createRef } from 'react';
 import { connect } from 'react-redux';
-import request from 'request';
-import { addNewDownload } from '../actions';
 import { ipcRenderer } from 'electron';
-import path from 'path';
-import contentDipositionFilename from 'content-disposition-filename';
-import pathExists from 'path-exists';
+import { thunkAddNewDownload } from '../thunks';
 
 function AddNewDownload({ onAdd = () => {} }) {
   const url = createRef();
@@ -40,66 +36,11 @@ function AddNewDownload({ onAdd = () => {} }) {
   );
 }
 
-function getFileName(url, headers) {
-  if (headers['content-disposition'])
-    return contentDipositionFilename(headers['content-disposition']);
-  else {
-    const urlobj = new URL(url);
-    return path.basename(urlobj.origin + urlobj.pathname);
-  }
-}
-
-function getFileSize(headers) {
-  return parseInt(headers['content-length']);
-}
-
-async function getAvailableFileName(dirname, filename, downloads) {
-  const extension = path.extname(filename);
-  const nameWithoutExtension = filename.replace(extension, '');
-  let suffix = 0;
-  let availableFilename = filename;
-  let fullPath = path.resolve(dirname, availableFilename);
-
-  while (await pathExists(fullPath)) {
-    suffix++;
-    availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
-    fullPath = path.resolve(dirname, availableFilename);
-  }
-
-  downloads.forEach(download => {
-    const downloadPath = path.resolve(download.dirname, download.filename);
-    if (downloadPath === fullPath) {
-      suffix++;
-      availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
-      fullPath = path.resolve(dirname, availableFilename);
-    }
-  });
-
-  return availableFilename;
-}
-
-let downloads;
 export default connect(
-  state => {
-    downloads = state.downloads;
-    return {};
-  },
+  null, 
   dispatch => ({
     onAdd: (url, dirname) => {
-      request.get(url).on('response', async res => {
-        dispatch(
-          addNewDownload(
-            url,
-            dirname,
-            await getAvailableFileName(
-              dirname,
-              getFileName(url, res.headers),
-              downloads
-            ),
-            getFileSize(res.headers)
-          )
-        );
-      });
+      dispatch(thunkAddNewDownload(url, dirname));
     }
   })
 )(AddNewDownload);
