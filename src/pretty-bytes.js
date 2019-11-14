@@ -1,4 +1,7 @@
 export default function (bytes) {
+  if (bytes === 0)
+    return '0 B';
+    
   const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   let unitIndex = 0;
   let prettyBytes = bytes;
