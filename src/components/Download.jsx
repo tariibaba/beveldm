@@ -7,7 +7,7 @@ import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
 import { thunkCancelDownload, thunkRemoveDownload } from '../thunks';
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from '../pretty-bytes';
 
 function Download({
   id,
