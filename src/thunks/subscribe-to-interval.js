@@ -1,6 +1,6 @@
 import { subscribeToInterval, setDownloadInterval } from '../actions';
 
-export function thunkSubscribeToInterval(id, action) {
+export default function thunkSubscribeToInterval(id, action) {
   return async (dispatch, getState) => {
     if (getState().intervalSubscribers.length === 0) {
       dispatch(thunkSetDownloadInterval());

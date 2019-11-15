@@ -1,7 +1,7 @@
 import thunkPauseDownload from './pause-download';
 import Store from 'electron-store';
 
-export function saveState() {
+export default function saveState() {
   return async (dispatch, getState) => {
     getState().downloads.forEach(async download => {
       await dispatch(thunkPauseDownload(download.id));

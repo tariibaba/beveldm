@@ -8,7 +8,7 @@ import fs from 'fs';
 import { updateBytesDownloaded } from '../actions';
 import { PARTIAL_DOWNLOAD_EXTENSION } from '../constants';
 
-export function thunkResumeDownload(id) {
+export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     if (download.id === 'resuming') return;

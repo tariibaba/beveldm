@@ -6,7 +6,7 @@ import { httpGetPromise } from '../promisified';
 import { replaceFileExt } from './helpers';
 import { PARTIAL_DOWNLOAD_EXTENSION } from '../constants';
 
-export function thunkStartDownload(id) {
+export default function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     if (download.status === 'starting') return;

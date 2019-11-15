@@ -4,7 +4,7 @@ import { removeDownload } from '../actions';
 import { replaceFileExt } from './helpers';
 import { PARTIAL_DOWNLOAD_EXTENSION } from '../constants';
 
-export function thunkRemoveDownload(id) {
+export default function thunkRemoveDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     const fullPath = path.resolve(download.dirname, download.filename);

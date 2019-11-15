@@ -5,7 +5,7 @@ import path from 'path';
 import { completeDownload } from '../actions';
 import fs from 'fs';
 
-export function thunkCompleteDownload(id) {
+export default function thunkCompleteDownload(id) {
   return async (dispatch, getState) => {
     const rename = pify(fs.rename, { multiArgs: true });
     const download = getState().downloads.find(download => download.id === id);
