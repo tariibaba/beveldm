@@ -19,7 +19,8 @@
     "redux-thunk": "^2.3.0",
     "request": "^2.88.0",
     "typeface-roboto": "^0.0.75",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "when-expression": "^0.0.2"
   },
   "scripts": {
     "start": "rescripts start",

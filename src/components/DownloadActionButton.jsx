@@ -5,6 +5,14 @@ import {
   thunkPauseDownload,
   thunkResumeDownload
 } from '../thunks';
+import { BlueButton, WhiteButton } from './CustomButtons';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    marginRight: '5px'
+  }
+}));
 
 function DownloadActionButton({ id, status, dispatch }) {
   let action;
@@ -47,9 +55,24 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   };
 
-  return (
-    status !== 'complete' && <button onClick={handleClick}>{action}</button>
-  );
+  const classes = useStyles();
+
+  if (status !== 'complete') {
+    const Button =
+      status === 'paused' || status === 'notstarted' || status === 'canceled'
+        ? BlueButton
+        : WhiteButton;
+    return (
+      <Button
+        onClick={handleClick}
+        variant="contained"
+        size="small"
+        style={{ marginRight: '5px' }}
+      >
+        {action}
+      </Button>
+    );
+  } else return null;
 }
 
 export default connect()(DownloadActionButton);

@@ -1,13 +1,37 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { thunkAddNewDownload } from '../thunks';
+import {
+  Fab,
+  makeStyles,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  IconButton,
+  DialogActions,
+  Button
+} from '@material-ui/core';
+import { Add, FolderOpen } from '@material-ui/icons';
+
+const useStyles = makeStyles(theme => ({
+  fabButton: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    margin: '0 auto',
+    bottom: -25
+  }
+}));
 
 function AddNewDownload({ onAdd = () => {} }) {
   const url = createRef();
   const filePath = createRef();
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = e => {
+    setOpen(false);
     e.preventDefault();
     onAdd(url.current.value, filePath.current.value);
     url.current.value = null;
@@ -21,17 +45,49 @@ function AddNewDownload({ onAdd = () => {} }) {
     });
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const classes = useStyles();
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input name="file" type="text" placeholder="Save path" ref={filePath} />
-        <button type="button" onClick={chooseFile}>
-          Choose file
-        </button>
-        <br />
-        <input name="url" type="text" placeholder="Enter url" ref={url} />
-        <button type="submit">Add</button>
-      </form>
+      <Fab className={classes.fabButton} onClick={handleClickOpen}>
+        <Add />
+      </Fab>
+      <Dialog open={open}>
+        <DialogTitle>Add new download</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            name="url"
+            type="text"
+            placeholder="Url"
+            inputRef={url}
+          />
+          <br />
+          <TextField
+            name="file"
+            type="text"
+            placeholder="Save folder"
+            inputRef={filePath}
+          />
+          <IconButton onClick={chooseFile}>
+            <FolderOpen />
+          </IconButton>
+          <DialogActions>
+            <Button type="submit" onClick={handleSubmit}>
+              Add
+            </Button>
+            <Button onClick={handleCancel}>Cancel</Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,0 +1,33 @@
+.Download {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  --blue: #005ce6;
+}
+
+.Download-link-button {
+  background-color: transparent;
+  border: none;
+  color: var(--blue);
+  font-size: 1em;
+  font-family: 'Roboto';
+  margin: 0;
+  padding: 0;
+}
+
+.Download-url {
+  display: inline-block;
+  margin-top: 9px;
+  color: #606060;
+  cursor: pointer;
+}
+
+.Download-file {
+  display: inline-block;
+  font-weight: 500;
+  cursor: text;
+}
+
+.Download-show-in-folder {
+  margin-top: 15px;
+  cursor: pointer;
+}
