@@ -1,4 +1,4 @@
-import { startingDownload } from '../actions';
+import { resumingDownload } from '../actions';
 import { resumeDownload } from '../actions';
 import { httpGetPromise } from '../promisified';
 import path from 'path';
@@ -11,8 +11,8 @@ import { PARTIAL_DOWNLOAD_EXTENSION } from '../constants';
 export function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
-    if (download.id === 'starting') return;
-    dispatch(startingDownload(id));
+    if (download.id === 'resuming') return;
+    dispatch(resumingDownload(id));
 
     if (download.res) {
       download.res.resume();

@@ -10,13 +10,14 @@ function DownloadActionButton({ id, status, dispatch }) {
   let action;
   switch (status) {
     case 'notstarted':
+    case 'starting':
       action = 'Start';
       break;
-    case 'starting':
     case 'started':
       action = 'Pause';
       break;
     case 'paused':
+    case 'resuming':
       action = 'Resume';
       break;
     case 'canceled':
