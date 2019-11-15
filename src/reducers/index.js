@@ -16,81 +16,81 @@ export function downloads(state = [], action) {
         }
       ];
     case C.START_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            res: action.res,
-            status: action.status,
-            resumable: action.resumable
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              res: action.res,
+              status: action.status,
+              resumable: action.resumable
+            }
+          : download
+      );
     case C.STARTING_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            status: 'starting'
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: 'starting'
+            }
+          : download
+      );
     case C.UPDATE_BYTES_DOWNLOADED:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            bytesDownloaded: action.bytesDownloaded
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              bytesDownloaded: action.bytesDownloaded
+            }
+          : download
+      );
     case C.PAUSE_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            status: action.status
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status
+            }
+          : download
+      );
     case C.RESUME_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            res: action.res,
-            status: action.status
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              res: action.res,
+              status: action.status
+            }
+          : download
+      );
     case C.RESUMING_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            status: action.status
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status
+            }
+          : download
+      );
     case C.COMPLETE_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            status: action.status
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status
+            }
+          : download
+      );
     case C.CANCEL_DOWNLOAD:
-      return state.map(download => {
-        if (download.id === action.id) {
-          return {
-            ...download,
-            status: action.status,
-            res: undefined
-          };
-        } else return download;
-      });
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status,
+              res: undefined
+            }
+          : download
+      );
     case C.REMOVE_DOWNLOAD:
       return state.filter(download => download.id !== action.id);
     default:
