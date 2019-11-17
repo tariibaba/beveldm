@@ -1,13 +1,15 @@
 import path from 'path';
 import { addNewDownload } from '../actions';
-import { httpGetPromise } from '../promisified';
 import pathExists from 'path-exists';
 import { PARTIAL_DOWNLOAD_EXTENSION } from '../constants';
 import contentDipositionFilename from 'content-disposition-filename';
+import request from 'request';
 
 export default function thunkAddNewDownload(url, dirname) {
   return async (dispatch, getState) => {
-    const res = await httpGetPromise(url);
+    const res = await new Promise(async resolve =>
+      request.get(url).on('response', res => resolve(res))
+    );
     const downloads = getState().downloads;
     dispatch(
       addNewDownload(
