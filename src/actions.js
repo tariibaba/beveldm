@@ -14,6 +14,9 @@ const SUBSCRIBE_TO_INTERVAL = 'SUBSCRIBE_TO_INTERVAL';
 const UNSUBSCRIBE_FROM_INTERVAL = 'UNSUBSCRIBE_FROM_INTERVAL';
 const STARTING_DOWNLOAD = 'STARTING_DOWNLOAD';
 const RESUMING_DOWNLOAD = 'RESUMING_DOWNLOAD';
+const CHANGE_DOWNLOAD_URL = 'CHANGE_DOWNLOAD_URL';
+const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR';
+const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -29,15 +32,25 @@ const C = {
   SUBSCRIBE_TO_INTERVAL,
   UNSUBSCRIBE_FROM_INTERVAL,
   STARTING_DOWNLOAD,
-  RESUMING_DOWNLOAD
+  RESUMING_DOWNLOAD,
+  CHANGE_DOWNLOAD_URL,
+  DOWNLOAD_ERROR,
+  CHANGE_DOWNLOAD_BASIC_INFO
 };
 
-export function addNewDownload(url, dirname, filename, size) {
+export function addNewDownload(
+  url,
+  dirname,
+  filename,
+  availableFilename,
+  size
+) {
   return {
     type: ADD_NEW_DOWNLOAD,
     id: v4(),
     url,
     filename,
+    availableFilename,
     dirname,
     size,
     status: 'notstarted',
@@ -138,6 +151,33 @@ export function unsubscribeFromInterval(id) {
   return {
     type: UNSUBSCRIBE_FROM_INTERVAL,
     id
+  };
+}
+
+export function changeDownloadUrl(id, newUrl) {
+  return {
+    type: CHANGE_DOWNLOAD_URL,
+    id,
+    newUrl
+  };
+}
+
+export function changeDownloadBasicInfo(id, filename, availableFilename, size) {
+  return {
+    type: CHANGE_DOWNLOAD_BASIC_INFO,
+    id,
+    filename,
+    availableFilename,
+    size
+  };
+}
+
+export function downloadError(id, error) {
+  return {
+    type: DOWNLOAD_ERROR,
+    id,
+    status: 'error',
+    error
   };
 }
 

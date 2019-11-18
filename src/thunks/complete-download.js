@@ -11,10 +11,10 @@ export default function thunkCompleteDownload(id) {
     const download = getState().downloads.find(download => download.id === id);
     await rename(
       replaceFileExt(
-        path.resolve(download.dirname, download.filename),
+        path.resolve(download.dirname, download.availableFilename),
         PARTIAL_DOWNLOAD_EXTENSION
       ),
-      path.resolve(download.dirname, download.filename)
+      path.resolve(download.dirname, download.availableFilename)
     );
     dispatch(completeDownload(id));
     return Promise.resolve();

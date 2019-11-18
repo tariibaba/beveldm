@@ -29,6 +29,7 @@ function DownloadActionButton({ id, status, dispatch }) {
       action = 'Resume';
       break;
     case 'canceled':
+    case 'error':
       action = 'Retry';
       break;
     default:
@@ -36,7 +37,7 @@ function DownloadActionButton({ id, status, dispatch }) {
       break;
   }
 
-  const handleClick = () => {
+  const handleClick = async () => {
     switch (status) {
       case 'notstarted':
         dispatch(thunkStartDownload(id));
@@ -45,9 +46,8 @@ function DownloadActionButton({ id, status, dispatch }) {
         dispatch(thunkPauseDownload(id));
         break;
       case 'paused':
-        dispatch(thunkResumeDownload(id));
-        break;
       case 'canceled':
+      case 'error':
         dispatch(thunkResumeDownload(id));
         break;
       default:
@@ -55,11 +55,9 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   };
 
-  const classes = useStyles();
-
   if (status !== 'complete') {
     const Button =
-      status === 'paused' || status === 'notstarted' || status === 'canceled'
+      status === 'paused' || status === 'notstarted' || status === 'canceled' || status === 'error'
         ? BlueButton
         : WhiteButton;
     return (

@@ -8,6 +8,7 @@ import thunkRemoveDownload from './remove-download';
 import thunkSubscribeToInterval from './subscribe-to-interval';
 import saveState from './save-state';
 import loadState from './load-state';
+import thunkChangeDownloadUrl from './change-download-url';
 
 export {
   thunkAddNewDownload,
@@ -19,5 +20,6 @@ export {
   thunkRemoveDownload,
   thunkSubscribeToInterval,
   saveState,
-  loadState
+  loadState,
+  thunkChangeDownloadUrl
 };

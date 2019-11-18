@@ -9,6 +9,7 @@ export function downloads(state = [], action) {
           id: action.id,
           url: action.url,
           filename: action.filename,
+          availableFilename: action.availableFilename,
           dirname: action.dirname,
           size: action.size,
           status: action.status,
@@ -93,6 +94,37 @@ export function downloads(state = [], action) {
       );
     case C.REMOVE_DOWNLOAD:
       return state.filter(download => download.id !== action.id);
+    case C.CHANGE_DOWNLOAD_URL:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              url: action.newUrl,
+              res: undefined
+            }
+          : download
+      );
+    case C.DOWNLOAD_ERROR:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status,
+              error: action.error
+            }
+          : download
+      );
+    case C.CHANGE_DOWNLOAD_BASIC_INFO:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              filename: action.filename,
+              availableFilename: action.availableFilename,
+              size: action.size
+            }
+          : download
+      );
     default:
       return state;
   }
