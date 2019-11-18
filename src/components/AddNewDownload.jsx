@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { thunkAddNewDownload } from '../thunks';
@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AddNewDownload({ onAdd = () => {} }) {
-  const url = createRef();
-  const filePath = createRef();
+  const url = useRef();
+  const filePath = useRef();
   const [open, setOpen] = useState(false);
 
   const handleSubmit = e => {
