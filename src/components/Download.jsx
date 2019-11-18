@@ -16,8 +16,8 @@ import {
 import './Download.css';
 import { WhiteButton } from './CustomButtons';
 import { Close } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
-import { grey } from '@material-ui/core/colors';
+import { makeStyles, withStyles } from '@material-ui/styles';
+import { grey, blue } from '@material-ui/core/colors';
 import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
 
@@ -34,8 +34,19 @@ const useStyles = makeStyles(theme => ({
   iconButton: {
     float: 'right',
     marginRight: '-14px'
+  },
+  colorLinearProgress: {
+    width: '95%',
+    padding: '0',
+    marginBottom: '10px',
   }
 }));
+
+const ColorLinearProgress = withStyles({
+  barColorPrimary: {
+    backgroundColor: blue['600']
+  },
+})(LinearProgress);
 
 const filenameStyles = {
   error: {
@@ -172,14 +183,10 @@ function Download({
               status !== 'canceled' &&
               status !== 'error' && (
                 <PeriodicUpdate start={status === 'started'}>
-                  <LinearProgress
+                  <ColorLinearProgress
                     value={(bytesDownloaded / size) * 100}
                     variant="determinate"
-                    style={{
-                      width: '100%',
-                      padding: '0',
-                      marginBottom: '10px'
-                    }}
+                    className={classes.colorLinearProgress}
                   />
                 </PeriodicUpdate>
               )}
