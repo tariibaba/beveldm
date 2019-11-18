@@ -23,10 +23,16 @@ export default function thunkStartDownload(id) {
     if (download.filename !== filename || download.size !== size)
       dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
     else {
-      dispatch(startDownload(id, res, res.statusCode === 206));
-      const fullPath = getPartialDownloadPath(download);
-      const stream = fs.createWriteStream(fullPath);
-      dispatch(thunkDownloadFile(id, res, stream));
+      // The download status might have changed since dispatching startingDownload
+      download = getState().downloads.find(
+        download => download.id === id
+      );
+      if (download.status === 'starting') {
+        dispatch(startDownload(id, res, res.statusCode === 206));
+        const fullPath = getPartialDownloadPath(download);
+        const stream = fs.createWriteStream(fullPath);
+        dispatch(thunkDownloadFile(id, res, stream));
+      }
     }
   };
 }

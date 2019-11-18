@@ -46,8 +46,12 @@ export default function thunkResumeDownload(id) {
           dispatch(updateBytesDownloaded(id, 0));
           stream = fs.createWriteStream(fullpath);
         } else stream = fs.createWriteStream(fullpath, { flags: 'a' });
-        dispatch(resumeDownload(id, res));
-        dispatch(thunkDownloadFile(id, res, stream));
+        // The download status might have changed since dispatching resumingDownload
+        download = getState().downloads.find(download => download.id === id);
+        if (download.status === 'resuming') {
+          dispatch(resumeDownload(id, res));
+          dispatch(thunkDownloadFile(id, res, stream));
+        }
       }
     }
     return Promise.resolve();
@@ -83,8 +87,12 @@ function thunkResumeFromError(id, code) {
       default:
         break;
     }
-    dispatch(resumeDownload(id, res));
-    dispatch(thunkDownloadFile(id, res, stream));
+    // The download status might have changed since dispatching resumingDownload
+    download = getState().downloads.find(download => download.id === id);
+    if (download.status === 'resuming') {
+      dispatch(resumeDownload(id, res));
+      dispatch(thunkDownloadFile(id, res, stream));
+    }
     return Promise.resolve();
   };
 }
