@@ -21,7 +21,7 @@ export default async function getAvailableFilename(
   }
 
   downloads.forEach(download => {
-    const downloadPath = path.resolve(download.dirname, download.filename);
+    const downloadPath = path.resolve(download.dirname, download.availableFilename);
     if (downloadPath === fullPath) {
       suffix++;
       availableWithoutExtension = `${nameWithoutExtension} (${suffix})`;
