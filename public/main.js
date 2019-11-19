@@ -13,7 +13,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    backgroundColor: '#fff'
   });
 
   mainWindow.setMenu(null);
