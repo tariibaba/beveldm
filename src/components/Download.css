@@ -16,7 +16,7 @@
 
 .Download-url {
   display: inline-block;
-  margin-top: 9px;
+  margin-top: 10px;
   color: #606060;
   cursor: pointer;
 }
@@ -28,6 +28,7 @@
 }
 
 .Download-show-in-folder {
-  margin-top: 15px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   cursor: pointer;
 }

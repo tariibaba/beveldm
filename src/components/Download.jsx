@@ -31,7 +31,11 @@ const useStyles = makeStyles(theme => ({
   },
   cardContent: {
     margin: '3px',
-    paddingTop: 0
+    paddingTop: 0,
+    minHeight: '100px',
+    '&:last-child': {
+      paddingBottom: 0
+    },
   },
   iconButton: {
     float: 'right',
@@ -40,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   colorLinearProgress: {
     width: '95%',
     padding: '0',
-    marginBottom: '10px'
+    marginTop: '20px'
   }
 }));
 
@@ -82,13 +86,13 @@ function Download({
   const fullPath = path.resolve(dirname, availableFilename);
 
   const openFolder = async () => {
-    if (!await pathExists(fullPath)) dispatch(downloadRemoved(id));
+    if (!(await pathExists(fullPath))) dispatch(downloadRemoved(id));
     else shell.showItemInFolder(fullPath);
   };
 
   const openFile = async () => {
     if (status === 'complete') {
-      if (!await pathExists(fullPath)) dispatch(downloadRemoved(id));
+      if (!(await pathExists(fullPath))) dispatch(downloadRemoved(id));
       else shell.openItem(fullPath);
     }
   };
@@ -133,33 +137,34 @@ function Download({
                 <DownloadMoreActions id={id} currentUrl={url} />
               </div>
             )}
-            <button
-              className="Download-link-button Download-file"
-              onClick={openFile}
-              style={when(status)({
-                canceled: filenameStyles.error,
-                complete: filenameStyles.complete,
-                error: filenameStyles.error,
-                deleted: filenameStyles.error,
-                else: {}
-              })}
-            >
-              {availableFilename}
-            </button>
-            <span style={{ marginLeft: 10, fontWeight: 500 }}>
-              {when(status)({
-                canceled: 'Canceled',
-                error: error
-                  ? when(error.code)({
-                      ERR_FILE_CHANGED: 'File changed',
-                      else: null
-                    })
-                  : null,
-                deleted: 'Deleted',
-                else: null
-              })}
-            </span>
-            <br />
+            <div>
+              <button
+                className="Download-link-button Download-file"
+                onClick={openFile}
+                style={when(status)({
+                  canceled: filenameStyles.error,
+                  complete: filenameStyles.complete,
+                  error: filenameStyles.error,
+                  deleted: filenameStyles.error,
+                  else: {}
+                })}
+              >
+                {availableFilename}
+              </button>
+              <span style={{ marginLeft: 10, fontWeight: 500 }}>
+                {when(status)({
+                  canceled: 'Canceled',
+                  error: error
+                    ? when(error.code)({
+                        ERR_FILE_CHANGED: 'File changed',
+                        else: null
+                      })
+                    : null,
+                  deleted: 'Deleted',
+                  else: null
+                })}
+              </span>
+            </div>
             <div>
               <button
                 className="Download-link-button Download-url"
@@ -168,20 +173,21 @@ function Download({
                 {url}
               </button>
             </div>
-            <br />
             {status !== 'complete' &&
               status !== 'canceled' &&
               status !== 'error' &&
               status !== 'deleted' && (
-                <PeriodicUpdate start={status === 'started'} interval={500}>
-                  <div style={{ marginBottom: '10px' }}>
-                    <DownloadSpeed
-                      bytesDownloaded={bytesDownloaded}
-                      status={status}
-                    />
-                    {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
-                  </div>
-                </PeriodicUpdate>
+                <div style={{ marginTop: '20px' }}>
+                  <PeriodicUpdate start={status === 'started'} interval={500}>
+                    <div>
+                      <DownloadSpeed
+                        bytesDownloaded={bytesDownloaded}
+                        status={status}
+                      />
+                      {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
+                    </div>
+                  </PeriodicUpdate>
+                </div>
               )}
             {status === 'complete' && (
               <button

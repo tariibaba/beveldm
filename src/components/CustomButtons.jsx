@@ -6,7 +6,10 @@ export const ThemeButton = withStyles({
   root: {
     textTransform: 'none',
     boxShadow: 'none',
-    border: '0.5px solid #c0c0c0',
+    border: '0.5px solid #e0e0e0',
+    marginTop: '15px',
+    marginBottom: '10px',
+    padding: '5px 15px',
     '&:hover': {
       boxShadow: 'none',
       backgroundColor: 'transparent',
