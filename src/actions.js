@@ -17,6 +17,7 @@ const RESUMING_DOWNLOAD = 'RESUMING_DOWNLOAD';
 const CHANGE_DOWNLOAD_URL = 'CHANGE_DOWNLOAD_URL';
 const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR';
 const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
+const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -35,7 +36,8 @@ const C = {
   RESUMING_DOWNLOAD,
   CHANGE_DOWNLOAD_URL,
   DOWNLOAD_ERROR,
-  CHANGE_DOWNLOAD_BASIC_INFO
+  CHANGE_DOWNLOAD_BASIC_INFO,
+  DOWNLOAD_REMOVED
 };
 
 export function addNewDownload(
@@ -178,6 +180,14 @@ export function downloadError(id, error) {
     id,
     status: 'error',
     error
+  };
+}
+
+export function downloadRemoved(id) {
+  return {
+    type: DOWNLOAD_REMOVED,
+    id,
+    status: 'deleted'
   };
 }
 

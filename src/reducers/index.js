@@ -125,6 +125,15 @@ export function downloads(state = [], action) {
             }
           : download
       );
+    case C.DOWNLOAD_REMOVED:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status
+            }
+          : download
+      );
     default:
       return state;
   }

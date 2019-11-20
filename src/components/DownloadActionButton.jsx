@@ -55,7 +55,7 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   };
 
-  if (status !== 'complete') {
+  if (status !== 'complete' && status !== 'deleted') {
     const Button =
       status === 'paused' || status === 'notstarted' || status === 'canceled' || status === 'error'
         ? BlueButton

@@ -20,6 +20,8 @@ import { makeStyles, withStyles } from '@material-ui/styles';
 import { grey, blue } from '@material-ui/core/colors';
 import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
+import pathExists from 'path-exists';
+import { downloadRemoved } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   cardError: {
@@ -38,14 +40,14 @@ const useStyles = makeStyles(theme => ({
   colorLinearProgress: {
     width: '95%',
     padding: '0',
-    marginBottom: '10px',
+    marginBottom: '10px'
   }
 }));
 
 const ColorLinearProgress = withStyles({
   barColorPrimary: {
     backgroundColor: blue['600']
-  },
+  }
 })(LinearProgress);
 
 const filenameStyles = {
@@ -79,12 +81,16 @@ function Download({
 }) {
   const fullPath = path.resolve(dirname, availableFilename);
 
-  const openFolder = () => {
-    shell.showItemInFolder(fullPath);
+  const openFolder = async () => {
+    if (!await pathExists(fullPath)) dispatch(downloadRemoved(id));
+    else shell.showItemInFolder(fullPath);
   };
 
-  const openFile = () => {
-    if (status === 'complete') shell.openItem(fullPath);
+  const openFile = async () => {
+    if (status === 'complete') {
+      if (!await pathExists(fullPath)) dispatch(downloadRemoved(id));
+      else shell.openItem(fullPath);
+    }
   };
 
   const openUrl = () => {
@@ -106,20 +112,23 @@ function Download({
       <Card
         style={{ position: 'relative' }}
         className={
-          status === 'canceled' || status === 'error' ? classes.cardError : {}
+          status === 'canceled' || status === 'error' || status === 'deleted'
+            ? classes.cardError
+            : {}
         }
       >
         <CardContent className={classes.cardContent}>
           <div>
             {(status === 'canceled' ||
               status === 'complete' ||
-              status === 'error') && (
+              status === 'error' ||
+              status === 'deleted') && (
               <IconButton className={classes.iconButton} onClick={remove}>
                 <Close style={{ fontSize: '15px' }} />
               </IconButton>
             )}
             <br />
-            {status !== 'complete' && (
+            {status !== 'complete' && status !== 'deleted' && (
               <div style={moreVert}>
                 <DownloadMoreActions id={id} currentUrl={url} />
               </div>
@@ -131,6 +140,7 @@ function Download({
                 canceled: filenameStyles.error,
                 complete: filenameStyles.complete,
                 error: filenameStyles.error,
+                deleted: filenameStyles.error,
                 else: {}
               })}
             >
@@ -145,6 +155,7 @@ function Download({
                       else: null
                     })
                   : null,
+                deleted: 'Deleted',
                 else: null
               })}
             </span>
@@ -160,7 +171,8 @@ function Download({
             <br />
             {status !== 'complete' &&
               status !== 'canceled' &&
-              status !== 'error' && (
+              status !== 'error' &&
+              status !== 'deleted' && (
                 <PeriodicUpdate start={status === 'started'} interval={500}>
                   <div style={{ marginBottom: '10px' }}>
                     <DownloadSpeed
@@ -181,7 +193,8 @@ function Download({
             )}
             {status !== 'complete' &&
               status !== 'canceled' &&
-              status !== 'error' && (
+              status !== 'error' &&
+              status !== 'deleted' && (
                 <PeriodicUpdate start={status === 'started'}>
                   <ColorLinearProgress
                     value={(bytesDownloaded / size) * 100}
@@ -193,7 +206,8 @@ function Download({
             <DownloadActionButton id={id} status={status} />
             {status !== 'canceled' &&
               status !== 'complete' &&
-              status !== 'error' && (
+              status !== 'error' &&
+              status !== 'deleted' && (
                 <WhiteButton onClick={cancel} variant="contained" size="small">
                   Cancel
                 </WhiteButton>
