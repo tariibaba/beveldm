@@ -13,7 +13,6 @@ import {
   CardContent,
   IconButton
 } from '@material-ui/core';
-import './Download.css';
 import { WhiteButton } from './CustomButtons';
 import { Close } from '@material-ui/icons';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100px',
     '&:last-child': {
       paddingBottom: 0
-    },
+    }
   },
   iconButton: {
     float: 'right',
@@ -55,6 +54,11 @@ const ColorLinearProgress = withStyles({
 })(LinearProgress);
 
 const filenameStyles = {
+  default: {
+    display: 'inline-block',
+    fontWeight: '500',
+    cursor: 'text'
+  },
   error: {
     color: grey['600'],
     textDecoration: 'line-through'
@@ -62,6 +66,37 @@ const filenameStyles = {
   complete: {
     cursor: 'pointer'
   }
+};
+
+const linkButtonStyles = {
+  default: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: '#005ce6',
+    fontSize: '1em',
+    fontFamily: 'Roboto',
+    margin: 0,
+    padding: 0
+  }
+};
+
+const urlStyles = {
+  display: 'inline-block',
+  marginTop: '10px',
+  color: '#606060',
+  cursor: 'pointer'
+};
+
+const showInFolderButtonStyles = {
+  marginTop: '30px',
+  marginBottom: '20px',
+  cursor: 'pointer'
+};
+
+const cardDefault = {
+  marginTop: '15px',
+  marginBottom: '15px',
+  position: 'relative'
 };
 
 const moreVert = {
@@ -112,117 +147,121 @@ function Download({
   const classes = useStyles();
 
   return (
-    <div className="Download">
-      <Card
-        style={{ position: 'relative' }}
-        className={
-          status === 'canceled' || status === 'error' || status === 'deleted'
-            ? classes.cardError
-            : {}
-        }
-      >
-        <CardContent className={classes.cardContent}>
+    <Card
+      style={cardDefault}
+      className={
+        status === 'canceled' || status === 'error' || status === 'deleted'
+          ? classes.cardError
+          : {}
+      }
+    >
+      <CardContent className={classes.cardContent}>
+        <div>
+          {(status === 'canceled' ||
+            status === 'complete' ||
+            status === 'error' ||
+            status === 'deleted') && (
+            <IconButton className={classes.iconButton} onClick={remove}>
+              <Close style={{ fontSize: '15px' }} />
+            </IconButton>
+          )}
+          <br />
+          {status !== 'complete' && status !== 'deleted' && (
+            <div style={moreVert}>
+              <DownloadMoreActions id={id} currentUrl={url} />
+            </div>
+          )}
           <div>
-            {(status === 'canceled' ||
-              status === 'complete' ||
-              status === 'error' ||
-              status === 'deleted') && (
-              <IconButton className={classes.iconButton} onClick={remove}>
-                <Close style={{ fontSize: '15px' }} />
-              </IconButton>
-            )}
-            <br />
-            {status !== 'complete' && status !== 'deleted' && (
-              <div style={moreVert}>
-                <DownloadMoreActions id={id} currentUrl={url} />
-              </div>
-            )}
-            <div>
-              <button
-                className="Download-link-button Download-file"
-                onClick={openFile}
-                style={when(status)({
+            <button
+              onClick={openFile}
+              style={{
+                ...linkButtonStyles.default,
+                ...filenameStyles.default,
+                ...when(status)({
                   canceled: filenameStyles.error,
                   complete: filenameStyles.complete,
                   error: filenameStyles.error,
                   deleted: filenameStyles.error,
                   else: {}
-                })}
-              >
-                {availableFilename}
-              </button>
-              <span style={{ marginLeft: 10, fontWeight: 500 }}>
-                {when(status)({
-                  canceled: 'Canceled',
-                  error: error
-                    ? when(error.code)({
-                        ERR_FILE_CHANGED: 'File changed',
-                        else: null
-                      })
-                    : null,
-                  deleted: 'Deleted',
-                  else: null
-                })}
-              </span>
-            </div>
-            <div>
-              <button
-                className="Download-link-button Download-url"
-                onClick={openUrl}
-              >
-                {url}
-              </button>
-            </div>
-            {status !== 'complete' &&
-              status !== 'canceled' &&
-              status !== 'error' &&
-              status !== 'deleted' && (
-                <div style={{ marginTop: '20px' }}>
-                  <PeriodicUpdate start={status === 'started'} interval={500}>
-                    <div>
-                      <DownloadSpeed
-                        bytesDownloaded={bytesDownloaded}
-                        status={status}
-                      />
-                      {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
-                    </div>
-                  </PeriodicUpdate>
-                </div>
-              )}
-            {status === 'complete' && (
-              <button
-                className="Download-link-button Download-show-in-folder"
-                onClick={openFolder}
-              >
-                Show in folder
-              </button>
-            )}
-            {status !== 'complete' &&
-              status !== 'canceled' &&
-              status !== 'error' &&
-              status !== 'deleted' && (
-                <PeriodicUpdate start={status === 'started'}>
-                  <ColorLinearProgress
-                    value={(bytesDownloaded / size) * 100}
-                    variant="determinate"
-                    className={classes.colorLinearProgress}
-                  />
-                </PeriodicUpdate>
-              )}
-            <DownloadActionButton id={id} status={status} />
-            {status !== 'canceled' &&
-              status !== 'complete' &&
-              status !== 'error' &&
-              status !== 'deleted' && (
-                <WhiteButton onClick={cancel} variant="contained" size="small">
-                  Cancel
-                </WhiteButton>
-              )}
-            <br />
+                })
+              }}
+            >
+              {availableFilename}
+            </button>
+            <span style={{ marginLeft: 10, fontWeight: 500 }}>
+              {when(status)({
+                canceled: 'Canceled',
+                error: error
+                  ? when(error.code)({
+                      ERR_FILE_CHANGED: 'File changed',
+                      else: null
+                    })
+                  : null,
+                deleted: 'Deleted',
+                else: null
+              })}
+            </span>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div>
+            <button
+              onClick={openUrl}
+              style={{ ...linkButtonStyles.default, ...urlStyles }}
+            >
+              {url}
+            </button>
+          </div>
+          {status !== 'complete' &&
+            status !== 'canceled' &&
+            status !== 'error' &&
+            status !== 'deleted' && (
+              <div style={{ marginTop: '20px' }}>
+                <PeriodicUpdate start={status === 'started'} interval={500}>
+                  <div>
+                    <DownloadSpeed
+                      bytesDownloaded={bytesDownloaded}
+                      status={status}
+                    />
+                    {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
+                  </div>
+                </PeriodicUpdate>
+              </div>
+            )}
+          {status === 'complete' && (
+            <button
+              onClick={openFolder}
+              style={{
+                ...linkButtonStyles.default,
+                ...showInFolderButtonStyles
+              }}
+            >
+              Show in folder
+            </button>
+          )}
+          {status !== 'complete' &&
+            status !== 'canceled' &&
+            status !== 'error' &&
+            status !== 'deleted' && (
+              <PeriodicUpdate start={status === 'started'}>
+                <ColorLinearProgress
+                  value={(bytesDownloaded / size) * 100}
+                  variant="determinate"
+                  className={classes.colorLinearProgress}
+                />
+              </PeriodicUpdate>
+            )}
+          <DownloadActionButton id={id} status={status} />
+          {status !== 'canceled' &&
+            status !== 'complete' &&
+            status !== 'error' &&
+            status !== 'deleted' && (
+              <WhiteButton onClick={cancel} variant="contained" size="small">
+                Cancel
+              </WhiteButton>
+            )}
+          <br />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
