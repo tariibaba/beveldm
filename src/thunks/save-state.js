@@ -11,10 +11,12 @@ export default function saveState() {
       setTimeout(() => {
         store.set(
           'downloads',
-          getState().downloads.map(download => {
-            const { res, ...d } = { ...download };
-            return d;
-          })
+          getState()
+            .downloads.filter(download => download.status !== 'gettinginfo')
+            .map(download => {
+              const { res, ...d } = { ...download };
+              return d;
+            })
         );
         resolve();
       }, 50);

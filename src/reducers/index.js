@@ -8,12 +8,8 @@ export function downloads(state = [], action) {
         {
           id: action.id,
           url: action.url,
-          filename: action.filename,
-          availableFilename: action.availableFilename,
           dirname: action.dirname,
-          size: action.size,
-          status: action.status,
-          bytesDownloaded: action.bytesDownloaded
+          status: action.status
         }
       ];
     case C.START_DOWNLOAD:
@@ -126,6 +122,15 @@ export function downloads(state = [], action) {
           : download
       );
     case C.DOWNLOAD_REMOVED:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              status: action.status
+            }
+          : download
+      );
+    case C.DOWNLOAD_NOT_STARTED:
       return state.map(download =>
         download.id === action.id
           ? {

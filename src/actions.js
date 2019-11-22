@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 
 const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
+const DOWNLOAD_NOT_STARTED = 'DOWNLOAD_NOT_STARTED';
 const START_DOWNLOAD = 'START_DOWNLOAD';
 const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
@@ -37,26 +38,21 @@ const C = {
   CHANGE_DOWNLOAD_URL,
   DOWNLOAD_ERROR,
   CHANGE_DOWNLOAD_BASIC_INFO,
-  DOWNLOAD_REMOVED
+  DOWNLOAD_REMOVED,
+  DOWNLOAD_NOT_STARTED
 };
 
 export function addNewDownload(
+  id,
   url,
-  dirname,
-  filename,
-  availableFilename,
-  size
+  dirname
 ) {
   return {
     type: ADD_NEW_DOWNLOAD,
-    id: v4(),
+    id,
     url,
-    filename,
-    availableFilename,
     dirname,
-    size,
-    status: 'notstarted',
-    bytesDownloaded: 0
+    status: 'gettinginfo'
   };
 }
 
@@ -188,6 +184,14 @@ export function downloadRemoved(id) {
     type: DOWNLOAD_REMOVED,
     id,
     status: 'deleted'
+  };
+}
+
+export function downloadNotStarted(id) {
+  return {
+    type: DOWNLOAD_NOT_STARTED,
+    id,
+    status: 'notstarted'
   };
 }
 

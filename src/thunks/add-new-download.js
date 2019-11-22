@@ -1,22 +1,36 @@
-import { addNewDownload } from '../actions';
+import {
+  addNewDownload,
+  changeDownloadBasicInfo,
+  downloadNotStarted,
+  updateBytesDownloaded,
+  removeDownload
+} from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
+import { v4 } from 'uuid';
 
 export default function thunkAddNewDownload(url, dirname) {
   return async (dispatch, getState) => {
-    const res = await new Promise(async resolve =>
-      request.get(url).on('response', res => resolve(res))
-    );
     const downloads = getState().downloads;
+    const id = v4();
+    dispatch(addNewDownload(id, url, dirname));
+    const res = await new Promise(async resolve =>
+      request
+        .get(url)
+        .on('response', res => resolve(res))
+        .on('error', () => dispatch(removeDownload(id)))
+    );
     const filename = getFilename(url, res.headers);
+    const size = getFileSize(res.headers);
     dispatch(
-      addNewDownload(
-        url,
-        dirname,
+      changeDownloadBasicInfo(
+        id,
         filename,
         await getAvailableFilename(dirname, filename, downloads),
-        getFileSize(res.headers)
+        size
       )
     );
+    dispatch(updateBytesDownloaded(id, 0));
+    dispatch(downloadNotStarted(id));
   };
 }
