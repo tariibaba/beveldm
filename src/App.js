@@ -5,7 +5,9 @@ import { ipcRenderer } from 'electron';
 import { saveState, loadState } from './thunks';
 import './App.css';
 import DownloadAppBar from './components/DownloadAppBar';
-import { grey } from '@material-ui/core/colors';
+import { grey, blue } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 
 const styles = {
   App: {
@@ -14,6 +16,14 @@ const styles = {
     height: '100%'
   }
 };
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: blue['700']
+    }
+  }
+});
 
 function App({ dispatch }) {
   ipcRenderer.on('close', async () => {
@@ -24,12 +34,14 @@ function App({ dispatch }) {
   dispatch(loadState());
 
   return (
-    <div style={{ height: '100%' }}>
-      <div style={styles.App}>
-        <DownloadAppBar />
-        <DownloadList />
+    <ThemeProvider theme={theme}>
+      <div style={{ height: '100%' }}>
+        <div style={styles.App}>
+          <DownloadAppBar />
+          <DownloadList />
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 

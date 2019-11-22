@@ -7,7 +7,7 @@ export const ThemeButton = withStyles({
     textTransform: 'none',
     boxShadow: 'none',
     border: '0.5px solid #e0e0e0',
-    marginTop: '15px',
+    marginTop: '20px',
     marginBottom: '10px',
     padding: '5px 15px',
     '&:hover': {
@@ -23,21 +23,24 @@ export const ThemeButton = withStyles({
 
 export const WhiteButton = withStyles({
   root: {
-    color: blue['A700'],
+    color: blue['700'],
     backgroundColor: 'white',
     '&:hover': {
       backgroundColor: blue['50']
-    },
+    }
   }
 })(ThemeButton);
 
 export const BlueButton = withStyles({
   root: {
     color: 'white',
-    backgroundColor: blue['600'],
-    borderColor: blue['600'],
+    backgroundColor: blue['700'],
+    border: 'none',
     '&:hover': {
-      backgroundColor: blue['600'],
+      backgroundColor: blue['700']
+    },
+    '&:focus': {
+      backgroundColor: blue['700']
     }
   }
 })(ThemeButton);

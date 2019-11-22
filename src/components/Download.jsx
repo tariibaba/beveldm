@@ -23,11 +23,6 @@ import pathExists from 'path-exists';
 import { downloadRemoved } from '../actions';
 
 const useStyles = makeStyles(theme => ({
-  cardError: {
-    backgroundColor: '#fbfbfb',
-    boxShadow: 'none',
-    border: '0.5px solid #e0e0e0'
-  },
   cardContent: {
     margin: '3px',
     paddingTop: 0,
@@ -43,15 +38,10 @@ const useStyles = makeStyles(theme => ({
   colorLinearProgress: {
     width: '95%',
     padding: '0',
-    marginTop: '20px'
+    marginTop: '20px',
+    backgroundColor: grey['A100']
   }
 }));
-
-const ColorLinearProgress = withStyles({
-  barColorPrimary: {
-    backgroundColor: blue['600']
-  }
-})(LinearProgress);
 
 const filenameStyles = {
   default: {
@@ -60,7 +50,7 @@ const filenameStyles = {
     cursor: 'text'
   },
   error: {
-    color: grey['600'],
+    color: grey['700'] + '99',
     textDecoration: 'line-through'
   },
   complete: {
@@ -72,7 +62,7 @@ const linkButtonStyles = {
   default: {
     backgroundColor: 'transparent',
     border: 'none',
-    color: '#005ce6',
+    color: blue['700'],
     fontSize: '1em',
     fontFamily: 'Roboto',
     margin: 0,
@@ -81,10 +71,15 @@ const linkButtonStyles = {
 };
 
 const urlStyles = {
-  display: 'inline-block',
-  marginTop: '10px',
-  color: '#606060',
-  cursor: 'pointer'
+  default: {
+    display: 'inline-block',
+    marginTop: '10px',
+    color: grey['700'],
+    cursor: 'pointer'
+  },
+  error: {
+    color: grey['700'] + '99',
+  }
 };
 
 const showInFolderButtonStyles = {
@@ -93,18 +88,25 @@ const showInFolderButtonStyles = {
   cursor: 'pointer'
 };
 
-const cardDefault = {
-  marginTop: '15px',
-  marginBottom: '15px',
-  position: 'relative'
+const cardStyles = {
+  default: {
+    marginTop: '15px',
+    marginBottom: '15px',
+    boxShadow: '0px 1px 3px' + grey['A200'],
+    transition: 'none'
+  },
+  error: {
+    backgroundColor: '#ffffff99',
+    boxShadow: 'none',
+    border: '0.5px solid #e0e0e0'
+  }
 };
 
 const moreVert = {
   float: 'right',
-  position: 'absolute',
-  right: 0,
-  top: '25%',
-  bottom: '100%'
+  clear: 'right',
+  position: 'relative',
+  marginRight: '-14px'
 };
 
 function Download({
@@ -148,12 +150,12 @@ function Download({
 
   return (
     <Card
-      style={cardDefault}
-      className={
-        status === 'canceled' || status === 'error' || status === 'deleted'
-          ? classes.cardError
-          : {}
-      }
+      style={{
+        ...cardStyles.default,
+        ...(status === 'canceled' || status === 'error' || status === 'deleted'
+          ? cardStyles.error
+          : {})
+      }}
     >
       <CardContent className={classes.cardContent}>
         <div>
@@ -188,7 +190,7 @@ function Download({
             >
               {availableFilename}
             </button>
-            <span style={{ marginLeft: 10, fontWeight: 500 }}>
+            <span style={{ marginLeft: 10, fontWeight: 500, color: '#000000cd' }}>
               {when(status)({
                 canceled: 'Canceled',
                 error: error
@@ -205,7 +207,15 @@ function Download({
           <div>
             <button
               onClick={openUrl}
-              style={{ ...linkButtonStyles.default, ...urlStyles }}
+              style={{
+                ...linkButtonStyles.default,
+                ...urlStyles.default,
+                ...(status === 'error' ||
+                status === 'deleted' ||
+                status === 'canceled'
+                  ? urlStyles.error
+                  : {})
+              }}
             >
               {url}
             </button>
@@ -242,7 +252,7 @@ function Download({
             status !== 'error' &&
             status !== 'deleted' && (
               <PeriodicUpdate start={status === 'started'}>
-                <ColorLinearProgress
+                <LinearProgress
                   value={(bytesDownloaded / size) * 100}
                   variant="determinate"
                   className={classes.colorLinearProgress}
