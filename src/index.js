@@ -4,12 +4,12 @@ import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { downloads, interval, intervalSubscribers } from './reducers';
+import { downloads, interval, intervalSubscribers, message } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto/index.css';
 
 const store = createStore(
-  combineReducers({ downloads, interval, intervalSubscribers }),
+  combineReducers({ downloads, interval, intervalSubscribers, message }),
   applyMiddleware(reduxThunk)
 );
 

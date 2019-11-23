@@ -163,3 +163,17 @@ export function intervalSubscribers(state = [], action) {
       return state;
   }
 }
+
+export function message(state = {}, action) {
+  switch (action.type) {
+    case C.ALERT:
+      return {
+        value: action.message,
+        type: action.messageType,
+        actionName: action.actionName,
+        action: action.action
+      };
+    default:
+      return state;
+  }
+}

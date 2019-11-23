@@ -8,6 +8,7 @@ import DownloadAppBar from './components/DownloadAppBar';
 import { grey, blue } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import CustomSnackbar from './components/CustomSnackbar';
 
 const styles = {
   App: {
@@ -39,6 +40,7 @@ function App({ dispatch }) {
         <div style={styles.App}>
           <DownloadAppBar />
           <DownloadList />
+          <CustomSnackbar/>
         </div>
       </div>
     </ThemeProvider>

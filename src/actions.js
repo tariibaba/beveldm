@@ -19,6 +19,7 @@ const CHANGE_DOWNLOAD_URL = 'CHANGE_DOWNLOAD_URL';
 const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR';
 const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
 const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
+const ALERT = 'ALERT';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -39,7 +40,8 @@ const C = {
   DOWNLOAD_ERROR,
   CHANGE_DOWNLOAD_BASIC_INFO,
   DOWNLOAD_REMOVED,
-  DOWNLOAD_NOT_STARTED
+  DOWNLOAD_NOT_STARTED,
+  ALERT
 };
 
 export function addNewDownload(
@@ -192,6 +194,16 @@ export function downloadNotStarted(id) {
     type: DOWNLOAD_NOT_STARTED,
     id,
     status: 'notstarted'
+  };
+}
+
+export function alert(message, messageType, action, actionName) {
+  return {
+    type: ALERT,
+    message,
+    messageType,
+    action,
+    actionName
   };
 }
 
