@@ -118,7 +118,8 @@ function Download({
   bytesDownloaded,
   status,
   dispatch,
-  error
+  error,
+  show
 }) {
   const fullPath = path.resolve(dirname, availableFilename);
 
@@ -148,7 +149,7 @@ function Download({
 
   const classes = useStyles();
 
-  return (
+  return show ? (
     <Card
       style={{
         ...cardStyles.default,
@@ -272,7 +273,7 @@ function Download({
         </div>
       </CardContent>
     </Card>
-  );
+  ) : null;
 }
 
 export default connect()(Download);

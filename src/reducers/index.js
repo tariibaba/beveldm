@@ -130,12 +130,31 @@ export function downloads(state = [], action) {
             }
           : download
       );
+    case C.HIDE_DOWNLOAD:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              show: action.show
+            }
+          : download
+      );
+    case C.SHOW_DOWNLOAD:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              show: action.show
+            }
+          : download
+      );
     case C.DOWNLOAD_NOT_STARTED:
       return state.map(download =>
         download.id === action.id
           ? {
               ...download,
-              status: action.status
+              status: action.status,
+              show: action.show
             }
           : download
       );

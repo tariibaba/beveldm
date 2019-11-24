@@ -19,6 +19,8 @@ const CHANGE_DOWNLOAD_URL = 'CHANGE_DOWNLOAD_URL';
 const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR';
 const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
 const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
+const HIDE_DOWNLOAD = 'HIDE_DOWNLOAD';
+const SHOW_DOWNLOAD = 'SHOW_DOWNLOAD';
 const ALERT = 'ALERT';
 
 const C = {
@@ -41,6 +43,8 @@ const C = {
   CHANGE_DOWNLOAD_BASIC_INFO,
   DOWNLOAD_REMOVED,
   DOWNLOAD_NOT_STARTED,
+  HIDE_DOWNLOAD,
+  SHOW_DOWNLOAD,
   ALERT
 };
 
@@ -193,7 +197,24 @@ export function downloadNotStarted(id) {
   return {
     type: DOWNLOAD_NOT_STARTED,
     id,
-    status: 'notstarted'
+    status: 'notstarted',
+    show: true
+  };
+}
+
+export function hideDownload(id) {
+  return {
+    type: HIDE_DOWNLOAD,
+    id,
+    show: false
+  };
+}
+
+export function showDownload(id) {
+  return {
+    type: SHOW_DOWNLOAD,
+    id,
+    show: true
   };
 }
 
