@@ -13,6 +13,10 @@ class DownloadSpeed extends Component {
     return { status: this.props.status };
   }
 
+  componentDidUpdate()
+  {
+  }
+
   render() {
     return (
       this.props.status === 'started' && prettyBytes(this.speed * 2) + '/s - '
