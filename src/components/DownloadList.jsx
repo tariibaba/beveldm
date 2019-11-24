@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Download from './Download';
 import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
@@ -23,15 +23,17 @@ function DownloadList({ downloads = [] }) {
   return (
     <div style={styles.main}>
       <div style={styles.list}>
-        {downloads.map(download =>
-          download.status === 'gettinginfo' ? (
-            <div style={styles.gettingInfo}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <Download key={download.id} {...download} />
-          )
-        )}
+        {downloads.map(download => (
+          <Fragment key={download.id}>
+            {download.status === 'gettinginfo' ? (
+              <div style={styles.gettingInfo}>
+                <CircularProgress />
+              </div>
+            ) : (
+              <Download {...download} />
+            )}
+          </Fragment>
+        ))}
       </div>
     </div>
   );
