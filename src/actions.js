@@ -125,7 +125,8 @@ export function cancelDownload(id) {
   return {
     type: CANCEL_DOWNLOAD,
     id,
-    status: 'canceled'
+    status: 'canceled',
+    res: undefined
   };
 }
 
@@ -162,7 +163,8 @@ export function changeDownloadUrl(id, newUrl) {
   return {
     type: CHANGE_DOWNLOAD_URL,
     id,
-    newUrl
+    newUrl,
+    res: undefined
   };
 }
 
