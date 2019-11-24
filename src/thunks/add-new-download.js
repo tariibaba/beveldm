@@ -3,7 +3,8 @@ import {
   changeDownloadBasicInfo,
   downloadNotStarted,
   updateBytesDownloaded,
-  removeDownload
+  removeDownload,
+  alert
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
@@ -18,7 +19,17 @@ export default function thunkAddNewDownload(url, dirname) {
       request
         .get(url)
         .on('response', res => resolve(res))
-        .on('error', () => dispatch(removeDownload(id)))
+        .on('error', () => {
+          dispatch(removeDownload(id));
+          dispatch(
+            alert(
+              'Network error',
+              'error',
+              () => dispatch(thunkAddNewDownload(url, dirname)),
+              'Retry'
+            )
+          );
+        })
     );
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
