@@ -233,6 +233,7 @@ function Download({
                       status={status}
                     />
                     {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
+                    {status === 'paused' ? ', Paused' : null}
                   </div>
                 </PeriodicUpdate>
               </div>
