@@ -32,9 +32,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.STARTING_DOWNLOAD:
     case C.PAUSE_DOWNLOAD:
-    case C.RESUMING_DOWNLOAD:
     case C.COMPLETE_DOWNLOAD:
     case C.DOWNLOAD_REMOVED:
       return state.map(download =>

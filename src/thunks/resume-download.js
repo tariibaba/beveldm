@@ -1,5 +1,4 @@
 import {
-  resumingDownload,
   resumeDownload,
   updateBytesDownloaded,
   downloadError,
@@ -19,16 +18,13 @@ export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     const downloads = getState().downloads;
     let download = downloads.find(download => download.id === id);
-    if (download.status === 'resuming') return;
+    dispatch(resumeDownload(id));
 
     if (download.res) {
-      dispatch(resumingDownload(id));
       download.res.resume();
-      dispatch(resumeDownload(id, download.res));
     } else if (download.status === 'error') {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
-      dispatch(resumingDownload(id));
       const fullpath = getPartialDownloadPath(download);
       const res = await httpGetPromise(download.url, {
         headers: {
@@ -36,6 +32,7 @@ export default function thunkResumeDownload(id) {
           Connection: 'keep-alive'
         }
       });
+      dispatch(resumeDownload(id, res));
       const filename = getFilename(download.url, res.headers);
       const size = getFileSize(res.headers);
       if (download.filename !== filename || download.size !== size)
@@ -46,10 +43,9 @@ export default function thunkResumeDownload(id) {
           dispatch(updateBytesDownloaded(id, 0));
           stream = fs.createWriteStream(fullpath);
         } else stream = fs.createWriteStream(fullpath, { flags: 'a' });
-        // The download status might have changed since dispatching resumingDownload
+        // The download status might have changed since dispatching resumeDownload
         download = getState().downloads.find(download => download.id === id);
-        if (download.status === 'resuming') {
-          dispatch(resumeDownload(id, res));
+        if (download.status === 'started') {
           dispatch(thunkDownloadFile(id, res, stream));
         }
       }
@@ -60,7 +56,6 @@ export default function thunkResumeDownload(id) {
 
 function thunkResumeFromError(id, code) {
   return async (dispatch, getState) => {
-    dispatch(resumingDownload(id));
     let res, stream;
     const downloads = getState().downloads;
     let download = downloads.find(download => download.id === id);
@@ -87,9 +82,9 @@ function thunkResumeFromError(id, code) {
       default:
         break;
     }
-    // The download status might have changed since dispatching resumingDownload
+    // The download status might have changed since dispatching resumeDownload
     download = getState().downloads.find(download => download.id === id);
-    if (download.status === 'resuming') {
+    if (download.status === 'started') {
       dispatch(resumeDownload(id, res));
       dispatch(thunkDownloadFile(id, res, stream));
     }

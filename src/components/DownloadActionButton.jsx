@@ -18,14 +18,12 @@ function DownloadActionButton({ id, status, dispatch }) {
   let action;
   switch (status) {
     case 'notstarted':
-    case 'starting':
       action = 'Start';
       break;
     case 'started':
       action = 'Pause';
       break;
     case 'paused':
-    case 'resuming':
       action = 'Resume';
       break;
     case 'canceled':
@@ -56,10 +54,7 @@ function DownloadActionButton({ id, status, dispatch }) {
   };
 
   if (status !== 'complete' && status !== 'deleted') {
-    const Button =
-      status === 'paused' || status === 'notstarted' || status === 'canceled' || status === 'error'
-        ? BlueButton
-        : WhiteButton;
+    const Button = action === 'Pause' ? WhiteButton : BlueButton;
     return (
       <Button
         onClick={handleClick}
