@@ -58,13 +58,12 @@ export function addNewDownload(
   };
 }
 
-export function startDownload(id, res, resumable) {
+export function startDownload(id, res) {
   return {
     type: START_DOWNLOAD,
     id,
     res,
-    status: 'started',
-    resumable
+    status: 'started'
   };
 }
 
@@ -148,13 +147,14 @@ export function changeDownloadUrl(id, newUrl) {
   };
 }
 
-export function changeDownloadBasicInfo(id, filename, availableFilename, size) {
+export function changeDownloadBasicInfo(id, filename, availableFilename, size, resumable) {
   return {
     type: CHANGE_DOWNLOAD_BASIC_INFO,
     id,
     filename,
     availableFilename,
-    size
+    size,
+    resumable
   };
 }
 

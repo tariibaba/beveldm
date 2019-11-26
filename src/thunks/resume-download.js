@@ -63,7 +63,7 @@ function thunkResumeFromError(id, code) {
       case 'ERR_FILE_CHANGED':
         let fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
-        res = await httpGetPromise(download.url);
+        res = await httpGetPromise(download.url, { headers: { Range: 'bytes=0-' }});
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         dispatch(
@@ -71,7 +71,8 @@ function thunkResumeFromError(id, code) {
             id,
             filename,
             await getAvailableFilename(download.dirname, filename, downloads),
-            size
+            size,
+            res.statusCode === 206
           )
         );
         download = getState().downloads.find(download => download.id === id);

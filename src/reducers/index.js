@@ -19,7 +19,6 @@ export function downloads(state = [], action) {
               ...download,
               res: action.res,
               status: action.status,
-              resumable: action.resumable
             }
           : download
       );
@@ -83,7 +82,8 @@ export function downloads(state = [], action) {
               ...download,
               filename: action.filename,
               availableFilename: action.availableFilename,
-              size: action.size
+              size: action.size,
+              resumable: action.resumable
             }
           : download
       );

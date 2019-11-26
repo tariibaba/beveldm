@@ -17,7 +17,7 @@ export default function thunkAddNewDownload(url, dirname) {
     dispatch(addNewDownload(id, url, dirname));
     const res = await new Promise(async resolve =>
       request
-        .get(url)
+        .get(url, { headers: { Range: 'bytes=0-' }})
         .on('response', res => resolve(res))
         .on('error', () => {
           dispatch(removeDownload(id));
@@ -38,7 +38,8 @@ export default function thunkAddNewDownload(url, dirname) {
         id,
         filename,
         await getAvailableFilename(dirname, filename, downloads),
-        size
+        size,
+        res.statusCode === 206
       )
     );
     dispatch(updateBytesDownloaded(id, 0));

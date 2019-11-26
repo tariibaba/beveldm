@@ -16,7 +16,7 @@ export default function thunkStartDownload(id) {
         Connection: 'keep-alive'
       }
     });
-    dispatch(startDownload(id, res, res.statusCode === 206));
+    dispatch(startDownload(id, res));
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);
 
