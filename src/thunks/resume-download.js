@@ -4,7 +4,6 @@ import {
   downloadError,
   changeDownloadBasicInfo
 } from '../actions';
-import { httpGetPromise } from '../promisified';
 import {
   getAvailableFilename,
   getPartialDownloadPath,
@@ -13,6 +12,7 @@ import {
 import fs from 'fs';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
+import http from 'http';
 
 export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
@@ -26,12 +26,18 @@ export default function thunkResumeDownload(id) {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
       const fullpath = getPartialDownloadPath(download);
-      const res = await httpGetPromise(download.url, {
-        headers: {
-          Range: `bytes=${download.bytesDownloaded}-`,
-          Connection: 'keep-alive'
-        }
-      });
+      const res = await new Promise(resolve =>
+        http
+          .get(download.url, {
+            headers: {
+              Range: `bytes=${download.bytesDownloaded}-`,
+              Connection: 'keep-alive'
+            }
+          })
+          .on('response', res => resolve(res))
+          .on('error', err => dispatch(downloadError(id, { code: err.code })))
+      );
+
       dispatch(resumeDownload(id, res));
       const filename = getFilename(download.url, res.headers);
       const size = getFileSize(res.headers);
@@ -63,7 +69,14 @@ function thunkResumeFromError(id, code) {
       case 'ERR_FILE_CHANGED':
         let fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
-        res = await httpGetPromise(download.url, { headers: { Range: 'bytes=0-' }});
+        res = await new Promise(resolve =>
+          http
+            .get(download.url, {
+              headers: { Range: 'bytes=0-', Connection: 'keep-alive' }
+            })
+            .on('response', res => resolve(res))
+            .on('error', err => dispatch(downloadError(id, { code: err.code })))
+        );
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         dispatch(
@@ -79,15 +92,18 @@ function thunkResumeFromError(id, code) {
         fullpath = getPartialDownloadPath(download);
         stream = fs.createWriteStream(fullpath);
         dispatch(updateBytesDownloaded(id, 0));
+        // The download status might have changed since dispatching resumeDownload
+        download = getState().downloads.find(download => download.id === id);
+        if (download.status === 'started') {
+          dispatch(resumeDownload(id, res));
+          dispatch(thunkDownloadFile(id, res, stream));
+        }
         break;
+      case 'ECONNREFUSED':
+        dispatch(thunkResumeDownload(id));
+        return;
       default:
         break;
-    }
-    // The download status might have changed since dispatching resumeDownload
-    download = getState().downloads.find(download => download.id === id);
-    if (download.status === 'started') {
-      dispatch(resumeDownload(id, res));
-      dispatch(thunkDownloadFile(id, res, stream));
     }
     return Promise.resolve();
   };

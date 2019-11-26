@@ -197,6 +197,7 @@ function Download({
                 error: error
                   ? when(error.code)({
                       ERR_FILE_CHANGED: 'File changed',
+                      ECONNREFUSED: 'Network error',
                       else: null
                     })
                   : null,
