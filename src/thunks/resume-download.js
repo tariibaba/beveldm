@@ -9,7 +9,6 @@ import {
   getPartialDownloadPath,
   deleteFile
 } from './helpers';
-import fs from 'fs';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
@@ -25,7 +24,6 @@ export default function thunkResumeDownload(id) {
     } else if (download.status === 'error') {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
-      const fullpath = getPartialDownloadPath(download);
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
@@ -36,15 +34,13 @@ export default function thunkResumeDownload(id) {
       if (download.filename !== filename || download.size !== size)
         dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
       else {
-        let stream;
         if (!download.resumable) {
           dispatch(updateBytesDownloaded(id, 0));
-          stream = fs.createWriteStream(fullpath);
-        } else stream = fs.createWriteStream(fullpath, { flags: 'a' });
+        }
         // The download status might have changed since dispatching resumeDownload
         download = getState().downloads.find(download => download.id === id);
         if (download.status === 'started') {
-          dispatch(thunkDownloadFile(id, res, stream));
+          dispatch(thunkDownloadFile(id, res));
         }
       }
     }
@@ -54,7 +50,7 @@ export default function thunkResumeDownload(id) {
 
 function thunkResumeFromError(id, code) {
   return async (dispatch, getState) => {
-    let res, stream;
+    let res;
     const downloads = getState().downloads;
     let download = downloads.find(download => download.id === id);
     switch (code) {
@@ -73,15 +69,12 @@ function thunkResumeFromError(id, code) {
             res.statusCode === 206
           )
         );
-        download = getState().downloads.find(download => download.id === id);
-        fullpath = getPartialDownloadPath(download);
-        stream = fs.createWriteStream(fullpath);
         dispatch(updateBytesDownloaded(id, 0));
         // The download status might have changed since dispatching resumeDownload
         download = getState().downloads.find(download => download.id === id);
         if (download.status === 'started') {
           dispatch(resumeDownload(id, res));
-          dispatch(thunkDownloadFile(id, res, stream));
+          dispatch(thunkDownloadFile(id, res));
         }
         break;
       case 'ECONNREFUSED':

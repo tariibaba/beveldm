@@ -1,9 +1,15 @@
 import { updateBytesDownloaded } from '../actions';
 import thunkCompleteDownload from './complete-download';
+import fs from 'fs';
+import { getPartialDownloadPath } from './helpers';
 
-export default function thunkDownloadFile(id, res, fileStream) {
+export default function thunkDownloadFile(id, res) {
   return async (dispatch, getState) => {
-    let download;
+    let download = getState().downloads.find(download => download.id === id);
+    const partialDownloadPath = getPartialDownloadPath(download);
+    const fileStream = fs.createWriteStream(partialDownloadPath, {
+      flags: 'a'
+    });
     res
       .on('data', chunk => {
         res.pause();
