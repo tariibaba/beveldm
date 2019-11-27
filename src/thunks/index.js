@@ -9,6 +9,8 @@ import thunkSubscribeToInterval from './subscribe-to-interval';
 import saveState from './save-state';
 import loadState from './load-state';
 import thunkChangeDownloadUrl from './change-download-url';
+import makeRequest from './make-request';
+import makePartialRequest from './make-partial-request';
 
 export {
   thunkAddNewDownload,
@@ -21,5 +23,7 @@ export {
   thunkSubscribeToInterval,
   saveState,
   loadState,
-  thunkChangeDownloadUrl
+  thunkChangeDownloadUrl,
+  makeRequest,
+  makePartialRequest
 };

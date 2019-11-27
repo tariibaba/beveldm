@@ -3,18 +3,14 @@ import { startDownload, downloadError } from '../actions';
 import { getPartialDownloadPath } from './helpers';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
-import http from 'http';
+import makeRequest from './make-request';
 
 export default function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     dispatch(startDownload(id));
 
-    const res = await new Promise(resolve => {
-      http.get(download.url)
-        .on('response', res => resolve(res))
-        .on('error', err => dispatch(downloadError(id, { code: err.code })));
-    });
+    const res = await dispatch(makeRequest(id, download.url));
     dispatch(startDownload(id, res));
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);

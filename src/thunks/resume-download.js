@@ -12,7 +12,7 @@ import {
 import fs from 'fs';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
-import http from 'http';
+import makePartialRequest from './make-partial-request';
 
 export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
@@ -26,16 +26,8 @@ export default function thunkResumeDownload(id) {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
       const fullpath = getPartialDownloadPath(download);
-      const res = await new Promise(resolve =>
-        http
-          .get(download.url, {
-            headers: {
-              Range: `bytes=${download.bytesDownloaded}-`,
-              Connection: 'keep-alive'
-            }
-          })
-          .on('response', res => resolve(res))
-          .on('error', err => dispatch(downloadError(id, { code: err.code })))
+      const res = await dispatch(
+        makePartialRequest(id, download.url, download.bytesDownloaded)
       );
 
       dispatch(resumeDownload(id, res));
@@ -69,14 +61,7 @@ function thunkResumeFromError(id, code) {
       case 'ERR_FILE_CHANGED':
         let fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
-        res = await new Promise(resolve =>
-          http
-            .get(download.url, {
-              headers: { Range: 'bytes=0-', Connection: 'keep-alive' }
-            })
-            .on('response', res => resolve(res))
-            .on('error', err => dispatch(downloadError(id, { code: err.code })))
-        );
+        res = await new dispatch(makePartialRequest(id, download.url, 0));
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         dispatch(
