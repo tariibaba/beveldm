@@ -18,7 +18,6 @@ export default function thunkResumeDownload(id) {
     const downloads = getState().downloads;
     let download = downloads.find(download => download.id === id);
     dispatch(resumeDownload(id));
-
     if (download.res) {
       download.res.resume();
     } else if (download.status === 'error') {
@@ -27,13 +26,15 @@ export default function thunkResumeDownload(id) {
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
-
       dispatch(resumeDownload(id, res));
       const filename = getFilename(download.url, res.headers);
-      const size = getFileSize(res.headers);
-      if (download.filename !== filename || download.size !== size)
+      let size = getFileSize(res.headers);
+      if (download.resumable) {
+        size += download.bytesDownloaded;
+      }
+      if (download.filename !== filename || download.size !== size) {
         dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
-      else {
+      } else {
         if (!download.resumable) {
           dispatch(updateBytesDownloaded(id, 0));
         }
