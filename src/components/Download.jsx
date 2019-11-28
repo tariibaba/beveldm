@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: '-14px'
   },
   colorLinearProgress: {
-    width: '95%',
+    width: '90%',
     padding: '0',
     marginTop: '20px',
     backgroundColor: grey['A100']
@@ -75,10 +75,14 @@ const urlStyles = {
     display: 'inline-block',
     marginTop: '10px',
     color: grey['700'],
-    cursor: 'pointer'
+    cursor: 'pointer',
+    maxWidth: '90%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   error: {
-    color: grey['700'] + '99',
+    color: grey['700'] + '99'
   }
 };
 
