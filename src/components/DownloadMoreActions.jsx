@@ -37,14 +37,15 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
   const url = useRef();
 
   const handlePopoverOpen = event => {
-    setAnchorEl(event.currentTarget); 
+    setAnchorEl(event.currentTarget);
   };
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
-  const handleChangeUrl = () => {
+  const handleChangeUrl = event => {
+    event.preventDefault();
     dispatch(thunkChangeDownloadUrl(id, url.current.value));
     setDialogOpen(false);
   };
@@ -86,23 +87,25 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
       </Popover>
       <Dialog open={dialogOpen}>
         <DialogTitle>Change URL</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            name="url"
-            type="text"
-            placeholder="Url"
-            inputRef={url}
-            defaultValue={currentUrl}
-          />
-          <br />
-          <DialogActions>
-            <Button type="submit" onClick={handleChangeUrl}>
-              Change
-            </Button>
-            <Button onClick={handleDialogCancel}>Cancel</Button>
-          </DialogActions>
-        </DialogContent>
+        <form onSubmit={handleChangeUrl}>
+          <DialogContent>
+            <TextField
+              autoFocus
+              name="url"
+              type="text"
+              placeholder="Url"
+              inputRef={url}
+              defaultValue={currentUrl}
+            />
+            <br />
+            <DialogActions>
+              <Button type="submit">
+                Change
+              </Button>
+              <Button onClick={handleDialogCancel}>Cancel</Button>
+            </DialogActions>
+          </DialogContent>
+        </form>
       </Dialog>
     </>
   );

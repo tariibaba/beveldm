@@ -42,6 +42,7 @@ function AddNewDownload({ onAdd = () => {} }) {
     ipcRenderer.send('choose-file');
     ipcRenderer.on('choosen-file', (_event, args) => {
       filePath.current.value = args;
+      filePath.current.focus();
     });
   };
 
@@ -62,41 +63,40 @@ function AddNewDownload({ onAdd = () => {} }) {
       </Fab>
       <Dialog open={open}>
         <DialogTitle>Add new download</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            name="url"
-            type="text"
-            placeholder="Url"
-            inputRef={url}
-          />
-          <br />
-          <TextField
-            name="file"
-            type="text"
-            placeholder="Save folder"
-            inputRef={filePath}
-          />
-          <IconButton onClick={chooseFile}>
-            <FolderOpen />
-          </IconButton>
-          <DialogActions>
-            <Button type="submit" onClick={handleSubmit}>
-              Add
-            </Button>
-            <Button onClick={handleCancel}>Cancel</Button>
-          </DialogActions>
-        </DialogContent>
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
+            <TextField
+              autoFocus
+              name="url"
+              type="text"
+              placeholder="Url"
+              inputRef={url}
+            />
+            <br />
+            <TextField
+              name="file"
+              type="text"
+              placeholder="Save folder"
+              inputRef={filePath}
+            />
+            <IconButton onClick={chooseFile}>
+              <FolderOpen />
+            </IconButton>
+            <DialogActions>
+              <Button type="submit">
+                Add
+              </Button>
+              <Button onClick={handleCancel}>Cancel</Button>
+            </DialogActions>
+          </DialogContent>
+        </form>
       </Dialog>
     </div>
   );
 }
 
-export default connect(
-  null, 
-  dispatch => ({
-    onAdd: (url, dirname) => {
-      dispatch(thunkAddNewDownload(url, dirname));
-    }
-  })
-)(AddNewDownload);
+export default connect(null, dispatch => ({
+  onAdd: (url, dirname) => {
+    dispatch(thunkAddNewDownload(url, dirname));
+  }
+}))(AddNewDownload);
