@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { WhiteButton } from './CustomButtons';
 import { Close } from '@material-ui/icons';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { grey, blue } from '@material-ui/core/colors';
 import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';

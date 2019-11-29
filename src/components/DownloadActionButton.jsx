@@ -6,13 +6,6 @@ import {
   thunkResumeDownload
 } from '../thunks';
 import { BlueButton, WhiteButton } from './CustomButtons';
-import { makeStyles } from '@material-ui/core';
-
-const useStyles = makeStyles(theme => ({
-  button: {
-    marginRight: '5px'
-  }
-}));
 
 function DownloadActionButton({ id, status, dispatch }) {
   let action;
