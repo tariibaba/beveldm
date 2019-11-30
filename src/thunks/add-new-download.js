@@ -31,6 +31,7 @@ export default function thunkAddNewDownload(url, dirname) {
           );
         })
     );
+    res.destroy();
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
     dispatch(
