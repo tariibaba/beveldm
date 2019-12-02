@@ -20,6 +20,7 @@ const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
 const HIDE_DOWNLOAD = 'HIDE_DOWNLOAD';
 const SHOW_DOWNLOAD = 'SHOW_DOWNLOAD';
 const ALERT = 'ALERT';
+const TOGGLE_SAVE_DATA = 'TOGGLE_SAVE_DATA';
 
 const C = {
   ADD_NEW_DOWNLOAD,
@@ -41,7 +42,8 @@ const C = {
   DOWNLOAD_NOT_STARTED,
   HIDE_DOWNLOAD,
   SHOW_DOWNLOAD,
-  ALERT
+  ALERT,
+  TOGGLE_SAVE_DATA
 };
 
 export function addNewDownload(
@@ -207,6 +209,13 @@ export function alert(message, messageType, action, actionName) {
     messageType,
     action,
     actionName
+  };
+}
+
+export function toggleSaveData(value) {
+  return {
+    type: TOGGLE_SAVE_DATA,
+    value
   };
 }
 

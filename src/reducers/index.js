@@ -18,7 +18,7 @@ export function downloads(state = [], action) {
           ? {
               ...download,
               res: action.res,
-              status: action.status,
+              status: action.status
             }
           : download
       );
@@ -140,6 +140,18 @@ export function message(state = {}, action) {
         type: action.messageType,
         actionName: action.actionName,
         action: action.action
+      };
+    default:
+      return state;
+  }
+}
+
+export function settings(state = {}, action) {
+  switch (action.type) {
+    case C.TOGGLE_SAVE_DATA:
+      return {
+        ...state,
+        saveData: action.value
       };
     default:
       return state;
