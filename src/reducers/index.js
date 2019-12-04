@@ -71,7 +71,8 @@ export function downloads(state = [], action) {
           ? {
               ...download,
               status: action.status,
-              error: action.error
+              error: action.error,
+              res: action.res
             }
           : download
       );

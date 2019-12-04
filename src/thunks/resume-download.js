@@ -78,7 +78,9 @@ function thunkResumeFromError(id, code) {
           dispatch(thunkDownloadFile(id, res));
         }
         break;
+      case 'ECONNRESET':
       case 'ECONNREFUSED':
+      case 'ENOTFOUND':
         dispatch(thunkResumeDownload(id));
         return;
       default:

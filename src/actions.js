@@ -165,7 +165,8 @@ export function downloadError(id, error) {
     type: DOWNLOAD_ERROR,
     id,
     status: 'error',
-    error
+    error,
+    res: undefined
   };
 }
 
