@@ -195,7 +195,7 @@ function Download({
             >
               {availableFilename}
             </button>
-            <span style={{ marginLeft: 10, fontWeight: 500, color: '#000000cd' }}>
+            <span style={{ marginLeft: 10, fontWeight: 500, color: '#00000099' }}>
               {when(status)({
                 canceled: 'Canceled',
                 error: error
