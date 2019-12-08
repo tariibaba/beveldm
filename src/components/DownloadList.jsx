@@ -2,11 +2,13 @@ import React, { Fragment } from 'react';
 import Download from './Download';
 import { connect } from 'react-redux';
 import { CircularProgress, makeStyles } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => ({
   main: {
     textAlign: 'center',
-    minHeight: '100%'
+    minHeight: '100%',
+    backgroundColor: grey['100']
   },
   list: {
     display: 'inline-block',
