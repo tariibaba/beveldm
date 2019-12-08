@@ -14,6 +14,8 @@ import {
   Button
 } from '@material-ui/core';
 import { Add, FolderOpen } from '@material-ui/icons';
+import pathExists from 'path-exists';
+import validUrl from 'valid-url';
 
 const useStyles = makeStyles(theme => ({
   fabButton: {
@@ -29,19 +31,55 @@ function AddNewDownload({ onAdd = () => {} }) {
   const url = useRef();
   const filePath = useRef();
   const [open, setOpen] = useState(false);
+  let [urlHelperText, setUrlHelperText] = useState(null);
+  let [dirnameHelperText, setDirnameHelperText] = useState(null);
+  const [formSubmittable, setFormSubmittable] = useState(false);
 
   const handleSubmit = e => {
     setOpen(false);
     e.preventDefault();
     onAdd(url.current.value, filePath.current.value);
-    url.current.value = null;
-    filePath.current.value = null;
+    url.current.value = '';
+    filePath.current.value = '';
+  };
+
+  const handleUrlChange = () => {
+    if (url.current.value !== '' && !validUrl.isWebUri(url.current.value)) {
+      urlHelperText = 'This url is invalid';
+    } else {
+      urlHelperText = null;
+    }
+    setUrlHelperText(urlHelperText);
+    setFormSubmittable(isFormSubmittable());
+  };
+
+  const handleDirnameChange = async () => {
+    if (
+      filePath.current.value !== '' &&
+      !(await pathExists(filePath.current.value))
+    ) {
+      dirnameHelperText = "This folder doesn't exist";
+    } else {
+      dirnameHelperText = null;
+    }
+    setDirnameHelperText(dirnameHelperText);
+    setFormSubmittable(isFormSubmittable());
+  };
+
+  const isFormSubmittable = () => {
+    return (
+      !urlHelperText &&
+      !dirnameHelperText &&
+      url.current.value &&
+      filePath.current.value
+    );
   };
 
   const chooseFile = () => {
     ipcRenderer.send('choose-file');
     ipcRenderer.on('choosen-file', (_event, args) => {
       filePath.current.value = args;
+      handleDirnameChange();
       filePath.current.focus();
     });
   };
@@ -71,6 +109,9 @@ function AddNewDownload({ onAdd = () => {} }) {
               type="text"
               placeholder="Url"
               inputRef={url}
+              error={urlHelperText !== null}
+              helperText={urlHelperText}
+              onChange={handleUrlChange}
             />
             <br />
             <TextField
@@ -78,12 +119,15 @@ function AddNewDownload({ onAdd = () => {} }) {
               type="text"
               placeholder="Save folder"
               inputRef={filePath}
+              error={dirnameHelperText !== null}
+              helperText={dirnameHelperText}
+              onChange={handleDirnameChange}
             />
             <IconButton onClick={chooseFile}>
               <FolderOpen />
             </IconButton>
             <DialogActions>
-              <Button type="submit">
+              <Button type="submit" disabled={!formSubmittable}>
                 Add
               </Button>
               <Button onClick={handleCancel}>Cancel</Button>
