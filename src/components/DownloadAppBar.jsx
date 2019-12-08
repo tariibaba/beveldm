@@ -18,8 +18,7 @@ import { toggleSaveData } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
-    marginBottom: 15
+    flexGrow: 1
   },
   iconButton: {
     float: 'right'
@@ -62,7 +61,7 @@ function DownloadAppBar({ saveData = false, dispatch }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Downloads

@@ -1,32 +1,36 @@
 import React, { Fragment } from 'react';
 import Download from './Download';
 import { connect } from 'react-redux';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, makeStyles } from '@material-ui/core';
 
-const styles = {
+const useStyles = makeStyles(theme => ({
   main: {
-    textAlign: 'center'
+    textAlign: 'center',
+    minHeight: '100%'
   },
   list: {
     display: 'inline-block',
     width: '600px',
-    textAlign: 'left'
+    textAlign: 'left',
+    marginTop: theme.spacing(10)
   },
   gettingInfo: {
     marginTop: '15px',
     marginBottom: '15px',
     textAlign: 'center'
   }
-};
+}));
 
 function DownloadList({ downloads = [] }) {
+  const classes = useStyles();
+
   return (
-    <div style={styles.main}>
-      <div style={styles.list}>
+    <div className={classes.main}>
+      <div className={classes.list}>
         {downloads.map(download => (
           <Fragment key={download.id}>
             {download.status === 'gettinginfo' ? (
-              <div style={styles.gettingInfo}>
+              <div className={classes.gettingInfo}>
                 <CircularProgress />
               </div>
             ) : (
