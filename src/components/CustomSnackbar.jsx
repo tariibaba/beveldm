@@ -49,7 +49,11 @@ function CustomSnackbar({ messageObj, message, action, actionName, variant }) {
           className={classes[variant]}
           message={<span>{message}</span>}
           action={[
-            <Button className={classes.actionButton} onClick={handleAction}>
+            <Button
+              key={0}
+              className={classes.actionButton}
+              onClick={handleAction}
+            >
               {actionName}
             </Button>
           ]}
