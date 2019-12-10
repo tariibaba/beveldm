@@ -1,5 +1,5 @@
-import { updateBytesDownloaded } from '../actions';
 import thunkCompleteDownload from './complete-download';
+import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 import fs from 'fs';
 import { getPartialDownloadPath } from './helpers';
 import { SAVE_DATA_LIMIT } from '../constants';
@@ -30,10 +30,7 @@ export default function thunkDownloadFile(id, res) {
             fileStream.write(chunkToWrite, err => {
               if (err) throw err;
               const received = download.bytesDownloaded + chunkToWrite.length;
-              dispatch(updateBytesDownloaded(id, received));
-              if (received === download.size) {
-                dispatch(thunkCompleteDownload(id));
-              }
+              dispatch(thunkUpdateBytesDownloaded(id, received));
               if (download.status !== 'paused') res.resume();
             });
           }, 500);
@@ -42,10 +39,7 @@ export default function thunkDownloadFile(id, res) {
             if (err) throw err;
             const received = download.bytesDownloaded + buffer.length;
             buffer = null;
-            dispatch(updateBytesDownloaded(id, received));
-            if (received === download.size) {
-              dispatch(thunkCompleteDownload(id));
-            }
+            dispatch(thunkUpdateBytesDownloaded(id, received));
             if (download.status !== 'paused') res.resume();
           });
         }
