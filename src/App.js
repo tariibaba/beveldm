@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DownloadList from './components/DownloadList';
 import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
@@ -32,19 +32,27 @@ function App({ dispatch }) {
     ipcRenderer.send('saved', null);
   });
 
-  dispatch(loadState());
+  const [loaded, setLoaded] = useState(false);
 
-  return (
+  useEffect(() => {
+    if (!loaded) {
+      dispatch(loadState()).then(() => {
+        setLoaded(true);
+      });
+    }
+  }, [loaded, dispatch]);
+
+  return loaded ? (
     <ThemeProvider theme={theme}>
       <div style={{ height: '100%' }}>
         <div style={styles.App}>
           <DownloadAppBar />
           <DownloadList />
-          <CustomSnackbar/>
+          <CustomSnackbar />
         </div>
       </div>
     </ThemeProvider>
-  );
+  ) : null;
 }
 
 export default connect()(App);
