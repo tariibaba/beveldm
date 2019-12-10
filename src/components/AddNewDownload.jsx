@@ -78,7 +78,9 @@ function AddNewDownload({ onAdd = () => {} }) {
   const chooseFile = () => {
     ipcRenderer.send('choose-file');
     ipcRenderer.on('choosen-file', (_event, args) => {
-      filePath.current.value = args;
+      if (args) {
+        filePath.current.value = args;
+      }
       handleDirnameChange();
       filePath.current.focus();
     });
