@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 function AddNewDownload({ onAdd = () => {} }) {
   const url = useRef();
-  const filePath = useRef();
+  const dirname = useRef();
   const [open, setOpen] = useState(false);
   let [urlHelperText, setUrlHelperText] = useState(null);
   let [dirnameHelperText, setDirnameHelperText] = useState(null);
@@ -38,9 +38,9 @@ function AddNewDownload({ onAdd = () => {} }) {
   const handleSubmit = e => {
     setOpen(false);
     e.preventDefault();
-    onAdd(url.current.value, filePath.current.value);
+    onAdd(url.current.value, dirname.current.value);
     url.current.value = '';
-    filePath.current.value = '';
+    dirname.current.value = '';
   };
 
   const handleUrlChange = () => {
@@ -55,8 +55,8 @@ function AddNewDownload({ onAdd = () => {} }) {
 
   const handleDirnameChange = async () => {
     if (
-      filePath.current.value !== '' &&
-      !(await pathExists(filePath.current.value))
+      dirname.current.value !== '' &&
+      !(await pathExists(dirname.current.value))
     ) {
       dirnameHelperText = "This folder doesn't exist";
     } else {
@@ -71,7 +71,7 @@ function AddNewDownload({ onAdd = () => {} }) {
       !urlHelperText &&
       !dirnameHelperText &&
       url.current.value &&
-      filePath.current.value
+      dirname.current.value
     );
   };
 
@@ -79,10 +79,10 @@ function AddNewDownload({ onAdd = () => {} }) {
     ipcRenderer.send('choose-file');
     ipcRenderer.on('choosen-file', (_event, args) => {
       if (args) {
-        filePath.current.value = args;
+        dirname.current.value = args;
       }
       handleDirnameChange();
-      filePath.current.focus();
+      dirname.current.focus();
     });
   };
 
@@ -117,10 +117,10 @@ function AddNewDownload({ onAdd = () => {} }) {
             />
             <br />
             <TextField
-              name="file"
+              name="dirname"
               type="text"
               placeholder="Save folder"
-              inputRef={filePath}
+              inputRef={dirname}
               error={dirnameHelperText !== null}
               helperText={dirnameHelperText}
               onChange={handleDirnameChange}
