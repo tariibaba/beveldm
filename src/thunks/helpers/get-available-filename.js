@@ -1,7 +1,9 @@
 import path from 'path';
 import pathExists from 'path-exists';
+import getDownloadPath from './get-download-path';
 
 export default async function getAvailableFilename(
+  id,
   dirname,
   filename,
   downloads
@@ -20,15 +22,19 @@ export default async function getAvailableFilename(
     fullPath = path.resolve(dirname, availableFilename);
   }
 
-  downloads.forEach(download => {
-    const downloadPath = path.resolve(download.dirname, download.availableFilename);
-    if (downloadPath === fullPath) {
+  for (const download of downloads) {
+    if (
+      (download.status === 'gettinginfo' && download.id !== id) ||
+      (download.status !== 'gettinginfo' &&
+        getDownloadPath(download) === fullPath)
+    ) {
       suffix++;
-      availableWithoutExtension = `${nameWithoutExtension} (${suffix})`;
-      availableFilename = availableWithoutExtension + extension;
-      fullPath = path.resolve(dirname, availableFilename);
     }
-  });
+    availableWithoutExtension =
+      suffix > 0 ? `${nameWithoutExtension} (${suffix})` : nameWithoutExtension;
+    availableFilename = availableWithoutExtension + extension;
+    fullPath = path.resolve(dirname, availableFilename);
+  }
 
   return availableFilename;
 }

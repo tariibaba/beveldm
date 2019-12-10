@@ -38,7 +38,7 @@ export default function thunkAddNewDownload(url, dirname) {
       changeDownloadBasicInfo(
         id,
         filename,
-        await getAvailableFilename(dirname, filename, downloads),
+        await getAvailableFilename(id, dirname, filename, downloads),
         size,
         res.statusCode === 206
       )
