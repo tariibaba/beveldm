@@ -174,7 +174,7 @@ export function downloadRemoved(id) {
   return {
     type: DOWNLOAD_REMOVED,
     id,
-    status: 'deleted'
+    status: 'removed'
   };
 }
 

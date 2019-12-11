@@ -46,7 +46,7 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   };
 
-  if (status !== 'complete' && status !== 'deleted') {
+  if (status !== 'complete' && status !== 'removed') {
     const Button = action === 'Pause' ? WhiteButton : BlueButton;
     return (
       <Button

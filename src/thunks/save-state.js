@@ -22,7 +22,7 @@ export default function saveState() {
             .filter(
               download =>
                 download.status !== 'gettinginfo' &&
-                download.status !== 'deleted' &&
+                download.status !== 'removed' &&
                 download.show
             )
             .map(download => {

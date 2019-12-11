@@ -157,7 +157,7 @@ function Download({
     <Card
       style={{
         ...cardStyles.default,
-        ...(status === 'canceled' || status === 'error' || status === 'deleted'
+        ...(status === 'canceled' || status === 'error' || status === 'removed'
           ? cardStyles.error
           : {})
       }}
@@ -167,13 +167,13 @@ function Download({
           {(status === 'canceled' ||
             status === 'complete' ||
             status === 'error' ||
-            status === 'deleted') && (
+            status === 'removed') && (
             <IconButton className={classes.iconButton} onClick={remove}>
               <Close style={{ fontSize: '15px' }} />
             </IconButton>
           )}
           <br />
-          {status !== 'complete' && status !== 'deleted' && (
+          {status !== 'complete' && status !== 'removed' && (
             <div style={moreVert}>
               <DownloadMoreActions id={id} currentUrl={url} />
             </div>
@@ -188,7 +188,7 @@ function Download({
                   canceled: filenameStyles.error,
                   complete: filenameStyles.complete,
                   error: filenameStyles.error,
-                  deleted: filenameStyles.error,
+                  removed: filenameStyles.error,
                   else: {}
                 })
               }}
@@ -207,7 +207,7 @@ function Download({
                       else: null
                     })
                   : null,
-                deleted: 'Deleted',
+                removed: 'Removed',
                 else: null
               })}
             </span>
@@ -219,7 +219,7 @@ function Download({
                 ...linkButtonStyles.default,
                 ...urlStyles.default,
                 ...(status === 'error' ||
-                status === 'deleted' ||
+                status === 'removed' ||
                 status === 'canceled'
                   ? urlStyles.error
                   : {})
@@ -231,7 +231,7 @@ function Download({
           {status !== 'complete' &&
             status !== 'canceled' &&
             status !== 'error' &&
-            status !== 'deleted' && (
+            status !== 'removed' && (
               <div style={{ marginTop: '20px' }}>
                 <PeriodicUpdate start={status === 'started'} interval={500}>
                   <div>
@@ -259,7 +259,7 @@ function Download({
           {status !== 'complete' &&
             status !== 'canceled' &&
             status !== 'error' &&
-            status !== 'deleted' && (
+            status !== 'removed' && (
               <PeriodicUpdate start={status === 'started'}>
                 <LinearProgress
                   value={(bytesDownloaded / size) * 100}
@@ -272,7 +272,7 @@ function Download({
           {status !== 'canceled' &&
             status !== 'complete' &&
             status !== 'error' &&
-            status !== 'deleted' && (
+            status !== 'removed' && (
               <WhiteButton onClick={cancel} variant="contained" size="small">
                 Cancel
               </WhiteButton>

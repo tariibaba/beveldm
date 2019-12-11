@@ -17,7 +17,7 @@ export default function loadState() {
           if (!(await pathExists(path))) {
             download = {
               ...download,
-              status: 'deleted'
+              status: 'removed'
             };
             return download;
           } else {
@@ -33,7 +33,7 @@ export default function loadState() {
           if (!(await pathExists(partialPath))) {
             download = {
               ...download,
-              status: 'deleted'
+              status: 'removed'
             };
             return download;
           }
