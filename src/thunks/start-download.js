@@ -5,10 +5,19 @@ import makeRequest from './make-request';
 
 export default function thunkStartDownload(id) {
   return async (dispatch, getState) => {
-    let download = getState().downloads.find(download => download.id === id);
+    let state = getState();
+    let download = state.downloads.find(download => download.id === id);
     dispatch(startDownload(id));
 
     const res = await dispatch(makeRequest(id, download.url));
+
+    // The download status might have changed since making the request.
+    state = getState();
+    download = state.downloads.find(download => download.id === id);
+    if (download.status !== 'started') {
+      return;
+    }
+
     dispatch(setDownloadRes(id, res));
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);
@@ -18,9 +27,7 @@ export default function thunkStartDownload(id) {
     else {
       // The download status might have changed since dispatching startDownload
       download = getState().downloads.find(download => download.id === id);
-      if (download.status === 'started') {
-        dispatch(thunkDownloadFile(id, res));
-      }
+      dispatch(thunkDownloadFile(id, res));
     }
   };
 }

@@ -16,21 +16,28 @@ import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
 export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
-    dispatch(resumeDownload(id));
-
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
 
     if (download.res) {
+      dispatch(resumeDownload(id));
       download.res.resume();
     } else if (download.status === 'error') {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
+      dispatch(resumeDownload(id));
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
-      dispatch(setDownloadRes(id, res));
 
+      // The download status might have changed since making the request.
+      state = getState();
+      download = state.downloads.find(download => download.id === id);
+      if (download.status !== 'started') {
+        return;
+      }
+
+      dispatch(setDownloadRes(id, res));
       const filename = getFilename(download.url, res.headers);
       const contentLength = getFileSize(res.headers);
       let size;
@@ -47,13 +54,7 @@ export default function thunkResumeDownload(id) {
         if (!download.resumable) {
           dispatch(thunkUpdateBytesDownloaded(id, 0));
         }
-
-        // The download status might have changed since dispatching resumeDownload
-        state = getState();
-        download = state.downloads.find(download => download.id === id);
-        if (download.status === 'started') {
-          dispatch(thunkDownloadFile(id, res));
-        }
+        dispatch(thunkDownloadFile(id, res));
       }
     }
 
@@ -63,6 +64,8 @@ export default function thunkResumeDownload(id) {
 
 function thunkResumeFromError(id, code) {
   return async (dispatch, getState) => {
+    dispatch(resumeDownload(id));
+
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
 
@@ -73,6 +76,14 @@ function thunkResumeFromError(id, code) {
         deleteFile(fullpath);
 
         res = await new dispatch(makePartialRequest(id, download.url, 0));
+
+        // The download status might have changed since making the request.
+        state = getState();
+        download = state.downloads.find(download => download.id === id);
+        if (download.status !== 'started') {
+          return;
+        }
+
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         const availableFilename = getAvailableFilename(
@@ -91,14 +102,7 @@ function thunkResumeFromError(id, code) {
           )
         );
         dispatch(thunkUpdateBytesDownloaded(id, 0));
-
-        // The download status might have changed since dispatching resumeDownload
-        state = getState();
-        download = state.downloads.find(download => download.id === id);
-        if (download.status === 'started') {
-          dispatch(resumeDownload(id, res));
-          dispatch(thunkDownloadFile(id, res));
-        }
+        dispatch(thunkDownloadFile(id, res));
         break;
       case 'ECONNRESET':
       case 'ECONNREFUSED':
