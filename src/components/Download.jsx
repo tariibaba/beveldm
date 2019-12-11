@@ -125,7 +125,7 @@ function Download({
   error,
   show
 }) {
-  const fullPath = path.resolve(dirname, availableFilename);
+  const fullPath = path.join(dirname, availableFilename);
 
   const openFolder = async () => {
     if (!(await pathExists(fullPath))) dispatch(downloadRemoved(id));

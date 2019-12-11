@@ -13,13 +13,13 @@ export default async function getAvailableFilename(
   let availableWithoutExtension;
   let suffix = 0;
   let availableFilename = filename;
-  let fullPath = path.resolve(dirname, availableFilename);
+  let fullPath = path.join(dirname, availableFilename);
 
   while (await pathExists(fullPath)) {
     suffix++;
     availableWithoutExtension = `${nameWithoutExtension} (${suffix})`;
     availableFilename = availableWithoutExtension + extension;
-    fullPath = path.resolve(dirname, availableFilename);
+    fullPath = path.join(dirname, availableFilename);
   }
 
   for (const download of downloads) {
@@ -33,7 +33,7 @@ export default async function getAvailableFilename(
     availableWithoutExtension =
       suffix > 0 ? `${nameWithoutExtension} (${suffix})` : nameWithoutExtension;
     availableFilename = availableWithoutExtension + extension;
-    fullPath = path.resolve(dirname, availableFilename);
+    fullPath = path.join(dirname, availableFilename);
   }
 
   return availableFilename;
