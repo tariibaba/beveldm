@@ -4,14 +4,17 @@ import { NOTIFICATION_SHOW_DURATION } from '../constants';
 
 export default function thunkRemoveDownload(id) {
   return async (dispatch, getState) => {
-    let download = getState().downloads.find(download => download.id === id);
     dispatch(hideDownload(id));
+
+    let download = getState().downloads.find(download => download.id === id);
+
     const timeout = setTimeout(async () => {
       if (download.status === 'canceled') {
         dispatch(removeDownload(id));
         await deleteFile(getPartialDownloadPath(download));
       }
     }, NOTIFICATION_SHOW_DURATION);
+
     dispatch(
       alert(
         `Removed '${download.availableFilename}' from list`,
