@@ -1,6 +1,5 @@
 import {
   resumeDownload,
-  updateBytesDownloaded,
   downloadError,
   changeDownloadBasicInfo
 } from '../actions';
@@ -12,6 +11,7 @@ import {
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
+import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
 export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
@@ -36,7 +36,7 @@ export default function thunkResumeDownload(id) {
         dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
       } else {
         if (!download.resumable) {
-          dispatch(updateBytesDownloaded(id, 0));
+          dispatch(thunkUpdateBytesDownloaded(id, 0));
         }
         // The download status might have changed since dispatching resumeDownload
         download = getState().downloads.find(download => download.id === id);
@@ -70,7 +70,7 @@ function thunkResumeFromError(id, code) {
             res.statusCode === 206
           )
         );
-        dispatch(updateBytesDownloaded(id, 0));
+        dispatch(thunkUpdateBytesDownloaded(id, 0));
         // The download status might have changed since dispatching resumeDownload
         download = getState().downloads.find(download => download.id === id);
         if (download.status === 'started') {

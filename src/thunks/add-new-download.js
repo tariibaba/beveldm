@@ -2,13 +2,13 @@ import {
   addNewDownload,
   changeDownloadBasicInfo,
   downloadNotStarted,
-  updateBytesDownloaded,
   removeDownload,
   alert
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
 import { v4 } from 'uuid';
+import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
 export default function thunkAddNewDownload(url, dirname) {
   return async (dispatch, getState) => {
@@ -43,7 +43,7 @@ export default function thunkAddNewDownload(url, dirname) {
         res.statusCode === 206
       )
     );
-    dispatch(updateBytesDownloaded(id, 0));
+    dispatch(thunkUpdateBytesDownloaded(id, 0));
     dispatch(downloadNotStarted(id));
   };
 }
