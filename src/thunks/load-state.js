@@ -13,7 +13,7 @@ export default function loadState() {
       savedDownloads.map(async download => {
         const path = getDownloadPath(download);
         const partialPath = getPartialDownloadPath(download);
-        if (download.status === 'completed') {
+        if (download.status === 'complete') {
           if (!(await pathExists(path))) {
             download = {
               ...download,
