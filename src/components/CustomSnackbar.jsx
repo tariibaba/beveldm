@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Slide, Snackbar, Button, SnackbarContent } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import { NOTIFICATION_SHOW_DURATION } from '../constants';
 
 const useStyles = makeStyles(theme => ({
   actionButton: {
@@ -42,7 +43,7 @@ function CustomSnackbar({ messageObj, message, action, actionName, variant }) {
         open={open}
         TransitionComponent={TransitionUp}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        autoHideDuration={10000}
+        autoHideDuration={NOTIFICATION_SHOW_DURATION}
         onClose={handleClose}
       >
         <SnackbarContent

@@ -1,5 +1,6 @@
 import { removeDownload, alert, hideDownload, showDownload } from '../actions';
 import { getPartialDownloadPath, deleteFile } from './helpers';
+import { NOTIFICATION_SHOW_DURATION } from '../constants';
 
 export default function thunkRemoveDownload(id) {
   return async (dispatch, getState) => {
@@ -10,7 +11,7 @@ export default function thunkRemoveDownload(id) {
         dispatch(removeDownload(id));
         await deleteFile(getPartialDownloadPath(download));
       }
-    }, 10000);
+    }, NOTIFICATION_SHOW_DURATION);
     dispatch(
       alert(
         `Removed '${download.availableFilename}' from list`,
