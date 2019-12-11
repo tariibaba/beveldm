@@ -1,4 +1,3 @@
-import thunkCompleteDownload from './complete-download';
 import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 import fs from 'fs';
 import { getPartialDownloadPath } from './helpers';
