@@ -12,16 +12,6 @@ export function downloads(state = [], action) {
           status: action.status
         }
       ];
-    case C.START_DOWNLOAD:
-      return state.map(download =>
-        download.id === action.id
-          ? {
-              ...download,
-              res: action.res,
-              status: action.status
-            }
-          : download
-      );
     case C.UPDATE_BYTES_DOWNLOADED:
       return state.map(download =>
         download.id === action.id
@@ -31,7 +21,9 @@ export function downloads(state = [], action) {
             }
           : download
       );
+    case C.START_DOWNLOAD:
     case C.PAUSE_DOWNLOAD:
+    case C.RESUME_DOWNLOAD:
     case C.COMPLETE_DOWNLOAD:
     case C.DOWNLOAD_REMOVED:
       return state.map(download =>
@@ -42,7 +34,6 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.RESUME_DOWNLOAD:
     case C.CANCEL_DOWNLOAD:
       return state.map(download =>
         download.id === action.id
@@ -105,6 +96,15 @@ export function downloads(state = [], action) {
               ...download,
               status: action.status,
               show: action.show
+            }
+          : download
+      );
+    case C.SET_DOWNLOAD_RES:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              res: action.res
             }
           : download
       );

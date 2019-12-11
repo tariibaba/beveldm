@@ -9,6 +9,7 @@ const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
 const COMPLETE_DOWNLOAD = 'COMPLETE_DOWNLOAD';
 const CANCEL_DOWNLOAD = 'CANCEL_DOWNLOAD';
 const REMOVE_DOWNLOAD = 'REMOVE_DOWNLOAD';
+const SET_DOWNLOAD_RES = 'SET_DOWNLOAD_RES';
 const SET_INTERVAL = 'SET_INTERVAL';
 const CLEAR_INTERVAL = 'CLEAR_INTERVAL';
 const SUBSCRIBE_TO_INTERVAL = 'SUBSCRIBE_TO_INTERVAL';
@@ -31,6 +32,7 @@ const C = {
   COMPLETE_DOWNLOAD,
   CANCEL_DOWNLOAD,
   REMOVE_DOWNLOAD,
+  SET_DOWNLOAD_RES,
   SET_INTERVAL,
   CLEAR_INTERVAL,
   SUBSCRIBE_TO_INTERVAL,
@@ -64,7 +66,6 @@ export function startDownload(id, res) {
   return {
     type: START_DOWNLOAD,
     id,
-    res,
     status: 'started'
   };
 }
@@ -85,11 +86,10 @@ export function pauseDownload(id) {
   };
 }
 
-export function resumeDownload(id, res) {
+export function resumeDownload(id) {
   return {
     type: RESUME_DOWNLOAD,
     id,
-    res,
     status: 'started'
   };
 }
@@ -122,6 +122,14 @@ export function setDownloadInterval(interval) {
   return {
     type: SET_INTERVAL,
     interval
+  };
+}
+
+export function setDownloadRes(id, res) {
+  return {
+    type: SET_DOWNLOAD_RES,
+    id,
+    res
   };
 }
 

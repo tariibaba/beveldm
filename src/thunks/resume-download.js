@@ -1,7 +1,8 @@
 import {
   resumeDownload,
   downloadError,
-  changeDownloadBasicInfo
+  changeDownloadBasicInfo,
+  setDownloadRes
 } from '../actions';
 import {
   getAvailableFilename,
@@ -28,7 +29,7 @@ export default function thunkResumeDownload(id) {
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
-      dispatch(resumeDownload(id, res));
+      dispatch(setDownloadRes(id, res));
 
       const filename = getFilename(download.url, res.headers);
       const contentLength = getFileSize(res.headers);

@@ -1,4 +1,4 @@
-import { startDownload, downloadError } from '../actions';
+import { startDownload, downloadError, setDownloadRes } from '../actions';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
 import makeRequest from './make-request';
@@ -9,7 +9,7 @@ export default function thunkStartDownload(id) {
     dispatch(startDownload(id));
 
     const res = await dispatch(makeRequest(id, download.url));
-    dispatch(startDownload(id, res));
+    dispatch(setDownloadRes(id, res));
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);
 
