@@ -16,6 +16,7 @@ import {
 import { MoreVert } from '@material-ui/icons';
 import { thunkChangeDownloadUrl } from '../thunks';
 import { connect } from 'react-redux';
+import validUrl from 'valid-url';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -34,6 +35,8 @@ const useStyles = makeStyles(theme => ({
 function DownloadMoreActions({ id, currentUrl, dispatch }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogFormSubmittable, setDialogFormSubmittable] = useState(false);
+  const [dialogUrlHelperText, setDialogUrlHelperText] = useState(null);
   const url = useRef();
 
   const handlePopoverOpen = event => {
@@ -57,6 +60,19 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
 
   const handleDialogCancel = () => {
     setDialogOpen(false);
+  };
+
+  const handleDialogUrlChange = () => {
+    if (!validUrl.isWebUri(url.current.value)) {
+      setDialogUrlHelperText('This url is invalid');
+      setDialogFormSubmittable(false);
+    } else if (url.current.value === currentUrl) {
+      setDialogUrlHelperText(null);
+      setDialogFormSubmittable(false);
+    } else {
+      setDialogUrlHelperText(null);
+      setDialogFormSubmittable(true);
+    }
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -96,10 +112,13 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
               placeholder="Url"
               inputRef={url}
               defaultValue={currentUrl}
+              helperText={dialogUrlHelperText}
+              error={dialogUrlHelperText !== null}
+              onChange={handleDialogUrlChange}
             />
             <br />
             <DialogActions>
-              <Button type="submit">
+              <Button type="submit" disabled={!dialogFormSubmittable}>
                 Change
               </Button>
               <Button onClick={handleDialogCancel}>Cancel</Button>
