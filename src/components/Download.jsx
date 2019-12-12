@@ -21,6 +21,7 @@ import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
 import pathExists from 'path-exists';
 import { downloadRemoved } from '../actions';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   cardContent: {
@@ -40,26 +41,20 @@ const useStyles = makeStyles(theme => ({
     padding: '0',
     marginTop: '20px',
     backgroundColor: grey['A100']
-  }
-}));
-
-const filenameStyles = {
-  default: {
+  },
+  filenameStylesDefault: {
     display: 'inline-block',
     fontWeight: '500',
     cursor: 'text'
   },
-  error: {
-    color: grey['700'] + '99',
+  filenameStylesError: {
+    color: `${grey['700']}99 !important`,
     textDecoration: 'line-through'
   },
-  complete: {
+  filenameStylesComplete: {
     cursor: 'pointer'
-  }
-};
-
-const linkButtonStyles = {
-  default: {
+  },
+  linkButtonStylesDefault: {
     backgroundColor: 'transparent',
     border: 'none',
     color: blue['700'],
@@ -67,11 +62,8 @@ const linkButtonStyles = {
     fontFamily: 'Roboto',
     margin: 0,
     padding: 0
-  }
-};
-
-const urlStyles = {
-  default: {
+  },
+  urlStylesDefault: {
     display: 'inline-block',
     marginTop: '10px',
     color: grey['700'],
@@ -81,37 +73,32 @@ const urlStyles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
-  error: {
+  urlStylesError: {
     color: grey['700'] + '99'
-  }
-};
-
-const showInFolderButtonStyles = {
-  marginTop: '30px',
-  marginBottom: '20px',
-  cursor: 'pointer'
-};
-
-const cardStyles = {
-  default: {
+  },
+  showInFolderButtonStyles: {
+    marginTop: '30px',
+    marginBottom: '20px',
+    cursor: 'pointer'
+  },
+  cardStylesDefault: {
     marginTop: '15px',
     marginBottom: '15px',
     boxShadow: '0px 1px 3px' + grey['A200'],
     transition: 'none'
   },
-  error: {
+  cardStylesError: {
     backgroundColor: '#ffffff99',
     boxShadow: 'none',
     border: '0.5px solid #e0e0e0'
+  },
+  moreVert: {
+    float: 'right',
+    clear: 'right',
+    position: 'relative',
+    marginRight: '-14px'
   }
-};
-
-const moreVert = {
-  float: 'right',
-  clear: 'right',
-  position: 'relative',
-  marginRight: '-14px'
-};
+}));
 
 function Download({
   id,
@@ -155,12 +142,11 @@ function Download({
 
   return show ? (
     <Card
-      style={{
-        ...cardStyles.default,
-        ...(status === 'canceled' || status === 'error' || status === 'removed'
-          ? cardStyles.error
-          : {})
-      }}
+      className={clsx(
+        classes.cardStylesDefault,
+        (status === 'canceled' || status === 'error' || status === 'removed') &&
+          classes.cardStylesError
+      )}
     >
       <CardContent className={classes.cardContent}>
         <div>
@@ -174,28 +160,30 @@ function Download({
           )}
           <br />
           {status !== 'complete' && status !== 'removed' && (
-            <div style={moreVert}>
+            <div className={classes.moreVert}>
               <DownloadMoreActions id={id} currentUrl={url} />
             </div>
           )}
           <div>
             <button
               onClick={openFile}
-              style={{
-                ...linkButtonStyles.default,
-                ...filenameStyles.default,
-                ...when(status)({
-                  canceled: filenameStyles.error,
-                  complete: filenameStyles.complete,
-                  error: filenameStyles.error,
-                  removed: filenameStyles.error,
-                  else: {}
+              className={clsx(
+                classes.linkButtonStylesDefault,
+                classes.filenameStylesDefault,
+                when(status)({
+                  canceled: classes.filenameStylesError,
+                  complete: classes.filenameStylesComplete,
+                  error: classes.filenameStylesError,
+                  removed: classes.filenameStylesError,
+                  else: null
                 })
-              }}
+              )}
             >
               {availableFilename}
             </button>
-            <span style={{ marginLeft: 10, fontWeight: 500, color: '#00000099' }}>
+            <span
+              style={{ marginLeft: 10, fontWeight: 500, color: '#00000099' }}
+            >
               {when(status)({
                 canceled: 'Canceled',
                 error: error
@@ -215,15 +203,15 @@ function Download({
           <div>
             <button
               onClick={openUrl}
-              style={{
-                ...linkButtonStyles.default,
-                ...urlStyles.default,
-                ...(status === 'error' ||
-                status === 'removed' ||
-                status === 'canceled'
-                  ? urlStyles.error
-                  : {})
-              }}
+              className={clsx(
+                classes.linkButtonStylesDefault,
+                classes.urlStylesDefault,
+                status === 'error' ||
+                  status === 'removed' ||
+                  status === 'canceled'
+                  ? classes.urlStylesError
+                  : null
+              )}
             >
               {url}
             </button>
@@ -248,10 +236,10 @@ function Download({
           {status === 'complete' && (
             <button
               onClick={openFolder}
-              style={{
-                ...linkButtonStyles.default,
-                ...showInFolderButtonStyles
-              }}
+              className={clsx(
+                classes.linkButtonStylesDefault,
+                classes.showInFolderButtonStyles
+              )}
             >
               Show in folder
             </button>
