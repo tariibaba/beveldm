@@ -8,6 +8,8 @@
     "@material-ui/icons": "^4.5.1",
     "content-disposition-filename": "^0.0.1",
     "electron": "^6.0.12",
+    "electron-is-dev": "^1.1.0",
+    "electron-packager": "^14.1.1",
     "electron-store": "^5.0.0",
     "path-exists": "^4.0.0",
     "pify": "^4.0.1",
@@ -28,7 +30,8 @@
     "electron-start": "node_modules/.bin/electron .",
     "build": "rescripts build",
     "test": "rescripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "package-win": "electron-packager . BevelDM --platform=win32 --arch=ia32"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "@rescripts/cli": "^0.0.11",
-    "@rescripts/rescript-env": "^0.0.10"
+    "@rescripts/rescript-env": "^0.0.10",
+    "file-loader": "^5.0.2"
   }
 }

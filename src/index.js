@@ -12,7 +12,7 @@ import {
   settings
 } from './reducers';
 import reduxThunk from 'redux-thunk';
-import 'typeface-roboto/index.css';
+import 'typeface-roboto';
 
 const store = createStore(
   combineReducers({
