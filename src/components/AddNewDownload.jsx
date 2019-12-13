@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, clipboard } from 'electron';
 import { thunkAddNewDownload } from '../thunks';
 import {
   Fab,
@@ -16,6 +16,7 @@ import {
 import { Add, FolderOpen } from '@material-ui/icons';
 import pathExists from 'path-exists';
 import validUrl from 'valid-url';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles(theme => ({
   fabButton: {
@@ -30,10 +31,22 @@ const useStyles = makeStyles(theme => ({
 function AddNewDownload({ onAdd = () => {} }) {
   const url = useRef();
   const dirname = useRef();
+  const [defaultUrl, setDefaultUrl] = useState(null);
   const [open, setOpen] = useState(false);
   let [urlHelperText, setUrlHelperText] = useState(null);
   let [dirnameHelperText, setDirnameHelperText] = useState(null);
   const [formSubmittable, setFormSubmittable] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      const clipboardText = clipboard.readText();
+      if (validUrl.isWebUri(clipboardText)) {
+        setDefaultUrl(clipboardText);
+      } else {
+        setDefaultUrl(null);
+      }
+    }
+  }, [open]);
 
   const handleSubmit = e => {
     setOpen(false);
@@ -114,6 +127,7 @@ function AddNewDownload({ onAdd = () => {} }) {
               error={urlHelperText !== null}
               helperText={urlHelperText}
               onChange={handleUrlChange}
+              defaultValue={defaultUrl}
             />
             <br />
             <TextField
