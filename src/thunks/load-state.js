@@ -69,7 +69,7 @@ export default function loadState() {
     );
 
     getState().downloads = savedDownloads;
-    getState().settings = store.get('settings');
+    getState().settings = store.get('settings') || {};
 
     return Promise.resolve();
   };
