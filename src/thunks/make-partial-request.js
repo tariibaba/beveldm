@@ -3,20 +3,18 @@ import https from 'https';
 import { downloadError } from '../actions';
 
 export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
-  return async (dispatch, getState) => {
-    const download = getState().downloads.find(download => download.id === id);
-    
-    if (!rangeEnd) rangeEnd = download.size;
+  return async (dispatch, _getState) => {
     const protocol = new URL(url).protocol === 'http:' ? http : https;
+    const options = {
+      headers: {
+        Connection: 'keep-alive',
+        Range: `bytes=${rangeStart}-${rangeEnd || ''}`
+      }
+    };
 
     return new Promise(resolve => {
       protocol
-        .get(url, {
-          headers: {
-            Connection: 'keep-alive',
-            Range: `bytes=${rangeStart}-${rangeEnd}`
-          }
-        })
+        .get(url, options)
         .on('response', res => resolve(res))
         .on('error', err => dispatch(downloadError(id, { code: err.code })));
     });
