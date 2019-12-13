@@ -1,8 +1,30 @@
-import C from '../actions';
+import {
+  ADD_NEW_DOWNLOAD,
+  UPDATE_BYTES_DOWNLOADED,
+  START_DOWNLOAD,
+  PAUSE_DOWNLOAD,
+  RESUME_DOWNLOAD,
+  CANCEL_DOWNLOAD,
+  COMPLETE_DOWNLOAD,
+  DOWNLOAD_REMOVED,
+  CHANGE_DOWNLOAD_URL,
+  CHANGE_DOWNLOAD_BASIC_INFO,
+  REMOVE_DOWNLOAD,
+  DOWNLOAD_NOT_STARTED,
+  DOWNLOAD_ERROR,
+  HIDE_DOWNLOAD,
+  SHOW_DOWNLOAD,
+  SET_INTERVAL,
+  SUBSCRIBE_TO_INTERVAL,
+  UNSUBSCRIBE_FROM_INTERVAL,
+  SET_DOWNLOAD_RES,
+  ALERT,
+  TOGGLE_SAVE_DATA
+} from '../actions';
 
 export function downloads(state = [], action) {
   switch (action.type) {
-    case C.ADD_NEW_DOWNLOAD:
+    case ADD_NEW_DOWNLOAD:
       return [
         ...state,
         {
@@ -12,7 +34,7 @@ export function downloads(state = [], action) {
           status: action.status
         }
       ];
-    case C.UPDATE_BYTES_DOWNLOADED:
+    case UPDATE_BYTES_DOWNLOADED:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -21,11 +43,11 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.START_DOWNLOAD:
-    case C.PAUSE_DOWNLOAD:
-    case C.RESUME_DOWNLOAD:
-    case C.COMPLETE_DOWNLOAD:
-    case C.DOWNLOAD_REMOVED:
+    case START_DOWNLOAD:
+    case PAUSE_DOWNLOAD:
+    case RESUME_DOWNLOAD:
+    case COMPLETE_DOWNLOAD:
+    case DOWNLOAD_REMOVED:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -34,7 +56,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.CANCEL_DOWNLOAD:
+    case CANCEL_DOWNLOAD:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -44,9 +66,9 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.REMOVE_DOWNLOAD:
+    case REMOVE_DOWNLOAD:
       return state.filter(download => download.id !== action.id);
-    case C.CHANGE_DOWNLOAD_URL:
+    case CHANGE_DOWNLOAD_URL:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -56,7 +78,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.DOWNLOAD_ERROR:
+    case DOWNLOAD_ERROR:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -67,7 +89,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.CHANGE_DOWNLOAD_BASIC_INFO:
+    case CHANGE_DOWNLOAD_BASIC_INFO:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -79,8 +101,8 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.HIDE_DOWNLOAD:
-    case C.SHOW_DOWNLOAD:
+    case HIDE_DOWNLOAD:
+    case SHOW_DOWNLOAD:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -89,7 +111,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.DOWNLOAD_NOT_STARTED:
+    case DOWNLOAD_NOT_STARTED:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -99,7 +121,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case C.SET_DOWNLOAD_RES:
+    case SET_DOWNLOAD_RES:
       return state.map(download =>
         download.id === action.id
           ? {
@@ -115,7 +137,7 @@ export function downloads(state = [], action) {
 
 export function interval(state = null, action) {
   switch (action.type) {
-    case C.SET_INTERVAL:
+    case SET_INTERVAL:
       return action.interval;
     default:
       return state;
@@ -124,9 +146,9 @@ export function interval(state = null, action) {
 
 export function intervalSubscribers(state = [], action) {
   switch (action.type) {
-    case C.SUBSCRIBE_TO_INTERVAL:
+    case SUBSCRIBE_TO_INTERVAL:
       return [...state, { id: action.id, action: action.action }];
-    case C.UNSUBSCRIBE_FROM_INTERVAL:
+    case UNSUBSCRIBE_FROM_INTERVAL:
       return state.filter(subscriber => subscriber.id !== action.id);
     default:
       return state;
@@ -135,7 +157,7 @@ export function intervalSubscribers(state = [], action) {
 
 export function message(state = {}, action) {
   switch (action.type) {
-    case C.ALERT:
+    case ALERT:
       return {
         value: action.message,
         type: action.messageType,
@@ -149,7 +171,7 @@ export function message(state = {}, action) {
 
 export function settings(state = {}, action) {
   switch (action.type) {
-    case C.TOGGLE_SAVE_DATA:
+    case TOGGLE_SAVE_DATA:
       return {
         ...state,
         saveData: action.value
