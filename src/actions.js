@@ -127,7 +127,7 @@ export function changeDownloadUrl(id, newUrl) {
 
 export function changeDownloadBasicInfo(
   id,
-  filename,
+  defaultFilename,
   availableFilename,
   size,
   resumable
@@ -135,7 +135,7 @@ export function changeDownloadBasicInfo(
   return {
     type: CHANGE_DOWNLOAD_BASIC_INFO,
     id,
-    filename,
+    defaultFilename,
     availableFilename,
     size,
     resumable

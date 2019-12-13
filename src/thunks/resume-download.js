@@ -48,7 +48,7 @@ export default function thunkResumeDownload(id) {
         size = contentLength;
       }
 
-      if (download.filename !== filename || download.size !== size) {
+      if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
       } else {
         if (!download.resumable) {

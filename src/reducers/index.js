@@ -94,7 +94,7 @@ export function downloads(state = [], action) {
         download.id === action.id
           ? {
               ...download,
-              filename: action.filename,
+              defaultFilename: action.defaultFilename,
               availableFilename: action.availableFilename,
               size: action.size,
               resumable: action.resumable

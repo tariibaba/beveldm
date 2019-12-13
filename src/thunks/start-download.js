@@ -22,7 +22,7 @@ export default function thunkStartDownload(id) {
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);
 
-    if (download.filename !== filename || download.size !== size)
+    if (download.defaultFilename !== filename || download.size !== size)
       dispatch(downloadError(id, { code: 'ERR_FILE_CHANGED' }));
     else {
       // The download status might have changed since dispatching startDownload
