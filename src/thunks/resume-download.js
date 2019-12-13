@@ -86,7 +86,7 @@ function thunkResumeFromError(id, code) {
 
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
-        const availableFilename = getAvailableFilename(
+        const availableFilename = await getAvailableFilename(
           download.dirname,
           filename,
           state.downloads
