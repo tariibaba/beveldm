@@ -32,8 +32,11 @@ export default function thunkAddNewDownload(url, dirname) {
         })
     );
     res.destroy();
+
+    // Get info from the request.
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
+
     dispatch(
       changeDownloadBasicInfo(
         id,

@@ -19,6 +19,7 @@ export default function thunkStartDownload(id) {
     }
 
     dispatch(setDownloadRes(id, res));
+    // Get info from the request.
     const filename = getFilename(download.url, res.headers);
     const size = getFileSize(res.headers);
 

@@ -38,10 +38,11 @@ export default function thunkResumeDownload(id) {
       }
 
       dispatch(setDownloadRes(id, res));
+      // Get info from the request.
       const filename = getFilename(download.url, res.headers);
       const contentLength = getFileSize(res.headers);
       let size;
-      // Check for partial content
+      // Check for partial content.
       if (download.resumable) {
         size = download.bytesDownloaded + contentLength;
       } else {
@@ -84,6 +85,8 @@ function thunkResumeFromError(id, code) {
           return;
         }
 
+        dispatch(setDownloadRes(id, res));
+        // Get info from the request.
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         const availableFilename = await getAvailableFilename(
