@@ -26,8 +26,14 @@ export default function saveState() {
                 download.show
             )
             .map(download => {
-              const { bytesDownloaded, res, ...d } = { ...download };
-              return d;
+              const { res, ...downloadWithoutRes } = { ...download };
+              if (download.status === 'paused') {
+                const { bytesDownloaded, ...downloadWithoutBytesDownloaded } = {
+                  ...downloadWithoutRes
+                };
+                return downloadWithoutBytesDownloaded;
+              }
+              return downloadWithoutRes;
             })
         );
         store.set('settings', state.settings);

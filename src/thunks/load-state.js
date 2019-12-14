@@ -13,57 +13,38 @@ export default function loadState() {
       savedDownloads.map(async download => {
         const path = getDownloadPath(download);
         const partialPath = getPartialDownloadPath(download);
+
         if (download.status === 'complete') {
           if (!(await pathExists(path))) {
             download = {
               ...download,
               status: 'removed'
             };
-            return download;
-          } else {
-            download = {
-              ...download,
-              bytesDownloaded: download.size
-            };
           }
         } else if (
+          !(await pathExists(partialPath)) &&
           download.status !== 'notstarted' &&
           download.status !== 'canceled'
         ) {
-          if (!(await pathExists(partialPath))) {
-            download = {
-              ...download,
-              status: 'removed'
-            };
-            return download;
-          }
-        }
-
-        const stat = pify(fs.stat);
-        if (download.status === 'paused') {
-          const partialPath = getPartialDownloadPath(download);
           download = {
             ...download,
-            bytesDownloaded: (await stat(partialPath)).size
+            status: 'removed'
           };
         } else if (download.status === 'canceled') {
-          if (await pathExists(partialPath)) {
-            download = {
-              ...download,
-              bytesDownloaded: (await stat(partialPath)).size
-            };
-          } else {
+          if (!(await pathExists(partialPath))) {
             download = {
               ...download,
               bytesDownloaded: 0
             };
           }
-        } else if (download.status === 'notstarted') {
+        } else if (download.status === 'paused') {
+          const stat = pify(fs.stat);
           download = {
             ...download,
-            bytesDownloaded: 0
+            bytesDownloaded: (await stat(partialPath)).size
           };
         }
+
         return download;
       })
     );
