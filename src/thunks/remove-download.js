@@ -1,6 +1,7 @@
 import { removeDownload, alert, hideDownload, showDownload } from '../actions';
 import { getPartialDownloadPath, deleteFile } from './helpers';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
+import pathExists from 'path-exists';
 
 export default function thunkRemoveDownload(id) {
   return async (dispatch, getState) => {
@@ -11,7 +12,10 @@ export default function thunkRemoveDownload(id) {
     const timeout = setTimeout(async () => {
       if (download.status === 'canceled') {
         dispatch(removeDownload(id));
-        await deleteFile(getPartialDownloadPath(download));
+        const partialDownloadPath = getPartialDownloadPath(download);
+        if (await pathExists(partialDownloadPath)) {
+          await deleteFile(partialDownloadPath);
+        }
       }
     }, NOTIFICATION_SHOW_DURATION);
 
