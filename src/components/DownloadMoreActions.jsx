@@ -83,6 +83,7 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
       <IconButton onClick={handlePopoverOpen}>
         <MoreVert fontSize="small" />
       </IconButton>
+
       <Popover
         className={classes.popover}
         open={popoverOpen}
@@ -101,8 +102,10 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
           </ListItem>
         </List>
       </Popover>
+
       <Dialog open={dialogOpen}>
         <DialogTitle>Change URL</DialogTitle>
+
         <form onSubmit={handleChangeUrl}>
           <DialogContent>
             <TextField
@@ -116,11 +119,14 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
               error={dialogUrlHelperText !== null}
               onChange={handleDialogUrlChange}
             />
+
             <br />
+
             <DialogActions>
               <Button type="submit" disabled={!dialogFormSubmittable}>
                 Change
               </Button>
+
               <Button onClick={handleDialogCancel}>Cancel</Button>
             </DialogActions>
           </DialogContent>

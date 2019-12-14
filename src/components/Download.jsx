@@ -150,6 +150,7 @@ function Download({
     >
       <CardContent className={classes.cardContent}>
         <div>
+          {/* Close icon button */}
           {(status === 'canceled' ||
             status === 'complete' ||
             status === 'error' ||
@@ -158,12 +159,16 @@ function Download({
               <Close style={{ fontSize: '15px' }} />
             </IconButton>
           )}
+
+          {/* More vert icon button */}
           <br />
           {status !== 'complete' && status !== 'removed' && (
             <div className={classes.moreVert}>
               <DownloadMoreActions id={id} currentUrl={url} />
             </div>
           )}
+
+          {/* Available file name */}
           <div>
             <button
               onClick={openFile}
@@ -181,6 +186,8 @@ function Download({
             >
               {availableFilename}
             </button>
+
+            {/* Text that shows when the download status is 'canceled', 'error' or 'removed' */}
             <span
               style={{ marginLeft: 10, fontWeight: 500, color: '#00000099' }}
             >
@@ -201,6 +208,8 @@ function Download({
               })}
             </span>
           </div>
+
+          {/* URL */}
           <div>
             <button
               onClick={openUrl}
@@ -217,6 +226,8 @@ function Download({
               {url}
             </button>
           </div>
+
+          {/* Speed, bytes downloaded and size */}
           {status !== 'complete' &&
             status !== 'canceled' &&
             status !== 'error' &&
@@ -234,6 +245,8 @@ function Download({
                 </PeriodicUpdate>
               </div>
             )}
+
+          {/* Button to open download folder */}
           {status === 'complete' && (
             <button
               onClick={openFolder}
@@ -245,6 +258,8 @@ function Download({
               Show in folder
             </button>
           )}
+
+          {/* Progress bar */}
           {status !== 'complete' &&
             status !== 'canceled' &&
             status !== 'error' &&
@@ -257,7 +272,10 @@ function Download({
                 />
               </PeriodicUpdate>
             )}
+
           <DownloadActionButton id={id} status={status} />
+
+          {/* Cancel button */}
           {status !== 'canceled' &&
             status !== 'complete' &&
             status !== 'error' &&

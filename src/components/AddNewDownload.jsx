@@ -114,8 +114,10 @@ function AddNewDownload({ onAdd = () => {} }) {
       <Fab className={classes.fabButton} onClick={handleClickOpen}>
         <Add />
       </Fab>
+
       <Dialog open={open}>
         <DialogTitle>Add new download</DialogTitle>
+
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <TextField
@@ -129,7 +131,9 @@ function AddNewDownload({ onAdd = () => {} }) {
               onChange={handleUrlChange}
               defaultValue={defaultUrl}
             />
+
             <br />
+
             <TextField
               name="dirname"
               type="text"
@@ -139,13 +143,16 @@ function AddNewDownload({ onAdd = () => {} }) {
               helperText={dirnameHelperText}
               onChange={handleDirnameChange}
             />
+
             <IconButton onClick={chooseFile}>
               <FolderOpen />
             </IconButton>
+
             <DialogActions>
               <Button type="submit" disabled={!formSubmittable}>
                 Add
               </Button>
+
               <Button onClick={handleCancel}>Cancel</Button>
             </DialogActions>
           </DialogContent>

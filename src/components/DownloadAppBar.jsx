@@ -66,7 +66,9 @@ function DownloadAppBar({ saveData = false, dispatch }) {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Downloads
           </Typography>
+
           <AddNewDownload />
+
           <IconButton
             className={classes.iconButton}
             edge="end"
@@ -75,6 +77,7 @@ function DownloadAppBar({ saveData = false, dispatch }) {
           >
             <MoreVert />
           </IconButton>
+
           <Popover
             className={classes.popover}
             open={popoverOpen}
