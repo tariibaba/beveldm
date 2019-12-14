@@ -18,7 +18,7 @@ export default function thunkAddNewDownload(url, dirname) {
     dispatch(addNewDownload(id, url, dirname));
     const res = await new Promise(async resolve =>
       request
-        .get(url, { headers: { Range: 'bytes=0-' }})
+        .get(url, { headers: { Range: 'bytes=0-' } })
         .on('response', res => resolve(res))
         .on('error', () => {
           dispatch(removeDownload(id));
@@ -33,6 +33,11 @@ export default function thunkAddNewDownload(url, dirname) {
         })
     );
     res.destroy();
+    if (res.statusCode === 403) {
+      dispatch(removeDownload(id));
+      dispatch(alert('Forbidden request', 'error'));
+      return Promise.resolve();
+    }
 
     // Get info from the request.
     const filename = getFilename(url, res.headers);
@@ -51,5 +56,7 @@ export default function thunkAddNewDownload(url, dirname) {
     );
     dispatch(thunkUpdateBytesDownloaded(id, 0));
     dispatch(downloadNotStarted(id));
+
+    return Promise.resolve();
   };
 }

@@ -8,7 +8,12 @@ export default function makeRequest(id, url) {
       const protocol = new URL(url).protocol === 'http:' ? http : https;
       protocol
         .get(url, { headers: { Connection: 'keep-alive' }})
-        .on('response', res => resolve(res))
+        .on('response', res => {
+          if (res.statusCode === 403) {
+            dispatch(downloadError(id, { code: 'ERR_FORBIDDEN' }));
+          }
+          resolve(res);
+        })
         .on('error', err => dispatch(downloadError(id, { code: err.code })));
     });
   };

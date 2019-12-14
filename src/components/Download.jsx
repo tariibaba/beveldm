@@ -192,6 +192,7 @@ function Download({
                       ECONNREFUSED: 'Network error',
                       ENOTFOUND: 'Network error',
                       ECONNRESET: 'Network error',
+                      ERR_FORBIDDEN: 'Forbidden',
                       else: null
                     })
                   : null,

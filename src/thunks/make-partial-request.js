@@ -15,7 +15,12 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
     return new Promise(resolve => {
       protocol
         .get(url, options)
-        .on('response', res => resolve(res))
+        .on('response', res => {
+          if (res.statusCode === 403) {
+            dispatch(downloadError(id, { code: 'ERR_FORBIDDEN' }));
+          }
+          resolve(res)}
+        )
         .on('error', err => dispatch(downloadError(id, { code: err.code })));
     });
   };
