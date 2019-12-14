@@ -12,7 +12,8 @@ import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
 export default function thunkAddNewDownload(url, dirname) {
   return async (dispatch, getState) => {
-    const downloads = getState().downloads;
+    let state = getState();
+    let downloads = state.downloads;
     const id = v4();
     dispatch(addNewDownload(id, url, dirname));
     const res = await new Promise(async resolve =>
@@ -37,11 +38,13 @@ export default function thunkAddNewDownload(url, dirname) {
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
 
+    state = getState();
+    downloads = state.downloads;
     dispatch(
       changeDownloadBasicInfo(
         id,
         filename,
-        await getAvailableFilename(id, dirname, filename, downloads),
+        await getAvailableFilename(dirname, filename, downloads),
         size,
         res.statusCode === 206
       )
