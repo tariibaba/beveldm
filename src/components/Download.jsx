@@ -221,7 +221,7 @@ function Download({
             status !== 'error' &&
             status !== 'removed' && (
               <div style={{ marginTop: '20px' }}>
-                <PeriodicUpdate start={status === 'started'} interval={500}>
+                <PeriodicUpdate start={status === 'progressing'} interval={500}>
                   <div>
                     <DownloadSpeed
                       bytesDownloaded={bytesDownloaded}
@@ -248,7 +248,7 @@ function Download({
             status !== 'canceled' &&
             status !== 'error' &&
             status !== 'removed' && (
-              <PeriodicUpdate start={status === 'started'}>
+              <PeriodicUpdate start={status === 'progressing'}>
                 <LinearProgress
                   value={(bytesDownloaded / size) * 100}
                   variant="determinate"

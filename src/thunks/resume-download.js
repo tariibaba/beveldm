@@ -1,8 +1,8 @@
 import {
-  resumeDownload,
   downloadError,
   changeDownloadBasicInfo,
-  setDownloadRes
+  setDownloadRes,
+  downloadProgressing
 } from '../actions';
 import {
   getAvailableFilename,
@@ -14,18 +14,18 @@ import thunkDownloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
-export default function thunkResumeDownload(id) {
+export default function thunkdownloadProgressing(id) {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
 
     if (download.res) {
-      dispatch(resumeDownload(id));
+      dispatch(downloadProgressing(id));
       download.res.resume();
     } else if (download.status === 'error') {
       dispatch(thunkResumeFromError(id, download.error.code));
     } else {
-      dispatch(resumeDownload(id));
+      dispatch(downloadProgressing(id));
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
@@ -33,7 +33,7 @@ export default function thunkResumeDownload(id) {
       // The download status might have changed since making the request.
       state = getState();
       download = state.downloads.find(download => download.id === id);
-      if (download.status !== 'started') {
+      if (download.status !== 'progressing') {
         return;
       }
 
@@ -65,7 +65,7 @@ export default function thunkResumeDownload(id) {
 
 function thunkResumeFromError(id, code) {
   return async (dispatch, getState) => {
-    dispatch(resumeDownload(id));
+    dispatch(downloadProgressing(id));
 
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
@@ -81,7 +81,7 @@ function thunkResumeFromError(id, code) {
         // The download status might have changed since making the request.
         state = getState();
         download = state.downloads.find(download => download.id === id);
-        if (download.status !== 'started') {
+        if (download.status !== 'progressing') {
           return;
         }
 
@@ -110,7 +110,7 @@ function thunkResumeFromError(id, code) {
       case 'ECONNRESET':
       case 'ECONNREFUSED':
       case 'ENOTFOUND':
-        dispatch(thunkResumeDownload(id));
+        dispatch(thunkdownloadProgressing(id));
         return;
       default:
         break;

@@ -1,6 +1,7 @@
 export const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
 export const DOWNLOAD_NOT_STARTED = 'DOWNLOAD_NOT_STARTED';
 export const START_DOWNLOAD = 'START_DOWNLOAD';
+export const DOWNLOAD_PROGRESSING = 'DOWNLOAD_PROGRESSING';
 export const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
 export const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
 export const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
@@ -30,11 +31,11 @@ export function addNewDownload(id, url, dirname) {
   };
 }
 
-export function startDownload(id, res) {
+export function downloadProgressing(id) {
   return {
-    type: START_DOWNLOAD,
+    type: DOWNLOAD_PROGRESSING,
     id,
-    status: 'started'
+    status: 'progressing'
   };
 }
 
@@ -51,14 +52,6 @@ export function pauseDownload(id) {
     type: PAUSE_DOWNLOAD,
     id,
     status: 'paused'
-  };
-}
-
-export function resumeDownload(id) {
-  return {
-    type: RESUME_DOWNLOAD,
-    id,
-    status: 'started'
   };
 }
 

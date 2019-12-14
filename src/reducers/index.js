@@ -1,7 +1,7 @@
 import {
   ADD_NEW_DOWNLOAD,
   UPDATE_BYTES_DOWNLOADED,
-  START_DOWNLOAD,
+  DOWNLOAD_PROGRESSING,
   PAUSE_DOWNLOAD,
   RESUME_DOWNLOAD,
   CANCEL_DOWNLOAD,
@@ -43,7 +43,7 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case START_DOWNLOAD:
+    case DOWNLOAD_PROGRESSING:
     case PAUSE_DOWNLOAD:
     case RESUME_DOWNLOAD:
     case COMPLETE_DOWNLOAD:

@@ -6,7 +6,7 @@ export default function saveState() {
   return async (dispatch, getState) => {
     let state = getState();
     state.downloads.forEach(async download => {
-      if (download.status === 'started') {
+      if (download.status === 'progressing') {
         await dispatch(thunkPauseDownload(download.id));
       }
       if (!download.show) deleteFile(getDownloadPath(download));

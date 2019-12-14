@@ -1,4 +1,4 @@
-import { startDownload, downloadError, setDownloadRes } from '../actions';
+import { downloadError, setDownloadRes, downloadProgressing } from '../actions';
 import { getFilename, getFileSize } from './helpers';
 import thunkDownloadFile from './download-file';
 import makeRequest from './make-request';
@@ -7,14 +7,14 @@ export default function thunkStartDownload(id) {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
-    dispatch(startDownload(id));
+    dispatch(downloadProgressing(id));
 
     const res = await dispatch(makeRequest(id, download.url));
 
     // The download status might have changed since making the request.
     state = getState();
     download = state.downloads.find(download => download.id === id);
-    if (download.status !== 'started') {
+    if (download.status !== 'progressing') {
       return;
     }
 

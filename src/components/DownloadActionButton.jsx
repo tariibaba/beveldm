@@ -13,7 +13,7 @@ function DownloadActionButton({ id, status, dispatch }) {
     case 'notstarted':
       action = 'Start';
       break;
-    case 'started':
+    case 'progressing':
       action = 'Pause';
       break;
     case 'paused':
@@ -33,7 +33,7 @@ function DownloadActionButton({ id, status, dispatch }) {
       case 'notstarted':
         dispatch(thunkStartDownload(id));
         break;
-      case 'started':
+      case 'progressing':
         dispatch(thunkPauseDownload(id));
         break;
       case 'paused':
