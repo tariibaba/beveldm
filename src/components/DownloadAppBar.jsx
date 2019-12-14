@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   saveDataCheck: {
     float: 'left',
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1) + 'px'
   }
 }));
 

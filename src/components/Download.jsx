@@ -38,13 +38,13 @@ const useStyles = makeStyles(theme => ({
   },
   colorLinearProgress: {
     width: '90%',
-    padding: '0',
+    padding: 0,
     marginTop: '20px',
     backgroundColor: grey['A100']
   },
   filenameStylesDefault: {
     display: 'inline-block',
-    fontWeight: '500',
+    fontWeight: 500,
     cursor: 'text'
   },
   filenameStylesError: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles(theme => ({
   cardStylesDefault: {
     marginTop: '15px',
     marginBottom: '15px',
-    boxShadow: '0px 1px 3px' + grey['A200'],
+    boxShadow: '0 1px 3px' + grey['A200'],
     transition: 'none'
   },
   cardStylesError: {
