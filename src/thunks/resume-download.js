@@ -14,7 +14,7 @@ import thunkDownloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
 
-export default function thunkdownloadProgressing(id) {
+export default function thunkResumeDownload(id) {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
@@ -110,7 +110,7 @@ function thunkResumeFromError(id, code) {
       case 'ECONNRESET':
       case 'ECONNREFUSED':
       case 'ENOTFOUND':
-        dispatch(thunkdownloadProgressing(id));
+        dispatch(thunkResumeDownload(id));
         return;
       default:
         break;
