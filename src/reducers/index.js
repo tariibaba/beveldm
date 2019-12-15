@@ -26,13 +26,13 @@ export function downloads(state = [], action) {
   switch (action.type) {
     case ADD_NEW_DOWNLOAD:
       return [
-        ...state,
         {
           id: action.id,
           url: action.url,
           dirname: action.dirname,
           status: action.status
-        }
+        },
+        ...state
       ];
     case UPDATE_BYTES_DOWNLOADED:
       return state.map(download =>
