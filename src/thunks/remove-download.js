@@ -1,4 +1,4 @@
-import { removeDownload, alert, hideDownload, showDownload } from '../actions';
+import { removeDownload, hideDownload, showDownload, notify } from '../actions';
 import { getPartialDownloadPath, deleteFile } from './helpers';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
 import pathExists from 'path-exists';
@@ -20,14 +20,14 @@ export default function thunkRemoveDownload(id) {
     }, NOTIFICATION_SHOW_DURATION);
 
     dispatch(
-      alert(
-        `Removed '${download.availableFilename}' from list`,
+      notify(
         'info',
+        `Removed '${download.availableFilename}' from list`,
+        'Undo',
         () => {
           dispatch(showDownload(id));
           clearTimeout(timeout);
-        },
-        'Undo'
+        }
       )
     );
   };

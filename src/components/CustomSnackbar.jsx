@@ -18,12 +18,18 @@ function TransitionUp(props) {
   return <Slide {...props} direction="up" />;
 }
 
-function CustomSnackbar({ messageObj, message, action, actionName, variant }) {
+function CustomSnackbar({
+  variant,
+  message,
+  actionName,
+  action,
+  notification
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (message) setOpen(true);
-  }, [messageObj, message]);
+  }, [notification, message]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') return;
@@ -66,10 +72,11 @@ function CustomSnackbar({ messageObj, message, action, actionName, variant }) {
   );
 }
 
-export default connect(({ message }) => ({
-  messageObj: message,
-  message: message.value,
-  variant: message.type,
-  action: message.action,
-  actionName: message.actionName
+export default connect(({ currentNotification }) => ({
+  variant: currentNotification.variant,
+  message: currentNotification.message,
+  actionName: currentNotification.actionName,
+  action: currentNotification.action,
+  // Also passing the full object to detect when it has changed even with the same props
+  notification: currentNotification
 }))(CustomSnackbar);

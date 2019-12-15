@@ -3,7 +3,7 @@ import {
   changeDownloadBasicInfo,
   downloadNotStarted,
   removeDownload,
-  alert
+  notify
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
@@ -23,11 +23,8 @@ export default function thunkAddNewDownload(url, dirname) {
         .on('error', () => {
           dispatch(removeDownload(id));
           dispatch(
-            alert(
-              'Network error',
-              'error',
-              () => dispatch(thunkAddNewDownload(url, dirname)),
-              'Retry'
+            notify('error', 'Network error', 'Retry', () =>
+              dispatch(thunkAddNewDownload(url, dirname))
             )
           );
         })
@@ -35,7 +32,7 @@ export default function thunkAddNewDownload(url, dirname) {
     res.destroy();
     if (res.statusCode === 403) {
       dispatch(removeDownload(id));
-      dispatch(alert('Forbidden request', 'error'));
+      dispatch(notify('error', 'Forbidden request'));
       return Promise.resolve();
     }
 

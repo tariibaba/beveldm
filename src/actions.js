@@ -18,7 +18,7 @@ export const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
 export const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
 export const HIDE_DOWNLOAD = 'HIDE_DOWNLOAD';
 export const SHOW_DOWNLOAD = 'SHOW_DOWNLOAD';
-export const ALERT = 'ALERT';
+export const NOTIFY = 'NOTIFY';
 export const TOGGLE_SAVE_DATA = 'TOGGLE_SAVE_DATA';
 
 export function addNewDownload(id, url, dirname) {
@@ -178,13 +178,14 @@ export function showDownload(id) {
   };
 }
 
-export function alert(message, messageType, action, actionName) {
+export function notify(variant, message, actionName, action) {
+  console.log('notify');
   return {
-    type: ALERT,
+    type: NOTIFY,
+    variant,
     message,
-    messageType,
-    action,
-    actionName
+    actionName,
+    action
   };
 }
 

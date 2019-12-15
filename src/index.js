@@ -8,7 +8,7 @@ import {
   downloads,
   interval,
   intervalSubscribers,
-  message,
+  currentNotification,
   settings
 } from './reducers';
 import reduxThunk from 'redux-thunk';
@@ -19,7 +19,7 @@ const store = createStore(
     downloads,
     interval,
     intervalSubscribers,
-    message,
+    currentNotification,
     settings
   }),
   applyMiddleware(reduxThunk)

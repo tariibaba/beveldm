@@ -18,7 +18,7 @@ import {
   SUBSCRIBE_TO_INTERVAL,
   UNSUBSCRIBE_FROM_INTERVAL,
   SET_DOWNLOAD_RES,
-  ALERT,
+  NOTIFY,
   TOGGLE_SAVE_DATA
 } from '../actions';
 
@@ -155,12 +155,12 @@ export function intervalSubscribers(state = [], action) {
   }
 }
 
-export function message(state = {}, action) {
+export function currentNotification(state = {}, action) {
   switch (action.type) {
-    case ALERT:
+    case NOTIFY:
       return {
-        value: action.message,
-        type: action.messageType,
+        variant: action.variant,
+        message: action.message,
         actionName: action.actionName,
         action: action.action
       };
