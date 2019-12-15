@@ -27,7 +27,7 @@ export default function thunkDownloadFile(id, res) {
         } else {
           buffer = Buffer.concat([buffer, chunk]);
         }
-        
+
         const saveData = state.settings.saveData;
         if (saveData) {
           const writeSlicedBuffer = () => {
@@ -37,15 +37,21 @@ export default function thunkDownloadFile(id, res) {
             const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
             buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
 
+            clearTimeout(speedThrottleTimeout);
             speedThrottleTimeout = setTimeout(() => {
               fileStream.write(chunkToWrite, async err => {
                 if (err) throw err;
+
                 const received = download.bytesDownloaded + chunkToWrite.length;
                 dispatch(thunkUpdateBytesDownloaded(id, received));
-                
+
+                state = getState();
+                download = state.downloads.find(download => download.id === id);
+
                 if (
                   buffer.length > SAVE_DATA_LIMIT / 2 &&
-                  state.settings.saveData
+                  state.settings.saveData &&
+                  download.status !== 'paused'
                 ) {
                   writeSlicedBuffer();
                 } else if (download.status !== 'paused') {
@@ -61,7 +67,7 @@ export default function thunkDownloadFile(id, res) {
             const received = download.bytesDownloaded + buffer.length;
             buffer = null;
             dispatch(thunkUpdateBytesDownloaded(id, received));
-            
+
             if (download.status !== 'paused') res.resume();
           });
         }
