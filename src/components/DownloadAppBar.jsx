@@ -17,9 +17,6 @@ import { connect } from 'react-redux';
 import { toggleSaveData } from '../actions';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
   iconButton: {
     float: 'right'
   },
@@ -60,7 +57,7 @@ function DownloadAppBar({ saveData = false, dispatch }) {
   const popoverOpen = Boolean(anchorEl);
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }}>

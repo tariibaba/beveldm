@@ -6,7 +6,7 @@ import { saveState, loadState } from './thunks';
 import './App.css';
 import DownloadAppBar from './components/DownloadAppBar';
 import { grey, blue } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, Toolbar } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import CustomSnackbar from './components/CustomSnackbar';
 
@@ -14,8 +14,10 @@ const styles = {
   App: {
     backgroundColor: grey['100'],
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+    display: 'flex',
+    flexFlow: 'column'
+  },
 };
 
 const theme = createMuiTheme({
@@ -47,6 +49,7 @@ function App({ dispatch }) {
       <div style={{ height: '100%' }}>
         <div style={styles.App}>
           <DownloadAppBar />
+          <Toolbar />
           <DownloadList />
           <CustomSnackbar />
         </div>

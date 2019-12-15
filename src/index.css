@@ -7,4 +7,5 @@ body {
   margin: 0;
   font-family: Roboto, 'Segoe UI';
   font-size: 13px;
+  overflow-y: hidden;
 }

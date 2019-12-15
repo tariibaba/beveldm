@@ -7,14 +7,19 @@ import { grey } from '@material-ui/core/colors';
 const useStyles = makeStyles(theme => ({
   main: {
     textAlign: 'center',
-    minHeight: '100%',
-    backgroundColor: grey['100']
+    position: 'relative',
+    minHeight: '70%',
+    height: '70%',
+    backgroundColor: grey['100'],
+    overflowY: 'overlay',               // I know 'overlay' is deprecated.
+    flex: '1 1 auto'
   },
   list: {
+    position: 'relative',
     display: 'inline-block',
     width: '600px',
     textAlign: 'left',
-    marginTop: theme.spacing(10)
+    marginTop: '15px'
   },
   gettingInfo: {
     marginTop: '15px',
