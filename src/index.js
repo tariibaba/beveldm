@@ -5,22 +5,22 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import {
-  downloads,
-  interval,
-  intervalSubscribers,
-  currentNotification,
-  settings
+  downloadsReducer,
+  intervalReducer,
+  intervalSubscribersReducer,
+  currentNotificationReducer,
+  settingsReducer
 } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto';
 
 const store = createStore(
   combineReducers({
-    downloads,
-    interval,
-    intervalSubscribers,
-    currentNotification,
-    settings
+    downloads: downloadsReducer,
+    interval: intervalReducer,
+    intervalSubscribers: intervalSubscribersReducer,
+    currentNotification: currentNotificationReducer,
+    settings: settingsReducer
   }),
   applyMiddleware(reduxThunk)
 );

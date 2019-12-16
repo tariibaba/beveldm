@@ -1,15 +1,16 @@
-import { subscribeToInterval, setDownloadInterval } from '../actions';
+import { subscribeToInterval, setDownloadsInterval } from '../actions';
+
 
 export default function subscribeToIntervalThunk(id, action) {
   return async (dispatch, getState) => {
     if (getState().intervalSubscribers.length === 0) {
-      dispatch(setDownloadIntervalThunk());
+      dispatch(setDownloadsIntervalThunk());
     }
     dispatch(subscribeToInterval(id, action));
   };
 }
 
-function setDownloadIntervalThunk() {
+function setDownloadsIntervalThunk() {
   return async (dispatch, getState) => {
     let state = getState();
     const interval = setInterval(() => {
@@ -21,6 +22,6 @@ function setDownloadIntervalThunk() {
         clearInterval(interval);
       }
     }, 500);
-    dispatch(setDownloadInterval(interval));
+    dispatch(setDownloadsInterval(interval));
   };
 }

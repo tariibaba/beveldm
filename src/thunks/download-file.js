@@ -49,13 +49,19 @@ export default function downloadFile(id, res) {
                 download = state.downloads.find(download => download.id === id);
 
                 if (
-                  buffer.length > SAVE_DATA_LIMIT / 2 &&
-                  state.settings.saveData &&
-                  download.status !== 'paused'
+                  download.status !== 'paused' &&
+                  download.status !== 'canceled'
                 ) {
-                  writeSlicedBuffer();
-                } else if (download.status !== 'paused') {
-                  res.resume();
+                  if (
+                    buffer.length > SAVE_DATA_LIMIT / 2 &&
+                    state.settings.saveData
+                  ) {
+                    writeSlicedBuffer();
+                  } else {
+                    res.resume();
+                  }
+                } else {
+                  clearTimeout(speedThrottleTimeout);
                 }
               });
             }, 500);
@@ -66,7 +72,7 @@ export default function downloadFile(id, res) {
             if (err) throw err;
             const received = download.bytesDownloaded + buffer.length;
             buffer = null;
-            dispatch(thunkUpdateBytesDownloaded(id, received));
+            dispatch(updateBytesDownloadedThunk(id, received));
 
             if (download.status !== 'paused') res.resume();
           });
