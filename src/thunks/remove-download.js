@@ -1,11 +1,11 @@
-import { removeDownload, hideDownload, showDownload, notify } from '../actions';
+import { removeDownload, notify, setDownloadShow } from '../actions';
 import { getPartialDownloadPath, deleteFile } from './helpers';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
 import pathExists from 'path-exists';
 
-export default function thunkRemoveDownload(id) {
+export default function removeDownloadThunk(id) {
   return async (dispatch, getState) => {
-    dispatch(hideDownload(id));
+    dispatch(setDownloadShow(id, false))
 
     let download = getState().downloads.find(download => download.id === id);
 
@@ -25,7 +25,7 @@ export default function thunkRemoveDownload(id) {
         `Removed '${download.availableFilename}' from list`,
         'Undo',
         () => {
-          dispatch(showDownload(id));
+          dispatch(setDownloadShow(id, true));
           clearTimeout(timeout);
         }
       )

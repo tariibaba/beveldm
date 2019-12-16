@@ -5,7 +5,7 @@ import PeriodicUpdate from './PeriodicUpdate';
 import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
-import { thunkCancelDownload, thunkRemoveDownload } from '../thunks';
+import { cancelDownload, removeDownloadThunk } from '../thunks';
 import prettyBytes from '../pretty-bytes';
 import {
   LinearProgress,
@@ -20,7 +20,7 @@ import { grey, blue } from '@material-ui/core/colors';
 import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
 import pathExists from 'path-exists';
-import { downloadRemoved } from '../actions';
+import { changeDownloadStatus } from '../actions';
 import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
@@ -115,14 +115,20 @@ function Download({
   const fullPath = path.join(dirname, availableFilename);
 
   const openFolder = async () => {
-    if (!(await pathExists(fullPath))) dispatch(downloadRemoved(id));
-    else shell.showItemInFolder(fullPath);
+    if (!(await pathExists(fullPath))) {
+      dispatch(changeDownloadStatus(id, 'removed'));
+    } else {
+      shell.showItemInFolder(fullPath);
+    }
   };
 
   const openFile = async () => {
     if (status === 'complete') {
-      if (!(await pathExists(fullPath))) dispatch(downloadRemoved(id));
-      else shell.openItem(fullPath);
+      if (!(await pathExists(fullPath))) {
+        dispatch(changeDownloadStatus(id, 'removed'));
+      } else {
+        shell.openItem(fullPath);
+      }
     }
   };
 
@@ -131,11 +137,11 @@ function Download({
   };
 
   const cancel = () => {
-    dispatch(thunkCancelDownload(id));
+    dispatch(cancelDownload(id));
   };
 
   const remove = () => {
-    dispatch(thunkRemoveDownload(id));
+    dispatch(removeDownloadThunk(id));
   };
 
   const classes = useStyles();

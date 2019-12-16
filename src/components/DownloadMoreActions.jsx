@@ -14,7 +14,7 @@ import {
   DialogActions
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
-import { thunkChangeDownloadUrl } from '../thunks';
+import { changeDownloadUrlThunk } from '../thunks';
 import { connect } from 'react-redux';
 import validUrl from 'valid-url';
 
@@ -49,7 +49,7 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
 
   const handleChangeUrl = event => {
     event.preventDefault();
-    dispatch(thunkChangeDownloadUrl(id, url.current.value));
+    dispatch(changeDownloadUrlThunk(id, url.current.value));
     setDialogOpen(false);
   };
 

@@ -1,9 +1,9 @@
-import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
+import updateBytesDownloadedThunk from './update-bytes-downloaded';
 import fs from 'fs';
 import { getPartialDownloadPath } from './helpers';
 import { SAVE_DATA_LIMIT } from '../constants';
 
-export default function thunkDownloadFile(id, res) {
+export default function downloadFile(id, res) {
   return async (dispatch, getState) => {
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
@@ -43,7 +43,7 @@ export default function thunkDownloadFile(id, res) {
                 if (err) throw err;
 
                 const received = download.bytesDownloaded + chunkToWrite.length;
-                dispatch(thunkUpdateBytesDownloaded(id, received));
+                dispatch(updateBytesDownloadedThunk(id, received));
 
                 state = getState();
                 download = state.downloads.find(download => download.id === id);

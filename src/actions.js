@@ -1,23 +1,16 @@
 export const ADD_NEW_DOWNLOAD = 'ADD_NEW_DOWNLOAD';
-export const DOWNLOAD_NOT_STARTED = 'DOWNLOAD_NOT_STARTED';
-export const START_DOWNLOAD = 'START_DOWNLOAD';
-export const DOWNLOAD_PROGRESSING = 'DOWNLOAD_PROGRESSING';
 export const UPDATE_BYTES_DOWNLOADED = 'UPDATE_BYTES_DOWNLOADED';
-export const PAUSE_DOWNLOAD = 'PAUSE_DOWNLOAD';
-export const RESUME_DOWNLOAD = 'RESUME_DOWNLOAD';
-export const COMPLETE_DOWNLOAD = 'COMPLETE_DOWNLOAD';
-export const CANCEL_DOWNLOAD = 'CANCEL_DOWNLOAD';
 export const REMOVE_DOWNLOAD = 'REMOVE_DOWNLOAD';
 export const SET_DOWNLOAD_RES = 'SET_DOWNLOAD_RES';
 export const SET_INTERVAL = 'SET_INTERVAL';
 export const SUBSCRIBE_TO_INTERVAL = 'SUBSCRIBE_TO_INTERVAL';
 export const UNSUBSCRIBE_FROM_INTERVAL = 'UNSUBSCRIBE_FROM_INTERVAL';
 export const CHANGE_DOWNLOAD_URL = 'CHANGE_DOWNLOAD_URL';
-export const DOWNLOAD_ERROR = 'DOWNLOAD_ERROR';
 export const CHANGE_DOWNLOAD_BASIC_INFO = 'CHANGE_DOWNLOAD_BASIC_INFO';
+export const CHANGE_DOWNLOAD_STATUS = 'CHANGE_DOWNLOAD_STATUS';
 export const DOWNLOAD_REMOVED = 'DOWNLOAD_REMOVED';
-export const HIDE_DOWNLOAD = 'HIDE_DOWNLOAD';
-export const SHOW_DOWNLOAD = 'SHOW_DOWNLOAD';
+export const SET_DOWNLOAD_ERROR = 'SET_DOWNLOAD_ERROR';
+export const SET_DOWNLOAD_SHOW = 'SET_DOWNLOAD_VISIBILITY';
 export const NOTIFY = 'NOTIFY';
 export const TOGGLE_SAVE_DATA = 'TOGGLE_SAVE_DATA';
 
@@ -31,44 +24,11 @@ export function addNewDownload(id, url, dirname) {
   };
 }
 
-export function downloadProgressing(id) {
-  return {
-    type: DOWNLOAD_PROGRESSING,
-    id,
-    status: 'progressing'
-  };
-}
-
 export function updateBytesDownloaded(id, bytesDownloaded) {
   return {
     type: UPDATE_BYTES_DOWNLOADED,
     id,
     bytesDownloaded
-  };
-}
-
-export function pauseDownload(id) {
-  return {
-    type: PAUSE_DOWNLOAD,
-    id,
-    status: 'paused'
-  };
-}
-
-export function completeDownload(id) {
-  return {
-    type: COMPLETE_DOWNLOAD,
-    id,
-    status: 'complete'
-  };
-}
-
-export function cancelDownload(id) {
-  return {
-    type: CANCEL_DOWNLOAD,
-    id,
-    status: 'canceled',
-    res: undefined
   };
 }
 
@@ -135,47 +95,28 @@ export function changeDownloadBasicInfo(
   };
 }
 
-export function downloadError(id, error) {
+export function changeDownloadStatus(id, status) {
   return {
-    type: DOWNLOAD_ERROR,
+    type: CHANGE_DOWNLOAD_STATUS,
     id,
-    status: 'error',
-    error,
-    res: undefined
+    status
   };
 }
 
-export function downloadRemoved(id) {
+export function setDownloadError(id, error) {
   return {
-    type: DOWNLOAD_REMOVED,
+    type: SET_DOWNLOAD_ERROR,
     id,
-    status: 'removed'
+    error: error
   };
 }
 
-export function downloadNotStarted(id) {
+export function setDownloadShow(id, show) {
   return {
-    type: DOWNLOAD_NOT_STARTED,
+    type: SET_DOWNLOAD_SHOW,
     id,
-    status: 'notstarted',
-    show: true
-  };
-}
-
-export function hideDownload(id) {
-  return {
-    type: HIDE_DOWNLOAD,
-    id,
-    show: false
-  };
-}
-
-export function showDownload(id) {
-  return {
-    type: SHOW_DOWNLOAD,
-    id,
-    show: true
-  };
+    show
+  }
 }
 
 export function notify(variant, message, actionName, action) {

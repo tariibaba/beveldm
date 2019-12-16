@@ -1,16 +1,17 @@
 import {
   addNewDownload,
   changeDownloadBasicInfo,
-  downloadNotStarted,
   removeDownload,
-  notify
+  notify,
+  changeDownloadStatus,
+  setDownloadShow
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
 import { v4 } from 'uuid';
-import thunkUpdateBytesDownloaded from './update-bytes-downloaded';
+import updateBytesDownloadedThunk from './update-bytes-downloaded';
 
-export default function thunkAddNewDownload(url, dirname) {
+export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
     let state = getState();
     let downloads = state.downloads;
@@ -24,7 +25,7 @@ export default function thunkAddNewDownload(url, dirname) {
           dispatch(removeDownload(id));
           dispatch(
             notify('error', 'Network error', 'Retry', () =>
-              dispatch(thunkAddNewDownload(url, dirname))
+              dispatch(addNewDownloadThunk(url, dirname))
             )
           );
         })
@@ -51,8 +52,9 @@ export default function thunkAddNewDownload(url, dirname) {
         res.statusCode === 206
       )
     );
-    dispatch(thunkUpdateBytesDownloaded(id, 0));
-    dispatch(downloadNotStarted(id));
+    dispatch(setDownloadShow(id, true));
+    dispatch(updateBytesDownloadedThunk(id, 0));
+    dispatch(changeDownloadStatus(id, 'notstarted'));
 
     return Promise.resolve();
   };

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { ipcRenderer, clipboard } from 'electron';
-import { thunkAddNewDownload } from '../thunks';
+import { addNewDownloadThunk } from '../thunks';
 import {
   Fab,
   makeStyles,
@@ -164,6 +164,6 @@ function AddNewDownload({ onAdd = () => {} }) {
 
 export default connect(null, dispatch => ({
   onAdd: (url, dirname) => {
-    dispatch(thunkAddNewDownload(url, dirname));
+    dispatch(addNewDownloadThunk(url, dirname));
   }
 }))(AddNewDownload);

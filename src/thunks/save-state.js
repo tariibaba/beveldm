@@ -1,4 +1,4 @@
-import thunkPauseDownload from './pause-download';
+import pauseDownload from './pause-download';
 import Store from 'electron-store';
 import { deleteFile, getDownloadPath } from './helpers';
 
@@ -7,7 +7,7 @@ export default function saveState() {
     let state = getState();
     state.downloads.forEach(async download => {
       if (download.status === 'progressing') {
-        await dispatch(thunkPauseDownload(download.id));
+        await dispatch(pauseDownload(download.id));
       }
       if (!download.show) deleteFile(getDownloadPath(download));
     });

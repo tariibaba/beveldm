@@ -1,25 +1,18 @@
 import {
   ADD_NEW_DOWNLOAD,
   UPDATE_BYTES_DOWNLOADED,
-  DOWNLOAD_PROGRESSING,
-  PAUSE_DOWNLOAD,
-  RESUME_DOWNLOAD,
-  CANCEL_DOWNLOAD,
-  COMPLETE_DOWNLOAD,
-  DOWNLOAD_REMOVED,
   CHANGE_DOWNLOAD_URL,
   CHANGE_DOWNLOAD_BASIC_INFO,
   REMOVE_DOWNLOAD,
-  DOWNLOAD_NOT_STARTED,
-  DOWNLOAD_ERROR,
-  HIDE_DOWNLOAD,
-  SHOW_DOWNLOAD,
   SET_INTERVAL,
   SUBSCRIBE_TO_INTERVAL,
   UNSUBSCRIBE_FROM_INTERVAL,
   SET_DOWNLOAD_RES,
   NOTIFY,
-  TOGGLE_SAVE_DATA
+  TOGGLE_SAVE_DATA,
+  SET_DOWNLOAD_SHOW,
+  SET_DOWNLOAD_ERROR,
+  CHANGE_DOWNLOAD_STATUS
 } from '../actions';
 
 export function downloads(state = [], action) {
@@ -43,26 +36,12 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case DOWNLOAD_PROGRESSING:
-    case PAUSE_DOWNLOAD:
-    case RESUME_DOWNLOAD:
-    case COMPLETE_DOWNLOAD:
-    case DOWNLOAD_REMOVED:
+    case CHANGE_DOWNLOAD_STATUS:
       return state.map(download =>
         download.id === action.id
           ? {
               ...download,
               status: action.status
-            }
-          : download
-      );
-    case CANCEL_DOWNLOAD:
-      return state.map(download =>
-        download.id === action.id
-          ? {
-              ...download,
-              status: action.status,
-              res: action.res
             }
           : download
       );
@@ -74,17 +53,6 @@ export function downloads(state = [], action) {
           ? {
               ...download,
               url: action.newUrl,
-              res: action.res
-            }
-          : download
-      );
-    case DOWNLOAD_ERROR:
-      return state.map(download =>
-        download.id === action.id
-          ? {
-              ...download,
-              status: action.status,
-              error: action.error,
               res: action.res
             }
           : download
@@ -101,23 +69,12 @@ export function downloads(state = [], action) {
             }
           : download
       );
-    case HIDE_DOWNLOAD:
-    case SHOW_DOWNLOAD:
+    case SET_DOWNLOAD_ERROR:
       return state.map(download =>
         download.id === action.id
           ? {
               ...download,
-              show: action.show
-            }
-          : download
-      );
-    case DOWNLOAD_NOT_STARTED:
-      return state.map(download =>
-        download.id === action.id
-          ? {
-              ...download,
-              status: action.status,
-              show: action.show
+              error: action.error
             }
           : download
       );
@@ -127,6 +84,15 @@ export function downloads(state = [], action) {
           ? {
               ...download,
               res: action.res
+            }
+          : download
+      );
+    case SET_DOWNLOAD_SHOW:
+      return state.map(download =>
+        download.id === action.id
+          ? {
+              ...download,
+              show: action.show
             }
           : download
       );

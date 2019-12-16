@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  thunkStartDownload,
-  thunkPauseDownload,
-  thunkResumeDownload
+  startDownload,
+  pauseDownload,
+  resumeDownload
 } from '../thunks';
 import { BlueButton, WhiteButton } from './CustomButtons';
 
@@ -31,15 +31,15 @@ function DownloadActionButton({ id, status, dispatch }) {
   const handleClick = async () => {
     switch (status) {
       case 'notstarted':
-        dispatch(thunkStartDownload(id));
+        dispatch(startDownload(id));
         break;
       case 'progressing':
-        dispatch(thunkPauseDownload(id));
+        dispatch(pauseDownload(id));
         break;
       case 'paused':
       case 'canceled':
       case 'error':
-        dispatch(thunkResumeDownload(id));
+        dispatch(resumeDownload(id));
         break;
       default:
         break;

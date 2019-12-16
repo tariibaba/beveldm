@@ -1,15 +1,15 @@
 import { subscribeToInterval, setDownloadInterval } from '../actions';
 
-export default function thunkSubscribeToInterval(id, action) {
+export default function subscribeToIntervalThunk(id, action) {
   return async (dispatch, getState) => {
     if (getState().intervalSubscribers.length === 0) {
-      dispatch(thunkSetDownloadInterval());
+      dispatch(setDownloadIntervalThunk());
     }
     dispatch(subscribeToInterval(id, action));
   };
 }
 
-function thunkSetDownloadInterval() {
+function setDownloadIntervalThunk() {
   return async (dispatch, getState) => {
     let state = getState();
     const interval = setInterval(() => {
