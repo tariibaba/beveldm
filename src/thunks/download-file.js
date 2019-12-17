@@ -2,6 +2,8 @@ import updateBytesDownloadedThunk from './update-bytes-downloaded';
 import fs from 'fs';
 import { getPartialDownloadPath } from './helpers';
 import { SAVE_DATA_LIMIT } from '../constants';
+import Timeout from 'await-timeout';
+import PromiseWritable from 'promise-writable';
 
 export default function downloadFile(id, res) {
   return async (dispatch, getState) => {
@@ -12,75 +14,71 @@ export default function downloadFile(id, res) {
     const fileStream = fs.createWriteStream(partialDownloadPath, {
       flags: 'a'
     });
+    const fileStreamPromise = new PromiseWritable(fileStream);
+    const timeout = new Timeout();
     let buffer;
-    let speedThrottleTimeout;
 
-    res
-      .on('data', async chunk => {
-        res.pause();
+    res.on('data', async chunk => {
+      res.pause();
 
-        state = getState();
-        download = state.downloads.find(download => download.id === id);
+      state = getState();
+      download = state.downloads.find(download => download.id === id);
+      let saveData = state.settings.saveData;
 
-        if (!buffer) {
-          buffer = chunk;
-        } else {
-          buffer = Buffer.concat([buffer, chunk]);
+      if (!buffer) {
+        buffer = chunk;
+      } else {
+        buffer = Buffer.concat([buffer, chunk]);
+      }
+
+      if (saveData) {
+        const writeSlicedBuffer = async () => {
+          await timeout.set(500);
+
+          state = getState();
+          download = state.downloads.find(download => download.id === id);
+
+          if (download.status === 'paused') {
+            return;
+          }
+
+          const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
+          buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
+
+          await fileStreamPromise.write(chunkToWrite);
+
+          download = state.downloads.find(download => download.id === id);
+          saveData = state.settings.saveData;
+
+          const newBytesDownloaded =
+            download.bytesDownloaded + chunkToWrite.length;
+          dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
+
+          if (download.status !== 'paused') {
+            if (buffer.length > SAVE_DATA_LIMIT && saveData) {
+              writeSlicedBuffer();
+            } else {
+              res.resume();
+            }
+          }
+        };
+        await writeSlicedBuffer();
+      } else {
+        await fileStreamPromise.write(buffer);
+
+        const newBytesDownloaded = download.bytesDownloaded + buffer.length;
+        dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
+        buffer = null;
+
+        if (download.status !== 'paused') {
+          res.resume();
         }
+      }
+    });
 
-        const saveData = state.settings.saveData;
-        if (saveData) {
-          const writeSlicedBuffer = () => {
-            state = getState();
-            download = state.downloads.find(download => download.id === id);
-
-            const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
-            buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
-
-            clearTimeout(speedThrottleTimeout);
-            speedThrottleTimeout = setTimeout(() => {
-              fileStream.write(chunkToWrite, async err => {
-                if (err) throw err;
-
-                const received = download.bytesDownloaded + chunkToWrite.length;
-                dispatch(updateBytesDownloadedThunk(id, received));
-
-                state = getState();
-                download = state.downloads.find(download => download.id === id);
-
-                if (
-                  download.status !== 'paused' &&
-                  download.status !== 'canceled'
-                ) {
-                  if (
-                    buffer.length > SAVE_DATA_LIMIT / 2 &&
-                    state.settings.saveData
-                  ) {
-                    writeSlicedBuffer();
-                  } else {
-                    res.resume();
-                  }
-                } else {
-                  clearTimeout(speedThrottleTimeout);
-                }
-              });
-            }, 500);
-          };
-          await writeSlicedBuffer();
-        } else {
-          fileStream.write(buffer, err => {
-            if (err) throw err;
-            const received = download.bytesDownloaded + buffer.length;
-            buffer = null;
-            dispatch(updateBytesDownloadedThunk(id, received));
-
-            if (download.status !== 'paused') res.resume();
-          });
-        }
-      })
-      .on('end', () => {
-        clearTimeout(speedThrottleTimeout);
-        fileStream.close();
-      });
+    res.on('end', () => {
+      timeout.clear();
+      fileStream.close();
+    });
   };
 }
