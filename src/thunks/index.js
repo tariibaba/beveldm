@@ -11,6 +11,7 @@ import loadState from './load-state';
 import changeDownloadUrlThunk from './change-download-url';
 import makeRequest from './make-request';
 import makePartialRequest from './make-partial-request';
+import unsubscribeFromIntervalThunk from './unsubscribe-from-interval';
 
 export {
   addNewDownloadThunk,
@@ -25,5 +26,6 @@ export {
   loadState,
   changeDownloadUrlThunk,
   makeRequest,
-  makePartialRequest
+  makePartialRequest,
+  unsubscribeFromIntervalThunk
 };

@@ -18,9 +18,6 @@ function setDownloadsIntervalThunk() {
       state.intervalSubscribers.forEach(subscriber => {
         subscriber.action();
       });
-      if (state.intervalSubscribers.length === 0) {
-        clearInterval(interval);
-      }
     }, 500);
     dispatch(setDownloadsInterval(interval));
   };
