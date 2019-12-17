@@ -1,6 +1,11 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
-const { ipcMain, dialog } = require('electron');
+const {
+  ipcMain,
+  dialog,
+  app,
+  BrowserWindow,
+  globalShortcut
+} = require('electron');
 const electronIsDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
@@ -26,8 +31,12 @@ function createWindow() {
   mainWindow.loadURL(electronIsDev ? 'http://localhost:3000' : indexHtmlUrl);
 
   if (!electronIsDev) {
+    // Prevent reloading of React app
+    globalShortcut.register('CommandOrControl+R', () => {});
     mainWindow.setMenu(null);
   }
+
+  
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -49,6 +58,10 @@ function createWindow() {
     mainWindow.destroy();
   });
 }
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
