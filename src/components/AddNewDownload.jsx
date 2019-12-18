@@ -45,6 +45,7 @@ function AddNewDownload({ onAdd = () => {} }) {
       } else {
         setDefaultUrl(null);
       }
+      setFormSubmittable(false);
     }
   }, [open]);
 
