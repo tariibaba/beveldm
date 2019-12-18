@@ -26,7 +26,7 @@ export default function loadState() {
 async function fillMissingProps(savedDownload) {
   const path = getDownloadPath(savedDownload);
   const partialPath = getPartialDownloadPath(savedDownload);
-  let downloadWithRequiredProps;
+  let downloadWithRequiredProps = savedDownload;
 
   if (savedDownload.status === 'complete') {
     if (!(await pathExists(path))) {
