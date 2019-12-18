@@ -36,7 +36,7 @@
     "build": "rescripts build",
     "test": "rescripts test",
     "eject": "react-scripts eject",
-    "package-win": "electron-packager . BevelDM --platform=win32 --arch=ia32"
+    "package-win": "electron-packager . BevelDM --platform=win32 --arch=ia32 --overwrite"
   },
   "eslintConfig": {
     "extends": "react-app"
