@@ -53,7 +53,7 @@ async function fillMissingProps(savedDownload) {
     }
   } else if (savedDownload.status === 'paused') {
     const stat = pify(fs.stat);
-    const partialFileSize = await stat(partialPath).size;
+    const partialFileSize = (await stat(partialPath)).size;
     downloadWithRequiredProps = {
       ...savedDownload,
       bytesDownloaded: partialFileSize
