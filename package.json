@@ -24,6 +24,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "request": "^2.88.0",
+    "sum-by": "^1.0.3",
     "typeface-roboto": "^0.0.75",
     "uuid": "^3.3.2",
     "valid-url": "^1.0.9",

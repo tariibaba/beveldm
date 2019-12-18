@@ -5,6 +5,7 @@ import getAvailableFilename from './get-available-filename';
 import getDownloadPath from './get-download-path';
 import getPartialDownloadPath from './get-partial-download-path';
 import deleteFile from './delete-file';
+import setTaskbarProgress from './set-taskbar-progress';
 
 export {
   replaceFileExt,
@@ -13,5 +14,6 @@ export {
   getAvailableFilename,
   getDownloadPath,
   getPartialDownloadPath,
-  deleteFile
+  deleteFile,
+  setTaskbarProgress as setTaskbarIconProgress
 };

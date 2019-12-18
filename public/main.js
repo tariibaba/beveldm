@@ -35,9 +35,6 @@ function createWindow() {
     globalShortcut.register('CommandOrControl+R', () => {});
     mainWindow.setMenu(null);
   }
-
-  
-
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -87,4 +84,16 @@ ipcMain.on('choose-file', event => {
   dialog
     .showOpenDialog(mainWindow, { properties: ['openDirectory'] })
     .then(value => event.sender.send('choosen-file', value.filePaths[0]));
+});
+
+ipcMain.on('set-progress-indeterminate', () => {
+  mainWindow.setProgressBar(0, { mode: 'indeterminate' });
+});
+
+ipcMain.on('set-progress', (_event, args) => {
+  mainWindow.setProgressBar(args);
+});
+
+ipcMain.on('clear-progress', () => {
+  mainWindow.setProgressBar(0, { mode: 'none' });
 });

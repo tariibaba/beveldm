@@ -3,20 +3,24 @@ import {
   changeDownloadBasicInfo,
   removeDownload,
   notify,
-  changeDownloadStatus,
   setDownloadShow
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from './helpers';
 import { v4 } from 'uuid';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
+import setTaskbarProgress from './helpers/set-taskbar-progress';
+import changeDownloadStatusThunk from './change-download-status';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
-    let state = getState();
-    let downloads = state.downloads;
     const id = v4();
     dispatch(addNewDownload(id, url, dirname));
+
+    let state = getState();
+    let downloads = state.downloads;
+    setTaskbarProgress(downloads);
+
     const res = await new Promise(async resolve =>
       request
         .get(url, { headers: { Range: 'bytes=0-' } })
@@ -31,6 +35,7 @@ export default function addNewDownloadThunk(url, dirname) {
         })
     );
     res.destroy();
+
     if (res.statusCode === 403) {
       dispatch(removeDownload(id));
       dispatch(notify('error', 'Forbidden request'));
@@ -54,7 +59,11 @@ export default function addNewDownloadThunk(url, dirname) {
     );
     dispatch(setDownloadShow(id, true));
     dispatch(updateBytesDownloadedThunk(id, 0));
-    dispatch(changeDownloadStatus(id, 'notstarted'));
+    dispatch(changeDownloadStatusThunk(id, 'notstarted'));
+
+    state = getState();
+    downloads = state.downloads;
+    setTaskbarProgress(downloads);
 
     return Promise.resolve();
   };

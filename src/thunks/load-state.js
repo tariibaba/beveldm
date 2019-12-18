@@ -3,6 +3,7 @@ import fs from 'fs';
 import { getDownloadPath, getPartialDownloadPath } from './helpers';
 import pify from 'pify';
 import pathExists from 'path-exists';
+import setTaskbarProgress from './helpers/set-taskbar-progress';
 
 export default function loadState() {
   return async (_dispatch, getState) => {
@@ -50,6 +51,7 @@ export default function loadState() {
     );
 
     getState().downloads = savedDownloads;
+    setTaskbarProgress(savedDownloads);
     getState().settings = store.get('settings') || {};
 
     return Promise.resolve();

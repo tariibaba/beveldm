@@ -1,18 +1,19 @@
 import {
   changeDownloadBasicInfo,
   setDownloadRes,
-  changeDownloadStatus,
   setDownloadError
 } from '../actions';
 import {
   getAvailableFilename,
   getPartialDownloadPath,
-  deleteFile
+  deleteFile,
+  getFilename,
+  getFileSize
 } from './helpers';
-import { getFilename, getFileSize } from './helpers';
 import downloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
+import changeDownloadStatusThunk from './change-download-status';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
@@ -20,12 +21,12 @@ export default function resumeDownload(id) {
     let download = state.downloads.find(download => download.id === id);
 
     if (download.res) {
-      dispatch(changeDownloadStatus(id, 'progressing'));
+      dispatch(changeDownloadStatusThunk(id, 'progressing'));
       download.res.resume();
     } else if (download.status === 'error') {
       dispatch(resumeFromError(id, download.error.code));
     } else {
-      dispatch(changeDownloadStatus(id, 'progressing'));
+      dispatch(changeDownloadStatusThunk(id, 'progressing'));
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
@@ -51,7 +52,7 @@ export default function resumeDownload(id) {
 
       if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(setDownloadError(id, { code: 'ERR_FILE_CHANGED' }));
-        dispatch(changeDownloadStatus(id, 'error'));
+        dispatch(changeDownloadStatusThunk(id, 'error'));
       } else {
         if (!download.resumable) {
           dispatch(updateBytesDownloadedThunk(id, 0));
@@ -66,7 +67,7 @@ export default function resumeDownload(id) {
 
 function resumeFromError(id, code) {
   return async (dispatch, getState) => {
-    dispatch(changeDownloadStatus(id, 'progressing'));
+    dispatch(changeDownloadStatusThunk(id, 'progressing'));
 
     let state = getState();
     let download = state.downloads.find(download => download.id === id);

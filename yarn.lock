@@ -10303,6 +10303,11 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
+sum-by@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/sum-by/-/sum-by-1.0.3.tgz#071f0f6a41766a812b1b2231350de6c541a809ce"
+  integrity sha512-UsMEUVeBtAqQLRJwJvMPTQUBqE+QkUdjvKd25Wvz7NOpA2UGKhJKa0qpbfhbgjIDTlYCzadVwhVP1iq13eApkQ==
+
 sumchecker@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/sumchecker/-/sumchecker-2.0.2.tgz#0f42c10e5d05da5d42eea3e56c3399a37d6c5b3e"
