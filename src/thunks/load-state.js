@@ -11,49 +11,54 @@ export default function loadState() {
 
     let savedDownloads = store.get('downloads') || [];
     savedDownloads = await Promise.all(
-      savedDownloads.map(async download => {
-        const path = getDownloadPath(download);
-        const partialPath = getPartialDownloadPath(download);
-
-        if (download.status === 'complete') {
-          if (!(await pathExists(path))) {
-            download = {
-              ...download,
-              status: 'removed'
-            };
-          }
-        } else if (
-          !(await pathExists(partialPath)) &&
-          download.status !== 'notstarted' &&
-          download.status !== 'canceled'
-        ) {
-          download = {
-            ...download,
-            status: 'removed'
-          };
-        } else if (download.status === 'canceled') {
-          if (!(await pathExists(partialPath))) {
-            download = {
-              ...download,
-              bytesDownloaded: 0
-            };
-          }
-        } else if (download.status === 'paused') {
-          const stat = pify(fs.stat);
-          download = {
-            ...download,
-            bytesDownloaded: (await stat(partialPath)).size
-          };
-        }
-
-        return download;
-      })
+      savedDownloads.map(fillMissingProps)
     );
 
     getState().downloads = savedDownloads;
     setTaskbarProgress(savedDownloads);
+
     getState().settings = store.get('settings') || {};
 
     return Promise.resolve();
   };
+}
+
+async function fillMissingProps(savedDownload) {
+  const path = getDownloadPath(savedDownload);
+  const partialPath = getPartialDownloadPath(savedDownload);
+  let downloadWithRequiredProps;
+
+  if (savedDownload.status === 'complete') {
+    if (!(await pathExists(path))) {
+      downloadWithRequiredProps = {
+        ...savedDownload,
+        status: 'removed'
+      };
+    }
+  } else if (
+    !(await pathExists(partialPath)) &&
+    savedDownload.status !== 'notstarted' &&
+    savedDownload.status !== 'canceled'
+  ) {
+    downloadWithRequiredProps = {
+      ...savedDownload,
+      status: 'removed'
+    };
+  } else if (savedDownload.status === 'canceled') {
+    if (!(await pathExists(partialPath))) {
+      downloadWithRequiredProps = {
+        ...savedDownload,
+        bytesDownloaded: 0
+      };
+    }
+  } else if (savedDownload.status === 'paused') {
+    const stat = pify(fs.stat);
+    const partialFileSize = await stat(partialPath).size;
+    downloadWithRequiredProps = {
+      ...savedDownload,
+      bytesDownloaded: partialFileSize
+    };
+  }
+
+  return downloadWithRequiredProps;
 }
