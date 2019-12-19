@@ -9,7 +9,7 @@ import {
   deleteFile,
   getFilename,
   getFileSize
-} from './helpers';
+} from './utilities';
 import downloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';

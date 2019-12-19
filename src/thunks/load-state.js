@@ -1,9 +1,9 @@
 import Store from 'electron-store';
 import fs from 'fs';
-import { getDownloadPath, getPartialDownloadPath } from './helpers';
+import { getDownloadPath, getPartialDownloadPath } from './utilities';
 import pify from 'pify';
 import pathExists from 'path-exists';
-import setTaskbarProgress from './helpers/set-taskbar-progress';
+import setTaskbarProgress from './utilities/set-taskbar-progress';
 
 export default function loadState() {
   return async (_dispatch, getState) => {

@@ -1,6 +1,6 @@
 import pauseDownload from './pause-download';
 import Store from 'electron-store';
-import { deleteFile, getDownloadPath } from './helpers';
+import { deleteFile, getDownloadPath } from './utilities';
 
 export default function saveState() {
   return async (dispatch, getState) => {

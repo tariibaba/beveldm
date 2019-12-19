@@ -1,4 +1,4 @@
-import { getPartialDownloadPath, getDownloadPath } from './helpers';
+import { getPartialDownloadPath, getDownloadPath } from './utilities';
 import pify from 'pify';
 import fs from 'fs';
 import changeDownloadStatusThunk from './change-download-status';

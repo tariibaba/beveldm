@@ -1,5 +1,5 @@
 import { setDownloadRes, setDownloadError } from '../actions';
-import { getFilename, getFileSize } from './helpers';
+import { getFilename, getFileSize } from './utilities';
 import downloadFile from './download-file';
 import makeRequest from './make-request';
 import changeDownloadStatusThunk from './change-download-status';

@@ -1,5 +1,5 @@
 import { changeDownloadStatus } from '../actions';
-import { setTaskbarProgress } from './helpers';
+import { setTaskbarProgress } from './utilities';
 
 export default function changeDownloadStatusThunk(id, status) {
   return async (dispatch, getState) => {

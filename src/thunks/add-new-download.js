@@ -11,7 +11,7 @@ import {
   getFileSize,
   getAvailableFilename,
   setTaskbarProgress
-} from './helpers';
+} from './utilities';
 import { v4 } from 'uuid';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
 import changeDownloadStatusThunk from './change-download-status';
