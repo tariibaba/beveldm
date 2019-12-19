@@ -242,7 +242,7 @@ function Download({
             status !== 'error' &&
             status !== 'removed' && (
               <div style={{ marginTop: '20px' }}>
-                <PeriodicUpdate start={status === 'progressing'} interval={500}>
+                <PeriodicUpdate start={status === 'progressing'}>
                   <div>
                     <DownloadSpeed
                       bytesDownloaded={bytesDownloaded}
