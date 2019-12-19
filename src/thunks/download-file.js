@@ -3,7 +3,6 @@ import fs from 'fs';
 import { getPartialDownloadPath } from './helpers';
 import { SAVE_DATA_LIMIT } from '../constants';
 import Timeout from 'await-timeout';
-import PromiseWritable from 'promise-writable';
 
 export default function downloadFile(id, res) {
   return async (dispatch, getState) => {
@@ -14,7 +13,6 @@ export default function downloadFile(id, res) {
     const fileStream = fs.createWriteStream(partialDownloadPath, {
       flags: 'a'
     });
-    const fileStreamPromise = new PromiseWritable(fileStream);
     const timeout = new Timeout();
     let buffer;
 
@@ -37,7 +35,6 @@ export default function downloadFile(id, res) {
 
           state = getState();
           download = state.downloads.find(download => download.id === id);
-
           if (download.status === 'paused') {
             return;
           }
@@ -45,7 +42,7 @@ export default function downloadFile(id, res) {
           const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
           buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
 
-          await fileStreamPromise.write(chunkToWrite);
+          await writeStreamWritePromise(fileStream, chunkToWrite);
 
           download = state.downloads.find(download => download.id === id);
           saveData = state.settings.saveData;
@@ -64,7 +61,7 @@ export default function downloadFile(id, res) {
         };
         await writeSlicedBuffer();
       } else {
-        await fileStreamPromise.write(buffer);
+        await writeStreamWritePromise(fileStream, buffer);
 
         const newBytesDownloaded = download.bytesDownloaded + buffer.length;
         dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
@@ -81,4 +78,15 @@ export default function downloadFile(id, res) {
       fileStream.close();
     });
   };
+}
+
+function writeStreamWritePromise(writeStream, chunk) {
+  return new Promise((resolve, reject) => {
+    writeStream.write(chunk, err => {
+      if (err) {
+        reject(err);
+      }
+      resolve();
+    });
+  });
 }

@@ -8719,11 +8719,6 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
-promise-writable@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/promise-writable/-/promise-writable-5.0.3.tgz#535d67b591e806fdabacb04d2f0f9d58b984af04"
-  integrity sha512-mG/6Mo1b8SYT8790wnE8aNE4yerW4MXANoDs840UpVfxakzutQuJtqJDKTwcLoXz+ihlY2qeBjj6lx/VHk1nTQ==
-
 promise@8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/promise/-/promise-8.0.2.tgz#9dcd0672192c589477d56891271bdc27547ae9f0"
