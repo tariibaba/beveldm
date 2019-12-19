@@ -6,10 +6,14 @@ import {
   setDownloadShow
 } from '../actions';
 import request from 'request';
-import { getFilename, getFileSize, getAvailableFilename } from './helpers';
+import {
+  getFilename,
+  getFileSize,
+  getAvailableFilename,
+  setTaskbarProgress
+} from './helpers';
 import { v4 } from 'uuid';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
-import setTaskbarProgress from './helpers/set-taskbar-progress';
 import changeDownloadStatusThunk from './change-download-status';
 
 export default function addNewDownloadThunk(url, dirname) {
@@ -32,6 +36,10 @@ export default function addNewDownloadThunk(url, dirname) {
               dispatch(addNewDownloadThunk(url, dirname))
             )
           );
+          
+          state = getState();
+          downloads = state.downloads;
+          setTaskbarProgress(downloads);
         })
     );
     res.destroy();
@@ -39,6 +47,11 @@ export default function addNewDownloadThunk(url, dirname) {
     if (res.statusCode === 403) {
       dispatch(removeDownload(id));
       dispatch(notify('error', 'Forbidden request'));
+
+      state = getState();
+      downloads = state.downloads;
+      setTaskbarProgress(downloads);
+
       return Promise.resolve();
     }
 

@@ -15,5 +15,5 @@ export {
   getDownloadPath,
   getPartialDownloadPath,
   deleteFile,
-  setTaskbarProgress as setTaskbarIconProgress
+  setTaskbarProgress
 };

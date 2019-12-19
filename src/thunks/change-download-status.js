@@ -1,11 +1,11 @@
 import { changeDownloadStatus } from '../actions';
-import { setTaskbarIconProgress } from './helpers';
+import { setTaskbarProgress } from './helpers';
 
 export default function changeDownloadStatusThunk(id, status) {
   return async (dispatch, getState) => {
     dispatch(changeDownloadStatus(id, status));
     const downloads = getState().downloads;
-    setTaskbarIconProgress(downloads);
+    setTaskbarProgress(downloads);
 
     return Promise.resolve();
   };
