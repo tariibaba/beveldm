@@ -14,6 +14,7 @@ import downloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
 import changeDownloadStatusThunk from './change-download-status';
+import setDownloadErrorThunk from './set-download-error';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
@@ -51,9 +52,7 @@ export default function resumeDownload(id) {
       }
 
       if (download.defaultFilename !== filename || download.size !== size) {
-        dispatch(setDownloadError(id, { code: 'ERR_FILE_CHANGED' }));
-        dispatch(changeDownloadStatusThunk(id, 'error'));
-        dispatch(setDownloadRes(id, null));
+        dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
       } else {
         if (!download.resumable) {
           dispatch(updateBytesDownloadedThunk(id, 0));

@@ -1,8 +1,9 @@
-import { setDownloadRes, setDownloadError } from '../actions';
+import { setDownloadRes } from '../actions';
 import { getFilename, getFileSize } from './utilities';
 import downloadFile from './download-file';
 import makeRequest from './make-request';
 import changeDownloadStatusThunk from './change-download-status';
+import setDownloadErrorThunk from './set-download-error';
 
 export default function startDownload(id) {
   return async (dispatch, getState) => {
@@ -26,9 +27,7 @@ export default function startDownload(id) {
     const size = getFileSize(res.headers);
 
     if (download.defaultFilename !== filename || download.size !== size) {
-      dispatch(setDownloadError(id, { code: 'ERR_FILE_CHANGED' }));
-      dispatch(changeDownloadStatusThunk(id, 'error'));
-      dispatch(setDownloadRes(id, null));
+      dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
     } else {
       // The download status might have changed since dispatching startDownload
       download = getState().downloads.find(download => download.id === id);

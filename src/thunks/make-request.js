@@ -1,7 +1,6 @@
 import http from 'http';
 import https from 'https';
-import { setDownloadError, setDownloadRes } from '../actions';
-import changeDownloadStatusThunk from './change-download-status';
+import setDownloadErrorThunk from './set-download-error';
 
 export default function makeRequest(id, url) {
   return async (dispatch, _getState) => {
@@ -11,16 +10,12 @@ export default function makeRequest(id, url) {
         .get(url, { headers: { Connection: 'keep-alive' } })
         .on('response', res => {
           if (res.statusCode === 403) {
-            dispatch(setDownloadError(id, { code: 'ERR_FORBIDDEN' }));
-            dispatch(changeDownloadStatusThunk(id, 'error'));
-            dispatch(setDownloadRes(id, null));
+            dispatch(setDownloadErrorThunk(id, { code: 'ERR_FORBIDDEN' }));
           }
           resolve(res);
         })
         .on('error', err => {
-          dispatch(setDownloadError(id, { code: err.code }));
-          dispatch(changeDownloadStatusThunk(id, 'error'));
-          dispatch(setDownloadRes(id, null));
+          dispatch(setDownloadErrorThunk(id, { code: err.code }));
         });
     });
   };
