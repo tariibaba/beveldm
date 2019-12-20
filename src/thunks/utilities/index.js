@@ -1,19 +1,8 @@
-import replaceFileExt from './replace-file-ext';
-import getFilename from './get-filename';
-import getFileSize from './get-file-size';
-import getAvailableFilename from './get-available-filename';
-import getDownloadPath from './get-download-path';
-import getPartialDownloadPath from './get-partial-download-path';
-import deleteFile from './delete-file';
-import setTaskbarProgress from './set-taskbar-progress';
-
-export {
-  replaceFileExt,
-  getFilename,
-  getFileSize,
-  getAvailableFilename,
-  getDownloadPath,
-  getPartialDownloadPath,
-  deleteFile,
-  setTaskbarProgress
-};
+export { default as replaceFileExt } from './replace-file-ext';
+export { default as getFilename } from './get-filename';
+export { default as getFileSize } from './get-file-size';
+export { default as getAvailableFilename } from './get-available-filename';
+export { default as getDownloadPath } from './get-download-path';
+export { default as getPartialDownloadPath } from './get-partial-download-path';
+export { default as deleteFile } from './delete-file';
+export { default as setTaskbarProgress } from './set-taskbar-progress';

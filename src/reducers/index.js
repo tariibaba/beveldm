@@ -1,13 +1,5 @@
-import currentNotificationReducer from './currentNotification';
-import downloadsReducer from './downloads';
-import intervalReducer from './interval';
-import intervalSubscribersReducer from './intervalSubscribers';
-import settingsReducer from './settings';
-
-export {
-  currentNotificationReducer,
-  downloadsReducer,
-  intervalReducer,
-  intervalSubscribersReducer,
-  settingsReducer
-};
+export { default as currentNotificationReducer } from './currentNotification';
+export { default as downloadsReducer } from './downloads';
+export { default as intervalReducer } from './interval';
+export { default as intervalSubscribersReducer } from './intervalSubscribers';
+export { default as settingsReducer } from './settings';
