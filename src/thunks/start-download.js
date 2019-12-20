@@ -28,6 +28,7 @@ export default function startDownload(id) {
     if (download.defaultFilename !== filename || download.size !== size) {
       dispatch(setDownloadError(id, { code: 'ERR_FILE_CHANGED' }));
       dispatch(changeDownloadStatusThunk(id, 'error'));
+      dispatch(setDownloadRes(id, null));
     } else {
       // The download status might have changed since dispatching startDownload
       download = getState().downloads.find(download => download.id === id);

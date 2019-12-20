@@ -53,6 +53,7 @@ export default function resumeDownload(id) {
       if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(setDownloadError(id, { code: 'ERR_FILE_CHANGED' }));
         dispatch(changeDownloadStatusThunk(id, 'error'));
+        dispatch(setDownloadRes(id, null));
       } else {
         if (!download.resumable) {
           dispatch(updateBytesDownloadedThunk(id, 0));
