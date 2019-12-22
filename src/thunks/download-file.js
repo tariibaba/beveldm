@@ -15,6 +15,7 @@ export default function downloadFile(id, res) {
     });
     const timeout = new Timeout();
     let buffer;
+    let hasResEnded = false;
 
     res.on('data', async chunk => {
       res.pause();
@@ -35,7 +36,11 @@ export default function downloadFile(id, res) {
 
           state = getState();
           download = state.downloads.find(download => download.id === id);
-          if (download.status === 'paused' || download.status === 'canceled') {
+          if (
+            download.status === 'paused' ||
+            download.status === 'canceled' ||
+            download.status === 'complete'
+          ) {
             return;
           }
 
@@ -44,16 +49,19 @@ export default function downloadFile(id, res) {
 
           await writeStreamWritePromise(fileStream, chunkToWrite);
 
-          download = state.downloads.find(download => download.id === id);
-          saveData = state.settings.saveData;
-
           const newBytesDownloaded =
             download.bytesDownloaded + chunkToWrite.length;
           dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
 
+          state = getState();
+          download = state.downloads.find(download => download.id === id);
+          saveData = state.settings.saveData;
+
           if (download.status !== 'paused' && download.status !== 'canceled') {
             if (buffer.length > SAVE_DATA_LIMIT && saveData) {
-              writeSlicedBuffer();
+              await writeSlicedBuffer();
+            } else if (hasResEnded) {
+              await writeSlicedBuffer();
             } else {
               res.resume();
             }
@@ -71,11 +79,13 @@ export default function downloadFile(id, res) {
           res.resume();
         }
       }
+      if (hasResEnded) {
+        fileStream.close();
+      }
     });
 
     res.on('end', () => {
-      timeout.clear();
-      fileStream.close();
+      hasResEnded = true;
     });
   };
 }
