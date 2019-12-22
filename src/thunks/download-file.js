@@ -35,7 +35,7 @@ export default function downloadFile(id, res) {
 
           state = getState();
           download = state.downloads.find(download => download.id === id);
-          if (download.status === 'paused') {
+          if (download.status === 'paused' || download.status === 'canceled') {
             return;
           }
 
@@ -51,7 +51,7 @@ export default function downloadFile(id, res) {
             download.bytesDownloaded + chunkToWrite.length;
           dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
 
-          if (download.status !== 'paused') {
+          if (download.status !== 'paused' && download.status !== 'canceled') {
             if (buffer.length > SAVE_DATA_LIMIT && saveData) {
               writeSlicedBuffer();
             } else {
