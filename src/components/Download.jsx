@@ -148,22 +148,20 @@ function Download({
   };
 
   const classes = useStyles();
+  const inactive =
+    status === 'canceled' || status === 'error' || status === 'removed';
 
   return show ? (
     <Card
       className={clsx(
         classes.cardStylesDefault,
-        (status === 'canceled' || status === 'error' || status === 'removed') &&
-          classes.cardStylesError
+        inactive && classes.cardStylesError
       )}
     >
       <CardContent className={classes.cardContent}>
         <div>
           {/* Close icon button */}
-          {(status === 'canceled' ||
-            status === 'complete' ||
-            status === 'error' ||
-            status === 'removed') && (
+          {(status === 'complete' || inactive) && (
             <IconButton className={classes.iconButton} onClick={remove}>
               <Close style={{ fontSize: '15px' }} />
             </IconButton>
@@ -225,11 +223,7 @@ function Download({
               className={clsx(
                 classes.linkButtonStylesDefault,
                 classes.urlStylesDefault,
-                status === 'error' ||
-                  status === 'removed' ||
-                  status === 'canceled'
-                  ? classes.urlStylesError
-                  : null
+                inactive && classes.urlStylesError
               )}
             >
               {url}
@@ -237,23 +231,20 @@ function Download({
           </div>
 
           {/* Speed, bytes downloaded and size */}
-          {status !== 'complete' &&
-            status !== 'canceled' &&
-            status !== 'error' &&
-            status !== 'removed' && (
-              <div style={{ marginTop: '20px' }}>
-                <PeriodicUpdate start={status === 'progressing'}>
-                  <div>
-                    <DownloadSpeed
-                      bytesDownloaded={bytesDownloaded}
-                      status={status}
-                    />
-                    {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
-                    {status === 'paused' ? ', Paused' : null}
-                  </div>
-                </PeriodicUpdate>
-              </div>
-            )}
+          {!(status === 'complete' || inactive) && (
+            <div style={{ marginTop: '20px' }}>
+              <PeriodicUpdate start={status === 'progressing'}>
+                <div>
+                  <DownloadSpeed
+                    bytesDownloaded={bytesDownloaded}
+                    status={status}
+                  />
+                  {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
+                  {status === 'paused' ? ', Paused' : null}
+                </div>
+              </PeriodicUpdate>
+            </div>
+          )}
 
           {/* Button to open download folder */}
           {status === 'complete' && (
@@ -269,30 +260,24 @@ function Download({
           )}
 
           {/* Progress bar */}
-          {status !== 'complete' &&
-            status !== 'canceled' &&
-            status !== 'error' &&
-            status !== 'removed' && (
-              <PeriodicUpdate start={status === 'progressing'}>
-                <LinearProgress
-                  value={(bytesDownloaded / size) * 100}
-                  variant="determinate"
-                  className={classes.colorLinearProgress}
-                />
-              </PeriodicUpdate>
-            )}
+          {!(status === 'complete' || inactive) && (
+            <PeriodicUpdate start={status === 'progressing'}>
+              <LinearProgress
+                value={(bytesDownloaded / size) * 100}
+                variant="determinate"
+                className={classes.colorLinearProgress}
+              />
+            </PeriodicUpdate>
+          )}
 
           <DownloadActionButton id={id} status={status} />
 
           {/* Cancel button */}
-          {status !== 'canceled' &&
-            status !== 'complete' &&
-            status !== 'error' &&
-            status !== 'removed' && (
-              <WhiteButton onClick={cancel} variant="contained" size="small">
-                Cancel
-              </WhiteButton>
-            )}
+          {!(status === 'complete' || inactive) && (
+            <WhiteButton onClick={cancel} variant="contained" size="small">
+              Cancel
+            </WhiteButton>
+          )}
           <br />
         </div>
       </CardContent>

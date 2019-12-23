@@ -17,9 +17,8 @@ export default function startDownload(id) {
     // The download status might have changed since making the request.
     state = getState();
     download = state.downloads.find(download => download.id === id);
-    if (download.status !== 'progressing') {
-      return;
-    }
+
+    if (download.status !== 'progressing') return;
 
     dispatch(setDownloadRes(id, res));
     // Get info from the request.
@@ -29,9 +28,9 @@ export default function startDownload(id) {
     if (download.defaultFilename !== filename || download.size !== size) {
       dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
     } else {
-      // The download status might have changed since dispatching startDownload
-      download = getState().downloads.find(download => download.id === id);
       dispatch(downloadFile(id, res));
     }
+
+    return Promise.resolve();
   };
 }

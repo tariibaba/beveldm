@@ -24,11 +24,8 @@ export default function downloadFile(id, res) {
       download = state.downloads.find(download => download.id === id);
       let saveData = state.settings.saveData;
 
-      if (!buffer) {
-        buffer = chunk;
-      } else {
-        buffer = Buffer.concat([buffer, chunk]);
-      }
+      if (!buffer) buffer = chunk;
+      else buffer = Buffer.concat([buffer, chunk]);
 
       if (saveData) {
         const writeSlicedBuffer = async () => {
@@ -58,9 +55,7 @@ export default function downloadFile(id, res) {
           saveData = state.settings.saveData;
 
           if (download.status !== 'paused' && download.status !== 'canceled') {
-            if (buffer.length > SAVE_DATA_LIMIT && saveData) {
-              await writeSlicedBuffer();
-            } else if (hasResEnded) {
+            if ((buffer.length > SAVE_DATA_LIMIT && saveData) || hasResEnded) {
               await writeSlicedBuffer();
             } else {
               res.resume();
@@ -75,13 +70,9 @@ export default function downloadFile(id, res) {
         dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
         buffer = null;
 
-        if (download.status !== 'paused') {
-          res.resume();
-        }
+        if (download.status !== 'paused') res.resume();
       }
-      if (hasResEnded) {
-        fileStream.close();
-      }
+      if (hasResEnded) fileStream.close();
     });
 
     res.on('end', () => {
@@ -93,9 +84,7 @@ export default function downloadFile(id, res) {
 function writeStreamWritePromise(writeStream, chunk) {
   return new Promise((resolve, reject) => {
     writeStream.write(chunk, err => {
-      if (err) {
-        reject(err);
-      }
+      if (err) reject(err);
       resolve();
     });
   });

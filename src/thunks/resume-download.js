@@ -1,8 +1,4 @@
-import {
-  changeDownloadBasicInfo,
-  setDownloadRes,
-  setDownloadError
-} from '../actions';
+import { changeDownloadBasicInfo, setDownloadRes } from '../actions';
 import {
   getAvailableFilename,
   getPartialDownloadPath,
@@ -35,21 +31,17 @@ export default function resumeDownload(id) {
       // The download status might have changed since making the request.
       state = getState();
       download = state.downloads.find(download => download.id === id);
-      if (download.status !== 'progressing') {
-        return;
-      }
+      
+      if (download.status !== 'progressing') return;
 
       dispatch(setDownloadRes(id, res));
       // Get info from the request.
       const filename = getFilename(download.url, res.headers);
       const contentLength = getFileSize(res.headers);
-      let size;
       // Check for partial content.
-      if (download.resumable) {
-        size = download.bytesDownloaded + contentLength;
-      } else {
-        size = contentLength;
-      }
+      const size = download.resumable
+        ? download.bytesDownloaded + contentLength
+        : contentLength;
 
       if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
@@ -74,18 +66,15 @@ function resumeFromError(id, code) {
 
     switch (code) {
       case 'ERR_FILE_CHANGED':
-        let res;
         const fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
 
-        res = await new dispatch(makePartialRequest(id, download.url, 0));
+        const res = await new dispatch(makePartialRequest(id, download.url, 0));
 
         // The download status might have changed since making the request.
         state = getState();
         download = state.downloads.find(download => download.id === id);
-        if (download.status !== 'progressing') {
-          return;
-        }
+        if (download.status !== 'progressing') return;
 
         dispatch(setDownloadRes(id, res));
         // Get info from the request.
@@ -96,6 +85,7 @@ function resumeFromError(id, code) {
           filename,
           state.downloads
         );
+        const resumable = res.statusCode === 206;
 
         dispatch(
           changeDownloadBasicInfo(
@@ -103,7 +93,7 @@ function resumeFromError(id, code) {
             filename,
             availableFilename,
             size,
-            res.statusCode === 206
+            resumable
           )
         );
         dispatch(updateBytesDownloadedThunk(id, 0));
