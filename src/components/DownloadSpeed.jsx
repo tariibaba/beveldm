@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import prettyBytes from '../pretty-bytes';
+import { prettyBytes } from './utilities';
 
 class DownloadSpeed extends Component {
   constructor(props) {

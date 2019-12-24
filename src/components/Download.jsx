@@ -10,7 +10,7 @@ import {
   removeDownloadThunk,
   changeDownloadStatusThunk
 } from '../thunks';
-import prettyBytes from '../pretty-bytes';
+import { prettyBytes }  from './utilities';
 import {
   LinearProgress,
   Card,
