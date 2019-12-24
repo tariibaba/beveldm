@@ -12,7 +12,7 @@ export default function makeRequest(id, url) {
         .get(url, options)
         .on('response', res => {
           if (res.statusCode === 403) {
-            dispatch(setDownloadErrorThunk(id, { code: 'ERR_FORBIDDEN' }));
+            dispatch(setDownloadErrorThunk(id, { code: 'EFORBIDDEN' }));
           }
           resolve(res);
         })

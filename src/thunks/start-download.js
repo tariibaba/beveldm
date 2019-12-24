@@ -26,7 +26,7 @@ export default function startDownload(id) {
     const size = getFileSize(res.headers);
 
     if (download.defaultFilename !== filename || download.size !== size) {
-      dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
+      dispatch(setDownloadErrorThunk(id, { code: 'EFILECHANGED' }));
     } else {
       dispatch(downloadFile(id, res));
     }

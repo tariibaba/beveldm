@@ -44,7 +44,7 @@ export default function resumeDownload(id) {
         : contentLength;
 
       if (download.defaultFilename !== filename || download.size !== size) {
-        dispatch(setDownloadErrorThunk(id, { code: 'ERR_FILE_CHANGED' }));
+        dispatch(setDownloadErrorThunk(id, { code: 'EFILECHANGED' }));
       } else {
         if (!download.resumable) {
           dispatch(updateBytesDownloadedThunk(id, 0));
@@ -65,7 +65,7 @@ function resumeFromError(id, code) {
     let download = state.downloads.find(download => download.id === id);
 
     switch (code) {
-      case 'ERR_FILE_CHANGED':
+      case 'EFILECHANGED':
         const fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
 

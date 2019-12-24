@@ -202,11 +202,11 @@ function Download({
                 canceled: 'Canceled',
                 error: error
                   ? when(error.code)({
-                      ERR_FILE_CHANGED: 'File changed',
+                      EFILECHANGED: 'File changed',
                       ECONNREFUSED: 'Network error',
                       ENOTFOUND: 'Network error',
                       ECONNRESET: 'Network error',
-                      ERR_FORBIDDEN: 'Forbidden',
+                      EFORBIDDEN: 'Forbidden',
                       else: null
                     })
                   : null,
