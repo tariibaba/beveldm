@@ -13,6 +13,7 @@ const url = require('url');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let reactHasLoaded;
 
 function createWindow() {
   // Create the browser window.
@@ -47,8 +48,10 @@ function createWindow() {
   });
 
   mainWindow.on('close', e => {
-    e.preventDefault();
-    mainWindow.webContents.send('close', null);
+    if (reactHasLoaded) {
+      e.preventDefault();
+      mainWindow.webContents.send('close', null);
+    }
   });
 
   ipcMain.on('saved', () => {
@@ -96,4 +99,8 @@ ipcMain.on('set-progress', (_event, args) => {
 
 ipcMain.on('clear-progress', () => {
   mainWindow.setProgressBar(0, { mode: 'none' });
+});
+
+ipcMain.on('react-loaded', () => {
+  reactHasLoaded = true;
 });

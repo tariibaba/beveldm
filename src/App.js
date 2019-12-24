@@ -40,6 +40,7 @@ function App({ dispatch }) {
     if (!loaded) {
       dispatch(loadState()).then(() => {
         setLoaded(true);
+        ipcRenderer.send('react-loaded', null);
       });
     }
   }, [loaded, dispatch]);
