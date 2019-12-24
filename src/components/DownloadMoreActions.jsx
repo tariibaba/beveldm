@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Popover,
   IconButton,
@@ -6,17 +6,11 @@ import {
   ListItem,
   ListItemText,
   Button,
-  makeStyles,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  DialogActions
+  makeStyles
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
-import { changeDownloadUrlThunk } from '../thunks';
 import { connect } from 'react-redux';
-import validUrl from 'valid-url';
+import ChangeUrlDialog from './ChangeUrlDialog';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -32,12 +26,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function DownloadMoreActions({ id, currentUrl, dispatch }) {
+function DownloadMoreActions({ id, currentUrl }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogFormSubmittable, setDialogFormSubmittable] = useState(false);
-  const [dialogUrlHelperText, setDialogUrlHelperText] = useState(null);
-  const url = useRef();
 
   const handlePopoverOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -47,32 +38,13 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
     setAnchorEl(null);
   };
 
-  const handleChangeUrl = event => {
-    event.preventDefault();
-    dispatch(changeDownloadUrlThunk(id, url.current.value));
-    setDialogOpen(false);
-  };
-
   const handleDialogOpen = () => {
     setAnchorEl(null);
     setDialogOpen(true);
   };
 
-  const handleDialogCancel = () => {
+  const handleDialogClose = () => {
     setDialogOpen(false);
-  };
-
-  const handleDialogUrlChange = () => {
-    if (!validUrl.isWebUri(url.current.value)) {
-      setDialogUrlHelperText('This url is invalid');
-      setDialogFormSubmittable(false);
-    } else if (url.current.value === currentUrl) {
-      setDialogUrlHelperText(null);
-      setDialogFormSubmittable(false);
-    } else {
-      setDialogUrlHelperText(null);
-      setDialogFormSubmittable(true);
-    }
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -103,35 +75,12 @@ function DownloadMoreActions({ id, currentUrl, dispatch }) {
         </List>
       </Popover>
 
-      <Dialog open={dialogOpen}>
-        <DialogTitle>Change URL</DialogTitle>
-
-        <form onSubmit={handleChangeUrl}>
-          <DialogContent>
-            <TextField
-              autoFocus
-              name="url"
-              type="text"
-              placeholder="Url"
-              inputRef={url}
-              defaultValue={currentUrl}
-              helperText={dialogUrlHelperText}
-              error={dialogUrlHelperText !== null}
-              onChange={handleDialogUrlChange}
-            />
-
-            <br />
-
-            <DialogActions>
-              <Button type="submit" disabled={!dialogFormSubmittable}>
-                Change
-              </Button>
-
-              <Button onClick={handleDialogCancel}>Cancel</Button>
-            </DialogActions>
-          </DialogContent>
-        </form>
-      </Dialog>
+      <ChangeUrlDialog
+        id={id}
+        currentUrl={currentUrl}
+        open={dialogOpen}
+        onClose={handleDialogClose}
+      />
     </>
   );
 }
