@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,6 +15,10 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
   const newUrl = useRef();
   const [formSubmittable, setFormSubmittable] = useState(false);
   const [urlHelperText, setUrlHelperText] = useState(null);
+
+  useEffect(() => {
+    setFormSubmittable(false);
+  }, [open]);
 
   const handleChangeUrl = event => {
     event.preventDefault();
