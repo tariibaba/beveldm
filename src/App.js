@@ -29,7 +29,7 @@ const theme = createMuiTheme({
 });
 
 function App({ dispatch }) {
-  ipcRenderer.on('close', async () => {
+  ipcRenderer.on('before-close', async () => {
     await dispatch(saveState());
     ipcRenderer.send('saved', null);
   });
