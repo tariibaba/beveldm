@@ -22,7 +22,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
 
   const handleChangeUrl = event => {
     event.preventDefault();
-    onChange(id, newUrl);
+    onChange(id, newUrl.current.value);
     onClose();
   };
 
