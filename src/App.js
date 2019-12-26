@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import DownloadList from './components/DownloadList';
-import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import { saveState, loadState } from './thunks';
+import { loadState } from './thunks';
 import './App.css';
 import DownloadAppBar from './components/DownloadAppBar';
 import { grey, blue } from '@material-ui/core/colors';
 import { createMuiTheme, Toolbar } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import CustomSnackbar from './components/CustomSnackbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { saveState } from './utilities';
 
 const styles = {
   App: {
@@ -17,7 +18,7 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexFlow: 'column'
-  },
+  }
 };
 
 const theme = createMuiTheme({
@@ -28,13 +29,18 @@ const theme = createMuiTheme({
   }
 });
 
-function App({ dispatch }) {
-  ipcRenderer.on('before-close', async () => {
-    await dispatch(saveState());
-    ipcRenderer.send('saved', null);
-  });
-
+function App() {
   const [loaded, setLoaded] = useState(false);
+  const state = useSelector(state => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    ipcRenderer.removeAllListeners('before-close');
+    ipcRenderer.on('before-close', async () => {
+      await saveState(state);
+      ipcRenderer.send('saved', null);
+    });
+  }, [state]);
 
   useEffect(() => {
     if (!loaded) {
@@ -59,4 +65,4 @@ function App({ dispatch }) {
   ) : null;
 }
 
-export default connect()(App);
+export default App;

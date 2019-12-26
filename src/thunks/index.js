@@ -6,7 +6,6 @@ export { default as cancelDownload } from './cancel-download';
 export { default as completeDownload } from './complete-download';
 export { default as removeDownloadThunk } from './remove-download';
 export { default as subscribeToIntervalThunk } from './subscribe-to-interval';
-export { default as saveState } from './save-state';
 export { default as loadState } from './load-state';
 export { default as changeDownloadUrlThunk } from './change-download-url';
 export { default as makeRequest } from './make-request';

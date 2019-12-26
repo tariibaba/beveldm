@@ -6,3 +6,4 @@ export { default as getPartialDownloadPath } from './get-partial-download-path';
 export { default as setTaskbarProgress } from './set-taskbar-progress';
 export { default as deleteFile } from './delete-file';
 export { default as getDownloadPath } from './get-download-path';
+export { default as saveState } from './save-state';
