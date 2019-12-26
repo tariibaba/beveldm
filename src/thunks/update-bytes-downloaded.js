@@ -1,6 +1,6 @@
 import { updateBytesDownloaded } from '../actions';
 import completeDownload from './complete-download';
-import setTaskbarProgress from './utilities/set-taskbar-progress';
+import setTaskbarProgress from '../utilities/set-taskbar-progress';
 
 export default function updateBytesDownloadedThunk(id, bytesDownloaded) {
   return async (dispatch, getState) => {

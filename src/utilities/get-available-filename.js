@@ -1,6 +1,6 @@
 import path from 'path';
 import pathExists from 'path-exists';
-import getDownloadPath from './get-download-path';
+import getDownloadPath from './get-download-path'
 
 export default async function getAvailableFilename(
   dirname,

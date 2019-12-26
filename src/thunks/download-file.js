@@ -1,6 +1,6 @@
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
 import fs from 'fs';
-import { getPartialDownloadPath } from './utilities';
+import { getPartialDownloadPath } from '../utilities';
 import { SAVE_DATA_LIMIT } from '../constants';
 import Timeout from 'await-timeout';
 

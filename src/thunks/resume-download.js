@@ -5,7 +5,7 @@ import {
   deleteFile,
   getFilename,
   getFileSize
-} from './utilities';
+} from '../utilities';
 import downloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';

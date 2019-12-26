@@ -1,5 +1,5 @@
 import { removeDownload, notify, setDownloadShow } from '../actions';
-import { getPartialDownloadPath, deleteFile } from './utilities';
+import { getPartialDownloadPath, deleteFile } from '../utilities';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
 import pathExists from 'path-exists';
 
