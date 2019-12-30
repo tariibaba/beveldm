@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   startDownload,
-  pauseDownload,
+  pauseDownloadThunk,
   resumeDownload
 } from '../thunks';
 import { BlueButton, WhiteButton } from './CustomButtons';
@@ -34,7 +34,7 @@ function DownloadActionButton({ id, status, dispatch }) {
         dispatch(startDownload(id));
         break;
       case 'progressing':
-        dispatch(pauseDownload(id));
+        dispatch(pauseDownloadThunk(id));
         break;
       case 'paused':
       case 'canceled':

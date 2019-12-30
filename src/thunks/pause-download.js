@@ -1,12 +1,13 @@
-import changeDownloadStatusThunk from './change-download-status';
+import { pauseDownload } from '../actions';
 
-export default function pauseDownload(id) {
+
+export default function pauseDownloadThunk(id) {
   return (dispatch, getState) => {
     const download = getState().downloads.find(download => download.id === id);
     if (download.res) {
       download.res.pause();
     }
-    dispatch(changeDownloadStatusThunk(id, 'paused'));
+    dispatch(pauseDownload(id));
 
     return Promise.resolve();
   };

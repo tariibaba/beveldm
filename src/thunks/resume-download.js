@@ -1,4 +1,9 @@
-import { changeDownloadBasicInfo, setDownloadRes } from '../actions';
+import {
+  changeDownloadInfo,
+  setDownloadRes,
+  downloadProgressing,
+  showDownloadError
+} from '../actions';
 import {
   getAvailableFilename,
   getPartialDownloadPath,
@@ -9,8 +14,6 @@ import {
 import downloadFile from './download-file';
 import makePartialRequest from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
-import changeDownloadStatusThunk from './change-download-status';
-import setDownloadErrorThunk from './set-download-error';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
@@ -18,12 +21,12 @@ export default function resumeDownload(id) {
     let download = state.downloads.find(download => download.id === id);
 
     if (download.res) {
-      dispatch(changeDownloadStatusThunk(id, 'progressing'));
+      dispatch(downloadProgressing(id));
       download.res.resume();
     } else if (download.status === 'error') {
       dispatch(resumeFromError(id, download.error.code));
     } else {
-      dispatch(changeDownloadStatusThunk(id, 'progressing'));
+      dispatch(downloadProgressing(id));
       const res = await dispatch(
         makePartialRequest(id, download.url, download.bytesDownloaded)
       );
@@ -31,7 +34,7 @@ export default function resumeDownload(id) {
       // The download status might have changed since making the request.
       state = getState();
       download = state.downloads.find(download => download.id === id);
-      
+
       if (download.status !== 'progressing') return;
 
       dispatch(setDownloadRes(id, res));
@@ -44,11 +47,9 @@ export default function resumeDownload(id) {
         : contentLength;
 
       if (download.defaultFilename !== filename || download.size !== size) {
-        dispatch(setDownloadErrorThunk(id, { code: 'EFILECHANGED' }));
+        dispatch(showDownloadError(id, { code: 'EFILECHANGED' }));
       } else {
-        if (!download.resumable) {
-          dispatch(updateBytesDownloadedThunk(id, 0));
-        }
+        if (!download.resumable) dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(downloadFile(id, res));
       }
     }
@@ -59,7 +60,7 @@ export default function resumeDownload(id) {
 
 function resumeFromError(id, code) {
   return async (dispatch, getState) => {
-    dispatch(changeDownloadStatusThunk(id, 'progressing'));
+    dispatch(downloadProgressing(id));
 
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
@@ -88,13 +89,7 @@ function resumeFromError(id, code) {
         const resumable = res.statusCode === 206;
 
         dispatch(
-          changeDownloadBasicInfo(
-            id,
-            filename,
-            availableFilename,
-            size,
-            resumable
-          )
+          changeDownloadInfo(id, filename, availableFilename, size, resumable)
         );
         dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(downloadFile(id, res));

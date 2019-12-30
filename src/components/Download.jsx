@@ -5,12 +5,8 @@ import PeriodicUpdate from './PeriodicUpdate';
 import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
-import {
-  cancelDownload,
-  removeDownloadThunk,
-  changeDownloadStatusThunk
-} from '../thunks';
-import { prettyBytes }  from './utilities';
+import { cancelDownloadThunk, removeDownloadThunk } from '../thunks';
+import { prettyBytes } from './utilities';
 import {
   LinearProgress,
   Card,
@@ -25,6 +21,7 @@ import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
 import pathExists from 'path-exists';
 import clsx from 'clsx';
+import { downloadFileRemoved } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   cardContent: {
@@ -119,7 +116,7 @@ function Download({
 
   const openFolder = async () => {
     if (!(await pathExists(fullPath))) {
-      dispatch(changeDownloadStatusThunk(id, 'removed'));
+      dispatch(downloadFileRemoved(id));
     } else {
       shell.showItemInFolder(fullPath);
     }
@@ -128,7 +125,7 @@ function Download({
   const openFile = async () => {
     if (status === 'complete') {
       if (!(await pathExists(fullPath))) {
-        dispatch(changeDownloadStatusThunk(id, 'removed'));
+        dispatch(downloadFileRemoved(id));
       } else {
         shell.openItem(fullPath);
       }
@@ -140,7 +137,7 @@ function Download({
   };
 
   const cancel = () => {
-    dispatch(cancelDownload(id));
+    dispatch(cancelDownloadThunk(id));
   };
 
   const remove = () => {

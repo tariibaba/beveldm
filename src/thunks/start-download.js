@@ -1,13 +1,15 @@
-import { setDownloadRes } from '../actions';
+import {
+  setDownloadRes,
+  downloadProgressing,
+  showDownloadError
+} from '../actions';
 import { getFilename, getFileSize } from '../utilities';
 import downloadFile from './download-file';
 import makeRequest from './make-request';
-import changeDownloadStatusThunk from './change-download-status';
-import setDownloadErrorThunk from './set-download-error';
 
 export default function startDownload(id) {
   return async (dispatch, getState) => {
-    dispatch(changeDownloadStatusThunk(id, 'progressing'));
+    dispatch(downloadProgressing(id));
 
     let state = getState();
     let download = state.downloads.find(download => download.id === id);
@@ -26,7 +28,7 @@ export default function startDownload(id) {
     const size = getFileSize(res.headers);
 
     if (download.defaultFilename !== filename || download.size !== size) {
-      dispatch(setDownloadErrorThunk(id, { code: 'EFILECHANGED' }));
+      dispatch(showDownloadError(id, { code: 'EFILECHANGED' }));
     } else {
       dispatch(downloadFile(id, res));
     }

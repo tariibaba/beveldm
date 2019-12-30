@@ -1,13 +1,11 @@
-import { setDownloadRes } from '../actions';
-import changeDownloadStatusThunk from './change-download-status';
+import { cancelDownload } from '../actions';
 
-export default function cancelDownload(id) {
+export default function cancelDownloadThunk(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.find(download => download.id === id);
     if (download.res) download.res.destroy();
-    dispatch(changeDownloadStatusThunk(id, 'canceled'));
-    dispatch(setDownloadRes(id, undefined));
-    
+    dispatch(cancelDownload(id));
+
     return Promise.resolve();
   };
 }

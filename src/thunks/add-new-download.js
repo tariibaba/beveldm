@@ -1,29 +1,17 @@
 import {
   addNewDownload,
-  changeDownloadBasicInfo,
+  gotDownloadInfo,
   removeDownload,
-  notify,
-  setDownloadShow
+  notify
 } from '../actions';
 import request from 'request';
-import {
-  getFilename,
-  getFileSize,
-  getAvailableFilename,
-  setTaskbarProgress
-} from '../utilities';
+import { getFilename, getFileSize, getAvailableFilename } from '../utilities';
 import { v4 } from 'uuid';
-import updateBytesDownloadedThunk from './update-bytes-downloaded';
-import changeDownloadStatusThunk from './change-download-status';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
     const id = v4();
     dispatch(addNewDownload(id, url, dirname));
-
-    let state = getState();
-    let downloads = state.downloads;
-    setTaskbarProgress(downloads);
 
     const res = await new Promise(async resolve =>
       request
@@ -36,10 +24,6 @@ export default function addNewDownloadThunk(url, dirname) {
               dispatch(addNewDownloadThunk(url, dirname))
             )
           );
-          
-          state = getState();
-          downloads = state.downloads;
-          setTaskbarProgress(downloads);
         })
     );
     res.destroy();
@@ -48,10 +32,6 @@ export default function addNewDownloadThunk(url, dirname) {
       dispatch(removeDownload(id));
       dispatch(notify('error', 'Forbidden request'));
 
-      state = getState();
-      downloads = state.downloads;
-      setTaskbarProgress(downloads);
-
       return Promise.resolve();
     }
 
@@ -59,24 +39,15 @@ export default function addNewDownloadThunk(url, dirname) {
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
 
-    state = getState();
-    downloads = state.downloads;
     dispatch(
-      changeDownloadBasicInfo(
+      gotDownloadInfo(
         id,
         filename,
-        await getAvailableFilename(dirname, filename, downloads),
+        await getAvailableFilename(dirname, filename, getState().downloads),
         size,
         res.statusCode === 206
       )
     );
-    dispatch(setDownloadShow(id, true));
-    dispatch(updateBytesDownloadedThunk(id, 0));
-    dispatch(changeDownloadStatusThunk(id, 'notstarted'));
-
-    state = getState();
-    downloads = state.downloads;
-    setTaskbarProgress(downloads);
 
     return Promise.resolve();
   };

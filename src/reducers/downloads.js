@@ -2,25 +2,37 @@ import { updateObject, updateItemInArray, createReducer } from './utilities';
 import {
   ADD_NEW_DOWNLOAD,
   UPDATE_BYTES_DOWNLOADED,
-  CHANGE_DOWNLOAD_BASIC_INFO,
-  CHANGE_DOWNLOAD_STATUS,
   REMOVE_DOWNLOAD,
   CHANGE_DOWNLOAD_URL,
-  SET_DOWNLOAD_ERROR,
   SET_DOWNLOAD_RES,
-  SET_DOWNLOAD_SHOW
+  SHOW_DOWNLOAD,
+  HIDE_DOWNLOAD,
+  DOWNLOAD_PROGRESSING,
+  PAUSE_DOWNLOAD,
+  CANCEL_DOWNLOAD,
+  COMPLETE_DOWNLOAD,
+  CHANGE_DOWNLOAD_INFO,
+  GOT_DOWNLOAD_INFO,
+  SHOW_DOWNLOAD_ERROR,
+  DOWNLOAD_FILE_REMOVED
 } from '../actions';
 
 export default createReducer([], {
   [ADD_NEW_DOWNLOAD]: addNewDownload,
   [UPDATE_BYTES_DOWNLOADED]: updateBytesDownloaded,
-  [CHANGE_DOWNLOAD_BASIC_INFO]: changeDownloadBasicInfo,
-  [CHANGE_DOWNLOAD_STATUS]: changeDownloadStatus,
   [REMOVE_DOWNLOAD]: removeDownload,
   [CHANGE_DOWNLOAD_URL]: changeDownloadUrl,
-  [SET_DOWNLOAD_ERROR]: setDownloadError,
   [SET_DOWNLOAD_RES]: setDownloadRes,
-  [SET_DOWNLOAD_SHOW]: setDownloadShow
+  [SHOW_DOWNLOAD]: setDownloadShow,
+  [HIDE_DOWNLOAD]: setDownloadShow,
+  [DOWNLOAD_PROGRESSING]: changeDownloadStatus,
+  [PAUSE_DOWNLOAD]: changeDownloadStatus,
+  [COMPLETE_DOWNLOAD]: changeDownloadStatus,
+  [DOWNLOAD_FILE_REMOVED]: changeDownloadStatus,
+  [CANCEL_DOWNLOAD]: cancelDownload,
+  [CHANGE_DOWNLOAD_INFO]: changeDownloadInfo,
+  [GOT_DOWNLOAD_INFO]: gotDownloadInfo,
+  [SHOW_DOWNLOAD_ERROR]: showDownloadError
 });
 
 function addNewDownload(state, action) {
@@ -53,11 +65,11 @@ function removeDownload(state, action) {
 
 function changeDownloadUrl(state, action) {
   return updateItemInArray(state, action.id, download =>
-    updateObject(download, { url: action.newUrl, res: action.res })
+    updateObject(download, { url: action.url, res: action.res })
   );
 }
 
-function changeDownloadBasicInfo(state, action) {
+function changeDownloadInfo(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, {
       defaultFilename: action.defaultFilename,
@@ -67,18 +79,41 @@ function changeDownloadBasicInfo(state, action) {
     })
   );
 }
-function setDownloadError(state, action) {
-  return updateItemInArray(state, action.id, download =>
-    updateObject(download, { error: action.error })
-  );
-}
+
 function setDownloadRes(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, { res: action.res })
   );
 }
+
 function setDownloadShow(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, { show: action.show })
+  );
+}
+
+function gotDownloadInfo(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, {
+      status: action.status,
+      defaultFilename: action.defaultFilename,
+      availableFilename: action.availableFilename,
+      bytesDownloaded: action.bytesDownloaded,
+      size: action.size,
+      resumable: action.resumable,
+      show: action.show
+    })
+  );
+}
+
+function cancelDownload(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, { status: action.status, res: action.res })
+  );
+}
+
+function showDownloadError(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, { status: action.status, error: action.error })
   );
 }

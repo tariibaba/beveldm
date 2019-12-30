@@ -1,6 +1,6 @@
 import http from 'http';
 import https from 'https';
-import setDownloadErrorThunk from './set-download-error';
+import { showDownloadError } from '../actions';
 
 export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
   return async (dispatch, _getState) => {
@@ -17,12 +17,12 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
         .get(url, options)
         .on('response', res => {
           if (res.statusCode === 403) {
-            dispatch(setDownloadErrorThunk(id, { code: 'EFORBIDDEN' }));
+            dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
           }
           resolve(res);
         })
         .on('error', err => {
-          dispatch(setDownloadErrorThunk(id, { code: err.code }));
+          dispatch(showDownloadError(id, { code: err.code }));
         });
     });
   };

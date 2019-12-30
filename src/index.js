@@ -13,6 +13,7 @@ import {
 } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto';
+import { windowProgressSyncer } from './middlewares';
 
 const store = createStore(
   combineReducers({
@@ -22,7 +23,7 @@ const store = createStore(
     currentNotification: currentNotificationReducer,
     settings: settingsReducer
   }),
-  applyMiddleware(reduxThunk)
+  applyMiddleware(reduxThunk, windowProgressSyncer)
 );
 
 ReactDOM.render(
