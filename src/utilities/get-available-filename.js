@@ -1,6 +1,7 @@
 import path from 'path';
-import pathExists from 'path-exists';
-import getDownloadPath from './get-download-path'
+import getDownloadPath from './get-download-path';
+import pify from 'pify';
+import fs from 'fs';
 
 export default async function getAvailableFilename(
   dirname,
@@ -12,17 +13,18 @@ export default async function getAvailableFilename(
   let suffix = 0;
   let availableFilename = filename;
   let fullPath = path.join(dirname, availableFilename);
+  const filesInDir = await pify(fs.readdir)(dirname);
 
-  while (true) {
-    const noDownloadWithFullPath = downloads
+  const downloadWithFullPathExists = fullPath =>
+    downloads
       .filter(download => download.status !== 'gettinginfo')
-      // eslint-disable-next-line no-loop-func
-      .every(download => getDownloadPath(download) !== fullPath);
-    if (!(await pathExists(fullPath)) && noDownloadWithFullPath) {
-      break;
-    }
-    suffix++;
-    availableFilename = `${nameWithoutExtension} (${suffix})${extension}`;
+      .some(download => fullPath === getDownloadPath(download));
+
+  while (
+    filesInDir.includes(fullPath) ||
+    downloadWithFullPathExists(fullPath)
+  ) {
+    availableFilename = `${nameWithoutExtension} (${++suffix})${extension}`;
     fullPath = path.join(dirname, availableFilename);
   }
 
