@@ -21,7 +21,9 @@ function processDownloadForSaving(download) {
     download.status = 'paused';
   }
 
-  if (!download.show) deleteFile(getDownloadPath(download));
+  if (!download.show && download.status !== 'complete') {
+    deleteFile(getDownloadPath(download));
+  }
 
   delete download.res;
   if (download.status === 'paused') delete download.bytesDownloaded;
