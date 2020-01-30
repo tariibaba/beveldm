@@ -11,6 +11,7 @@ import {
 import { MoreVert } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import ChangeUrlDialog from './ChangeUrlDialog';
+import { toggleOpenWhenDone } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -26,7 +27,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function DownloadMoreActions({ id, currentUrl }) {
+function DownloadMoreActions({
+  dispatch,
+  id,
+  currentUrl,
+  openWhenDone = false
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -45,6 +51,11 @@ function DownloadMoreActions({ id, currentUrl }) {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
+  };
+
+  const handleToggleOpenWhenDone = () => {
+    dispatch(toggleOpenWhenDone(id, !openWhenDone));
+    setAnchorEl(null);
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -69,6 +80,20 @@ function DownloadMoreActions({ id, currentUrl }) {
             <ListItemText className={classes.listItemText}>
               <Button className={classes.button} onClick={handleDialogOpen}>
                 Change URL
+              </Button>
+            </ListItemText>
+          </ListItem>
+          <ListItem className={classes.listItem}>
+            <ListItemText className={classes.listItemText}>
+              <Button
+                className={classes.button}
+                onClick={handleToggleOpenWhenDone}
+              >
+                <Check
+                  className={classes.openWhenDoneCheck}
+                  style={{ visibility: openWhenDone ? 'visible' : 'hidden' }}
+                />
+                Open when done
               </Button>
             </ListItemText>
           </ListItem>

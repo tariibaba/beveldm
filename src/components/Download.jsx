@@ -110,7 +110,8 @@ function Download({
   status,
   dispatch,
   error,
-  show
+  show,
+  openWhenDone
 }) {
   const fullPath = path.join(dirname, availableFilename);
 
@@ -168,7 +169,11 @@ function Download({
           <br />
           {status !== 'complete' && status !== 'removed' && (
             <div className={classes.moreVert}>
-              <DownloadMoreActions id={id} currentUrl={url} />
+              <DownloadMoreActions
+                id={id}
+                currentUrl={url}
+                openWhenDone={openWhenDone}
+              />
             </div>
           )}
 

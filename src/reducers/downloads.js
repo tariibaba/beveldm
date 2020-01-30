@@ -14,7 +14,8 @@ import {
   CHANGE_DOWNLOAD_INFO,
   GOT_DOWNLOAD_INFO,
   SHOW_DOWNLOAD_ERROR,
-  DOWNLOAD_FILE_REMOVED
+  DOWNLOAD_FILE_REMOVED,
+  TOGGLE_OPEN_WHEN_DONE
 } from '../actions';
 
 export default createReducer([], {
@@ -32,7 +33,8 @@ export default createReducer([], {
   [CANCEL_DOWNLOAD]: cancelDownload,
   [CHANGE_DOWNLOAD_INFO]: changeDownloadInfo,
   [GOT_DOWNLOAD_INFO]: gotDownloadInfo,
-  [SHOW_DOWNLOAD_ERROR]: showDownloadError
+  [SHOW_DOWNLOAD_ERROR]: showDownloadError,
+  [TOGGLE_OPEN_WHEN_DONE]: toggleOpenWhenDone
 });
 
 function addNewDownload(state, action) {
@@ -115,5 +117,11 @@ function cancelDownload(state, action) {
 function showDownloadError(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, { status: action.status, error: action.error })
+  );
+}
+
+function toggleOpenWhenDone(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, { openWhenDone: action.value })
   );
 }

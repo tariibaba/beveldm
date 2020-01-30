@@ -13,7 +13,8 @@ import {
   CANCEL_DOWNLOAD,
   SHOW_DOWNLOAD_ERROR,
   DOWNLOAD_FILE_REMOVED,
-  COMPLETE_DOWNLOAD
+  COMPLETE_DOWNLOAD,
+  TOGGLE_OPEN_WHEN_DONE
 } from './constants';
 
 export function addNewDownload(id, url, dirname) {
@@ -149,7 +150,7 @@ export function completeDownload(id) {
     type: COMPLETE_DOWNLOAD,
     id,
     status: 'complete'
-  }
+  };
 }
 
 export function showDownloadError(id, error) {
@@ -159,5 +160,13 @@ export function showDownloadError(id, error) {
     res: undefined,
     status: 'error',
     error
+  };
+}
+
+export function toggleOpenWhenDone(id, value) {
+  return {
+    type: TOGGLE_OPEN_WHEN_DONE,
+    id,
+    value
   };
 }
