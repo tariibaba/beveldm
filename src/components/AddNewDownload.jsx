@@ -19,12 +19,13 @@ import validUrl from 'valid-url';
 import { useEffect } from 'react';
 
 const useStyles = makeStyles(theme => ({
-  fabButton: {
+  fab: {
     position: 'absolute',
     left: 0,
     right: 0,
     margin: '0 auto',
-    bottom: -25
+    bottom: 0,
+    transform: 'translateY(50%)'
   }
 }));
 
@@ -112,7 +113,7 @@ function AddNewDownload({ onAdd = () => {} }) {
 
   return (
     <div>
-      <Fab className={classes.fabButton} onClick={handleClickOpen}>
+      <Fab className={classes.fab} onClick={handleClickOpen}>
         <Add />
       </Fab>
 

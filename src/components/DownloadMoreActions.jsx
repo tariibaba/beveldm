@@ -8,7 +8,7 @@ import {
   Button,
   makeStyles
 } from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import ChangeUrlDialog from './ChangeUrlDialog';
 import { toggleOpenWhenDone } from '../actions';
@@ -23,7 +23,15 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     borderRadius: 0,
-    textTransform: 'none'
+    textTransform: 'none',
+    width: '100%'
+  },
+  openWhenDoneCheck: {
+    float: 'left',
+    marginRight: theme.spacing(1) + 'px'
+  },
+  iconButton: {
+    padding: '10px'
   }
 }));
 
@@ -63,7 +71,7 @@ function DownloadMoreActions({
 
   return (
     <>
-      <IconButton onClick={handlePopoverOpen}>
+      <IconButton className={classes.iconButton} onClick={handlePopoverOpen}>
         <MoreVert fontSize="small" />
       </IconButton>
 

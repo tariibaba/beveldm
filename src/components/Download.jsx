@@ -27,14 +27,14 @@ const useStyles = makeStyles(theme => ({
   cardContent: {
     margin: '3px',
     paddingTop: 0,
+    paddingRight: 0,
     minHeight: '100px',
     '&:last-child': {
       paddingBottom: 0
     }
   },
   iconButton: {
-    float: 'right',
-    marginRight: '-14px'
+    float: 'right'
   },
   colorLinearProgress: {
     width: '90%',
@@ -45,7 +45,8 @@ const useStyles = makeStyles(theme => ({
   filenameStylesDefault: {
     display: 'inline-block',
     fontWeight: 500,
-    cursor: 'text'
+    cursor: 'text',
+    marginTop: '10px !important'
   },
   filenameStylesError: {
     color: `${grey['700']}99 !important`,
@@ -94,9 +95,7 @@ const useStyles = makeStyles(theme => ({
   },
   moreVert: {
     float: 'right',
-    clear: 'right',
-    position: 'relative',
-    marginRight: '-14px'
+    clear: 'right'
   }
 }));
 
@@ -166,7 +165,6 @@ function Download({
           )}
 
           {/* More vert icon button */}
-          <br />
           {status !== 'complete' && status !== 'removed' && (
             <div className={classes.moreVert}>
               <DownloadMoreActions
