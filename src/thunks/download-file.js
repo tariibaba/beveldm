@@ -24,8 +24,7 @@ export default function downloadFile(id, res) {
       download = state.downloads.find(download => download.id === id);
       let saveData = state.settings.saveData;
 
-      if (!buffer) buffer = chunk;
-      else buffer = Buffer.concat([buffer, chunk]);
+      buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
 
       if (saveData) {
         const writeSlicedBuffer = async () => {
@@ -33,6 +32,7 @@ export default function downloadFile(id, res) {
 
           state = getState();
           download = state.downloads.find(download => download.id === id);
+
           if (
             download.status === 'paused' ||
             download.status === 'canceled' ||
@@ -43,12 +43,13 @@ export default function downloadFile(id, res) {
 
           const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
           buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
-
           await writeStreamWritePromise(fileStream, chunkToWrite);
-
-          const newBytesDownloaded =
-            download.bytesDownloaded + chunkToWrite.length;
-          dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
+          await dispatch(
+            updateBytesDownloadedThunk(
+              id,
+              download.bytesDownloaded + chunkToWrite.length
+            )
+          );
 
           state = getState();
           download = state.downloads.find(download => download.id === id);
@@ -57,21 +58,23 @@ export default function downloadFile(id, res) {
           if (download.status !== 'paused' && download.status !== 'canceled') {
             if ((buffer.length > SAVE_DATA_LIMIT && saveData) || hasResEnded) {
               await writeSlicedBuffer();
-            } else {
-              res.resume();
-            }
+            } else res.resume();
           }
         };
         await writeSlicedBuffer();
       } else {
         await writeStreamWritePromise(fileStream, buffer);
-
-        const newBytesDownloaded = download.bytesDownloaded + buffer.length;
-        dispatch(updateBytesDownloadedThunk(id, newBytesDownloaded));
+        await dispatch(
+          updateBytesDownloadedThunk(
+            id,
+            download.bytesDownloaded + buffer.length
+          )
+        );
         buffer = null;
 
         if (download.status !== 'paused') res.resume();
       }
+
       if (hasResEnded) fileStream.close();
     });
 
