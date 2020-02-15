@@ -10,9 +10,7 @@ export default function loadState() {
     const store = new Store();
 
     let savedDownloads = store.get('downloads') || [];
-    savedDownloads = await Promise.all(
-      savedDownloads.map(fillMissingProps)
-    );
+    savedDownloads = await Promise.all(savedDownloads.map(fillMissingProps));
 
     getState().downloads = savedDownloads;
     setTaskbarProgress(savedDownloads);
@@ -59,6 +57,12 @@ async function fillMissingProps(savedDownload) {
       bytesDownloaded: partialFileSize
     };
   }
+
+  downloadWithRequiredProps = {
+    ...downloadWithRequiredProps,
+    bytesDownloadedShown: downloadWithRequiredProps.bytesDownloaded,
+    speed: 0
+  };
 
   return downloadWithRequiredProps;
 }

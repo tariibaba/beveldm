@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
-import PeriodicUpdate from './PeriodicUpdate';
-import DownloadSpeed from './DownloadSpeed';
 import { shell } from 'electron';
 import path from 'path';
 import { cancelDownloadThunk, removeDownloadThunk } from '../thunks';
@@ -105,7 +103,8 @@ function Download({
   availableFilename,
   dirname,
   size,
-  bytesDownloaded,
+  bytesDownloadedShown,
+  speed,
   status,
   dispatch,
   error,
@@ -233,16 +232,11 @@ function Download({
           {/* Speed, bytes downloaded and size */}
           {!(status === 'complete' || inactive) && (
             <div style={{ marginTop: '20px' }}>
-              <PeriodicUpdate start={status === 'progressing'}>
-                <div>
-                  <DownloadSpeed
-                    bytesDownloaded={bytesDownloaded}
-                    status={status}
-                  />
-                  {prettyBytes(bytesDownloaded)} of {prettyBytes(size)}
-                  {status === 'paused' ? ', Paused' : null}
-                </div>
-              </PeriodicUpdate>
+              <div>
+                {status === 'progressing' && prettyBytes(speed) + '/s - '}
+                {prettyBytes(bytesDownloadedShown)} of {prettyBytes(size)}
+                {status === 'paused' ? ', Paused' : null}
+              </div>
             </div>
           )}
 
@@ -261,13 +255,11 @@ function Download({
 
           {/* Progress bar */}
           {!(status === 'complete' || inactive) && (
-            <PeriodicUpdate start={status === 'progressing'}>
-              <LinearProgress
-                value={(bytesDownloaded / size) * 100}
-                variant="determinate"
-                className={classes.colorLinearProgress}
-              />
-            </PeriodicUpdate>
+            <LinearProgress
+              value={(bytesDownloadedShown / size) * 100}
+              variant="determinate"
+              className={classes.colorLinearProgress}
+            />
           )}
 
           <DownloadActionButton id={id} status={status} />

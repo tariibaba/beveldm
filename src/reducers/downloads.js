@@ -1,7 +1,6 @@
 import { updateObject, updateItemInArray, createReducer } from './utilities';
 import {
   ADD_NEW_DOWNLOAD,
-  UPDATE_BYTES_DOWNLOADED,
   REMOVE_DOWNLOAD,
   CHANGE_DOWNLOAD_URL,
   SET_DOWNLOAD_RES,
@@ -15,12 +14,13 @@ import {
   GOT_DOWNLOAD_INFO,
   SHOW_DOWNLOAD_ERROR,
   DOWNLOAD_FILE_REMOVED,
-  TOGGLE_OPEN_WHEN_DONE
+  TOGGLE_OPEN_WHEN_DONE,
+  CHANGE_DOWNLOAD_SPEED,
+  UPDATE_BYTES_DOWNLOADED_SHOWN
 } from '../actions';
 
 export default createReducer([], {
   [ADD_NEW_DOWNLOAD]: addNewDownload,
-  [UPDATE_BYTES_DOWNLOADED]: updateBytesDownloaded,
   [REMOVE_DOWNLOAD]: removeDownload,
   [CHANGE_DOWNLOAD_URL]: changeDownloadUrl,
   [SET_DOWNLOAD_RES]: setDownloadRes,
@@ -34,25 +34,22 @@ export default createReducer([], {
   [CHANGE_DOWNLOAD_INFO]: changeDownloadInfo,
   [GOT_DOWNLOAD_INFO]: gotDownloadInfo,
   [SHOW_DOWNLOAD_ERROR]: showDownloadError,
-  [TOGGLE_OPEN_WHEN_DONE]: toggleOpenWhenDone
+  [TOGGLE_OPEN_WHEN_DONE]: toggleOpenWhenDone,
+  [CHANGE_DOWNLOAD_SPEED]: changeDownloadSpeed,
+  [UPDATE_BYTES_DOWNLOADED_SHOWN]: updateBytesDownloadedShown
 });
 
 function addNewDownload(state, action) {
   return [
     {
       id: action.id,
+      type: action.dtype,
       url: action.url,
       dirname: action.dirname,
       status: action.status
     },
     ...state
   ];
-}
-
-function updateBytesDownloaded(state, action) {
-  return updateItemInArray(state, action.id, download =>
-    updateObject(download, { bytesDownloaded: action.bytesDownloaded })
-  );
 }
 
 function changeDownloadStatus(state, action) {
@@ -100,7 +97,9 @@ function gotDownloadInfo(state, action) {
       status: action.status,
       defaultFilename: action.defaultFilename,
       availableFilename: action.availableFilename,
+      speed: action.speed,
       bytesDownloaded: action.bytesDownloaded,
+      bytesDownloadedShown: action.bytesDownloadedShown,
       size: action.size,
       resumable: action.resumable,
       show: action.show
@@ -123,5 +122,19 @@ function showDownloadError(state, action) {
 function toggleOpenWhenDone(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, { openWhenDone: action.value })
+  );
+}
+
+function changeDownloadSpeed(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, { speed: action.speed })
+  );
+}
+
+function updateBytesDownloadedShown(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, {
+      bytesDownloadedShown: action.bytesDownloadedShown
+    })
   );
 }

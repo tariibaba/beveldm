@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DownloadList from './components/DownloadList';
 import { ipcRenderer } from 'electron';
-import { loadState } from './thunks';
+import { loadState, updateDownloadsProgressPeriodically } from './thunks';
 import './App.css';
 import DownloadAppBar from './components/DownloadAppBar';
 import { grey, blue } from '@material-ui/core/colors';
@@ -46,6 +46,7 @@ function App() {
     if (!loaded) {
       dispatch(loadState()).then(() => {
         setLoaded(true);
+        dispatch(updateDownloadsProgressPeriodically());
         ipcRenderer.send('react-loaded', null);
       });
     }

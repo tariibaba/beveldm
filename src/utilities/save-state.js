@@ -26,6 +26,8 @@ function processDownloadForSaving(download) {
   }
 
   delete download.res;
+  delete download.speed;
+  delete download.bytesDownloadedShown;
   if (download.status === 'paused') delete download.bytesDownloaded;
 
   return download;

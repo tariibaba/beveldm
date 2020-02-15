@@ -1,6 +1,5 @@
 import {
   ADD_NEW_DOWNLOAD,
-  UPDATE_BYTES_DOWNLOADED,
   REMOVE_DOWNLOAD,
   CHANGE_DOWNLOAD_INFO,
   CHANGE_DOWNLOAD_URL,
@@ -14,7 +13,9 @@ import {
   SHOW_DOWNLOAD_ERROR,
   DOWNLOAD_FILE_REMOVED,
   COMPLETE_DOWNLOAD,
-  TOGGLE_OPEN_WHEN_DONE
+  TOGGLE_OPEN_WHEN_DONE,
+  CHANGE_DOWNLOAD_SPEED,
+  UPDATE_BYTES_DOWNLOADED_SHOWN
 } from './constants';
 
 export function addNewDownload(id, url, dirname) {
@@ -24,14 +25,6 @@ export function addNewDownload(id, url, dirname) {
     url,
     dirname,
     status: 'gettinginfo'
-  };
-}
-
-export function updateBytesDownloaded(id, bytesDownloaded) {
-  return {
-    type: UPDATE_BYTES_DOWNLOADED,
-    id,
-    bytesDownloaded
   };
 }
 
@@ -104,7 +97,9 @@ export function gotDownloadInfo(
     id,
     defaultFilename,
     availableFilename,
+    speed: 0,
     bytesDownloaded: 0,
+    bytesDownloadedShown: 0,
     size,
     resumable,
     status: 'notstarted',
@@ -168,5 +163,21 @@ export function toggleOpenWhenDone(id, value) {
     type: TOGGLE_OPEN_WHEN_DONE,
     id,
     value
+  };
+}
+
+export function changeDownloadSpeed(id, speed) {
+  return {
+    type: CHANGE_DOWNLOAD_SPEED,
+    id,
+    speed
+  };
+}
+
+export function updateBytesDownloadedShown(id, bytesDownloadedShown) {
+  return {
+    type: UPDATE_BYTES_DOWNLOADED_SHOWN,
+    id,
+    bytesDownloadedShown
   };
 }
