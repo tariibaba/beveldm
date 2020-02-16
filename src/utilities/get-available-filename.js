@@ -21,7 +21,7 @@ export default async function getAvailableFilename(
       .some(download => fullPath === getDownloadPath(download));
 
   while (
-    filesInDir.includes(fullPath) ||
+    filesInDir.includes(availableFilename) ||
     downloadWithFullPathExists(fullPath)
   ) {
     availableFilename = `${nameWithoutExtension} (${++suffix})${extension}`;
