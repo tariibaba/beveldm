@@ -44,31 +44,29 @@ function CustomSnackbar({
   const classes = useStyles();
 
   return (
-    <div>
-      <Snackbar
-        open={open}
-        TransitionComponent={TransitionUp}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        autoHideDuration={NOTIFICATION_SHOW_DURATION}
-        onClose={handleClose}
-      >
-        <SnackbarContent
-          className={classes[variant]}
-          message={<span>{message}</span>}
-          action={[
-            actionName && (
-              <Button
-                key={0}
-                className={classes.actionButton}
-                onClick={handleAction}
-              >
-                {actionName}
-              </Button>
-            )
-          ]}
-        />
-      </Snackbar>
-    </div>
+    <Snackbar
+      open={open}
+      TransitionComponent={TransitionUp}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      autoHideDuration={NOTIFICATION_SHOW_DURATION}
+      onClose={handleClose}
+    >
+      <SnackbarContent
+        className={classes[variant]}
+        message={<span>{message}</span>}
+        action={[
+          actionName && (
+            <Button
+              key={0}
+              className={classes.actionButton}
+              onClick={handleAction}
+            >
+              {actionName}
+            </Button>
+          )
+        ]}
+      />
+    </Snackbar>
   );
 }
 
