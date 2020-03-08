@@ -18,9 +18,10 @@ import {
   UPDATE_BYTES_DOWNLOADED_SHOWN
 } from './constants';
 
-export function addNewDownload(id, url, dirname) {
+export function addNewDownload(id, dtype, url, dirname) {
   return {
     type: ADD_NEW_DOWNLOAD,
+    dtype,
     id,
     url,
     dirname,

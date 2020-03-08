@@ -16,6 +16,7 @@ export default function loadState() {
     setTaskbarProgress(savedDownloads);
 
     getState().settings = store.get('settings') || {};
+    getState().downloadGroup = store.get('downloadGroup') || 'all';
 
     return Promise.resolve();
   };

@@ -13,6 +13,7 @@ export default async function saveState(state) {
     .filter(isDownloadToBeSaved);
   store.set('downloads', downloadsToSave);
   store.set('settings', state.settings);
+  store.set('downloadGroup', state.downloadGroup);
 }
 
 function processDownloadForSaving(download) {

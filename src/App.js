@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import DownloadList from './components/DownloadList';
 import { ipcRenderer } from 'electron';
 import { loadState, updateDownloadsProgressPeriodically } from './thunks';
 import './App.css';
-import DownloadAppBar from './components/DownloadAppBar';
-import { grey, blue } from '@material-ui/core/colors';
-import { createMuiTheme, Toolbar } from '@material-ui/core';
+import { blue } from '@material-ui/core/colors';
+import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import CustomSnackbar from './components/CustomSnackbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveState } from './utilities';
-
-const styles = {
-  App: {
-    backgroundColor: grey['100'],
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexFlow: 'column'
-  }
-};
+import DownloadPage from './components/DownloadPage';
 
 const theme = createMuiTheme({
   palette: {
@@ -54,14 +42,7 @@ function App() {
 
   return loaded ? (
     <ThemeProvider theme={theme}>
-      <div style={{ height: '100%' }}>
-        <div style={styles.App}>
-          <DownloadAppBar />
-          <Toolbar />
-          <DownloadList />
-          <CustomSnackbar />
-        </div>
-      </div>
+      <DownloadPage />
     </ThemeProvider>
   ) : null;
 }

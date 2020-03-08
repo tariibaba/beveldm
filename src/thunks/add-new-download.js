@@ -11,7 +11,7 @@ import { v4 } from 'uuid';
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
     const id = v4();
-    dispatch(addNewDownload(id, url, dirname));
+    dispatch(addNewDownload(id, 'file', url, dirname));
 
     const res = await new Promise(async resolve =>
       request

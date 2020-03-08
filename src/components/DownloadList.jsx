@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import Download from './Download';
-import { connect } from 'react-redux';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
+import { connect } from 'react-redux';
+import when from 'when-expression';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -10,20 +11,20 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     minHeight: '70%',
     height: '70%',
-    backgroundColor: grey['100'],
-    overflowY: 'overlay',               // I know 'overlay' is deprecated.
+    backgroundColor: grey[100],
+    overflowY: 'overlay',
     flex: '1 1 auto'
   },
   list: {
     position: 'relative',
     display: 'inline-block',
-    width: '600px',
+    width: 600,
     textAlign: 'left',
-    marginTop: '15px'
+    marginTop: 15
   },
   gettingInfo: {
-    marginTop: '15px',
-    marginBottom: '15px',
+    marginTop: 15,
+    marginBottom: 15,
     textAlign: 'center'
   }
 }));
@@ -50,6 +51,9 @@ function DownloadList({ downloads = [] }) {
   );
 }
 
-export default connect(state => ({
-  downloads: state.downloads
+export default connect(({ downloads, downloadGroup }) => ({
+  downloads: when(downloadGroup)({
+    all: downloads,
+    else: downloads.filter(download => download.type === downloadGroup)
+  })
 }))(DownloadList);
