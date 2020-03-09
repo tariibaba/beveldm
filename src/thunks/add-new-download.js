@@ -11,9 +11,15 @@ import { v4 } from 'uuid';
 import ytdl from 'ytdl-core';
 import filenameReservedRegex from 'filename-reserved-regex';
 import remoteFilename from 'remote-file-info';
+import youtubeUrl from 'youtube-url';
+import isOnline from 'is-online';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
+    if (youtubeUrl.valid(url)) {
+      return dispatch(addNewYoutubeDownloadThunk(url, dirname));
+    }
+
     const id = v4();
     dispatch(addNewDownload(id, 'file', url, dirname));
 
@@ -58,12 +64,26 @@ export default function addNewDownloadThunk(url, dirname) {
 }
 
 export function addNewYoutubeDownloadThunk(url, dirname) {
-  return async (dispatch, _getState) => {
+  return async dispatch => {
     const id = v4();
     dispatch(addNewDownload(id, 'youtube', url, dirname));
 
+    if (!(await isOnline())) {
+      dispatch(removeDownload(id));
+      dispatch(
+        notify('error', 'Network error', 'Retry', () =>
+          dispatch(addNewYoutubeDownloadThunk(url, dirname))
+        )
+      );
+      return;
+    }
+
     ytdl.getInfo(url, async (err, info) => {
-      if (err) throw err;
+      if ((err && err.code === 'ENOTFOUND') || !info) {
+        dispatch(removeDownload(id));
+        dispatch(notify('error', 'YouTube video not found'));
+        return;
+      }
 
       dispatch(
         openDialog('youtuberes', {
@@ -71,7 +91,7 @@ export function addNewYoutubeDownloadThunk(url, dirname) {
           videoTitle: info.title.replace(filenameReservedRegex(), ' '),
           videoFormats: await Promise.all(
             info.formats
-              .filter(format => format.qualityLabel)
+              .filter(format => format.qualityLabel && format.audioQuality)
               .map(async format => ({
                 ...format,
                 contentLength: format.contentLength

@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { addNewDownloadThunk } from '../thunks';
 import { closeDialog } from '../actions';
 import { addNewYoutubeDownloadThunk } from '../thunks/add-new-download';
+import youtubeUrl from 'youtube-url';
 
 function NewDownloadDialog({ type, open, onAdd, onClose }) {
   const url = useRef();
@@ -48,7 +49,9 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
 
   const handleUrlChange = () => {
     if (url.current.value !== '' && !validUrl.isWebUri(url.current.value)) {
-      urlHelperText = 'This url is invalid';
+      urlHelperText = 'This URL is invalid';
+    } else if (type === 'youtube' && !youtubeUrl.valid(url.current.value)) {
+      urlHelperText = 'Invalid YouTube URL';
     } else {
       urlHelperText = null;
     }
