@@ -16,7 +16,8 @@ import {
   DOWNLOAD_FILE_REMOVED,
   TOGGLE_OPEN_WHEN_DONE,
   CHANGE_DOWNLOAD_SPEED,
-  UPDATE_BYTES_DOWNLOADED_SHOWN
+  UPDATE_BYTES_DOWNLOADED_SHOWN,
+  CHOSEN_YOUTUBE_FORMAT
 } from '../actions';
 
 export default createReducer([], {
@@ -36,7 +37,8 @@ export default createReducer([], {
   [SHOW_DOWNLOAD_ERROR]: showDownloadError,
   [TOGGLE_OPEN_WHEN_DONE]: toggleOpenWhenDone,
   [CHANGE_DOWNLOAD_SPEED]: changeDownloadSpeed,
-  [UPDATE_BYTES_DOWNLOADED_SHOWN]: updateBytesDownloadedShown
+  [UPDATE_BYTES_DOWNLOADED_SHOWN]: updateBytesDownloadedShown,
+  [CHOSEN_YOUTUBE_FORMAT]: chosenYouTubeFormat
 });
 
 function addNewDownload(state, action) {
@@ -135,6 +137,23 @@ function updateBytesDownloadedShown(state, action) {
   return updateItemInArray(state, action.id, download =>
     updateObject(download, {
       bytesDownloadedShown: action.bytesDownloadedShown
+    })
+  );
+}
+
+function chosenYouTubeFormat(state, action) {
+  return updateItemInArray(state, action.id, download =>
+    updateObject(download, {
+      defaultFilename: action.defaultFilename,
+      availableFilename: action.availableFilename,
+      size: action.size,
+      format: action.format,
+      speed: action.speed,
+      bytesDownloaded: action.bytesDownloaded,
+      bytesDownloadedShown: action.bytesDownloadedShown,
+      status: action.status,
+      show: action.show,
+      resumable: action.resumable
     })
   );
 }

@@ -10,6 +10,7 @@ import {
 import { isWebUri } from 'valid-url';
 import { connect } from 'react-redux';
 import { changeDownloadUrlThunk } from '../thunks';
+import { closeDialog } from '../actions';
 
 function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
   const newUrl = useRef();
@@ -22,8 +23,8 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
 
   const handleChangeUrl = event => {
     event.preventDefault();
-    onChange(id, newUrl.current.value);
     onClose();
+    onChange(id, newUrl.current.value);
   };
 
   const handleDialogUrlChange = () => {
@@ -72,8 +73,20 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
   );
 }
 
-export default connect(null, dispatch => ({
-  onChange(id, newUrl) {
-    dispatch(changeDownloadUrlThunk(id, newUrl));
-  }
-}))(ChangeUrlDialog);
+export default connect(
+  ({ downloads, dialog }) => ({
+    id: dialog.data && dialog.data.downloadId,
+    url:
+      dialog.data &&
+      downloads.find(download => download.id === dialog.data.downloadId).url,
+    open: dialog.open && dialog.type === 'changeurl'
+  }),
+  dispatch => ({
+    onClose() {
+      dispatch(closeDialog());
+    },
+    onChange(id, newUrl) {
+      dispatch(changeDownloadUrlThunk(id, newUrl));
+    }
+  })
+)(ChangeUrlDialog);

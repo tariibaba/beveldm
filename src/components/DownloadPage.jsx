@@ -28,8 +28,9 @@ import DownloadList from './DownloadList';
 import { grey } from '@material-ui/core/colors';
 import CustomSnackbar from './CustomSnackbar';
 import NewDownloadDialog from './NewDownloadDialog';
+import YoutubeChooseFormat from './YouTubeChooseFormat';
 
-const drawerWidth = 185;
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,7 +51,8 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     [theme.breakpoints.down('md')]: {
       backgroundColor: '#fff',
-      boxShadow: theme.shadows[10]
+      boxShadow: theme.shadows[10],
+      width: drawerWidth
     }
   },
   drawerOpen: {
@@ -300,6 +302,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
         </div>
       </div>
       <NewDownloadDialog />
+      <YoutubeChooseFormat />
       <DownloadList />
       <CustomSnackbar />
     </div>

@@ -12,13 +12,14 @@ import {
   getFileSize
 } from '../utilities';
 import downloadFile from './download-file';
-import makePartialRequest from './make-partial-request';
+import makePartialRequest, {
+  makePartialYouTubeRequest
+} from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
-    let state = getState();
-    let download = state.downloads.find(download => download.id === id);
+    let download = getState().downloads.find(download => download.id === id);
 
     if (download.res) {
       dispatch(downloadProgressing(id));
@@ -27,25 +28,26 @@ export default function resumeDownload(id) {
       dispatch(resumeFromError(id, download.error.code));
     } else {
       dispatch(downloadProgressing(id));
-      const res = await dispatch(
-        makePartialRequest(id, download.url, download.bytesDownloaded)
-      );
+      let res;
+      if (download.type === 'file') {
+        res = await dispatch(
+          makePartialRequest(id, download.url, download.bytesDownloaded)
+        );
+      } else if (download.type === 'youtube') {
+        res = await dispatch(
+          makePartialYouTubeRequest(id, download.url, download.bytesDownloaded)
+        );
+      }
 
-      // The download status might have changed since making the request.
-      state = getState();
-      download = state.downloads.find(download => download.id === id);
-
+      download = getState().downloads.find(download => download.id === id);
       if (download.status !== 'progressing') return;
 
       dispatch(setDownloadRes(id, res));
-      // Get info from the request.
       const filename = getFilename(download.url, res.headers);
       const contentLength = getFileSize(res.headers);
-      // Check for partial content.
       const size = download.resumable
         ? download.bytesDownloaded + contentLength
         : contentLength;
-
       if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(showDownloadError(id, { code: 'EFILECHANGED' }));
       } else {
@@ -72,13 +74,11 @@ function resumeFromError(id, code) {
 
         const res = await new dispatch(makePartialRequest(id, download.url, 0));
 
-        // The download status might have changed since making the request.
         state = getState();
         download = state.downloads.find(download => download.id === id);
         if (download.status !== 'progressing') return;
 
         dispatch(setDownloadRes(id, res));
-        // Get info from the request.
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         const availableFilename = await getAvailableFilename(

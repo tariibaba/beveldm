@@ -15,7 +15,8 @@ import {
   COMPLETE_DOWNLOAD,
   TOGGLE_OPEN_WHEN_DONE,
   CHANGE_DOWNLOAD_SPEED,
-  UPDATE_BYTES_DOWNLOADED_SHOWN
+  UPDATE_BYTES_DOWNLOADED_SHOWN,
+  CHOSEN_YOUTUBE_FORMAT
 } from './constants';
 
 export function addNewDownload(id, dtype, url, dirname) {
@@ -180,5 +181,28 @@ export function updateBytesDownloadedShown(id, bytesDownloadedShown) {
     type: UPDATE_BYTES_DOWNLOADED_SHOWN,
     id,
     bytesDownloadedShown
+  };
+}
+
+export function chosenYouTubeFormat(
+  id,
+  defaultFilename,
+  availableFilename,
+  size,
+  format
+) {
+  return {
+    type: CHOSEN_YOUTUBE_FORMAT,
+    id,
+    defaultFilename,
+    availableFilename,
+    size,
+    format,
+    speed: 0,
+    bytesDownloaded: 0,
+    bytesDownloadedShown: 0,
+    status: 'notstarted',
+    show: true,
+    resumable: true
   };
 }

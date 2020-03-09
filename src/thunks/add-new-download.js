@@ -2,11 +2,15 @@ import {
   addNewDownload,
   gotDownloadInfo,
   removeDownload,
-  notify
+  notify,
+  openDialog
 } from '../actions';
 import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from '../utilities';
 import { v4 } from 'uuid';
+import ytdl from 'ytdl-core';
+import filenameReservedRegex from 'filename-reserved-regex';
+import remoteFilename from 'remote-file-info';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
@@ -50,5 +54,34 @@ export default function addNewDownloadThunk(url, dirname) {
     );
 
     return Promise.resolve();
+  };
+}
+
+export function addNewYoutubeDownloadThunk(url, dirname) {
+  return async (dispatch, _getState) => {
+    const id = v4();
+    dispatch(addNewDownload(id, 'youtube', url, dirname));
+
+    ytdl.getInfo(url, async (err, info) => {
+      if (err) throw err;
+
+      dispatch(
+        openDialog('youtuberes', {
+          downloadId: id,
+          videoTitle: info.title.replace(filenameReservedRegex(), ' '),
+          videoFormats: await Promise.all(
+            info.formats
+              .filter(format => format.qualityLabel)
+              .map(async format => ({
+                ...format,
+                contentLength: format.contentLength
+                  ? Number.parseInt(format.contentLength)
+                  : (await remoteFilename(format.url).catch(reason => false))
+                      .fileSize
+              }))
+          )
+        })
+      );
+    });
   };
 }

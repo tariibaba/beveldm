@@ -11,7 +11,7 @@ import {
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import ChangeUrlDialog from './ChangeUrlDialog';
-import { toggleOpenWhenDone } from '../actions';
+import { toggleOpenWhenDone, openDialog } from '../actions';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -38,11 +38,10 @@ const useStyles = makeStyles(theme => ({
 function DownloadMoreActions({
   dispatch,
   id,
-  currentUrl,
-  openWhenDone = false
+  openWhenDone = false,
+  onChangeUrl
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handlePopoverOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -53,17 +52,13 @@ function DownloadMoreActions({
   };
 
   const handleDialogOpen = () => {
-    setAnchorEl(null);
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
+    onChangeUrl();
+    handlePopoverClose();
   };
 
   const handleToggleOpenWhenDone = () => {
     dispatch(toggleOpenWhenDone(id, !openWhenDone));
-    setAnchorEl(null);
+    handlePopoverClose();
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -108,14 +103,13 @@ function DownloadMoreActions({
         </List>
       </Popover>
 
-      <ChangeUrlDialog
-        id={id}
-        currentUrl={currentUrl}
-        open={dialogOpen}
-        onClose={handleDialogClose}
-      />
+      <ChangeUrlDialog />
     </>
   );
 }
 
-export default connect()(DownloadMoreActions);
+export default connect(null, dispatch => ({
+  onChangeUrl(id) {
+    dispatch(openDialog('changeurl', { downloadId: id }));
+  }
+}))(DownloadMoreActions);

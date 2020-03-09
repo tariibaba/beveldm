@@ -15,6 +15,7 @@
     "electron-is-dev": "^1.1.0",
     "electron-packager": "^14.1.1",
     "electron-store": "^5.0.0",
+    "filename-reserved-regex": "^2.0.0",
     "open": "^7.0.1",
     "path-exists": "^4.0.0",
     "pify": "^4.0.1",
@@ -24,12 +25,14 @@
     "react-scripts": "3.0.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
+    "remote-file-info": "^1.0.1",
     "request": "^2.88.0",
     "sum-by": "^1.0.3",
     "typeface-roboto": "^0.0.75",
     "uuid": "^3.3.2",
     "valid-url": "^1.0.9",
-    "when-expression": "^0.0.2"
+    "when-expression": "^0.0.2",
+    "ytdl-core": "^2.0.0"
   },
   "scripts": {
     "start": "rescripts start",
