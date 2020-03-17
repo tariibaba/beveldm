@@ -8,11 +8,9 @@ import { openDialog } from '../actions';
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    margin: 'auto',
-    bottom: 0,
-    transform: 'translateY(50%)'
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
+    zIndex: 1298
   }
 }));
 
@@ -24,11 +22,10 @@ function AddNewDownload({ type, onClick }) {
   };
 
   return (
-    <div>
-      <Fab className={classes.root} onClick={handleClick}>
-        <Add />
-      </Fab>
-    </div>
+    <Fab className={classes.root} onClick={handleClick} variant="extended">
+      <Add />
+      New download
+    </Fab>
   );
 }
 

@@ -193,7 +193,6 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Downloads
           </Typography>
-          <AddNewDownload />
           <IconButton edge="end" color="inherit" onClick={handlePopoverOpen}>
             <MoreVert />
           </IconButton>
@@ -258,7 +257,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
               <ListItemIcon
                 className={clsx(
                   downloadGroup === 'all' && classes.selectedDownloadGroup
-                )}
+                  )}
               >
                 <ClearAll />
               </ListItemIcon>
@@ -278,13 +277,13 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
               className={clsx(
                 classes.downloadGroupListItem,
                 downloadGroup === 'youtube' &&
-                  classes.selectedDownloadGroupListItem
-              )}
+                classes.selectedDownloadGroupListItem
+                )}
             >
               <ListItemIcon
                 className={clsx(
                   downloadGroup === 'youtube' && classes.selectedDownloadGroup
-                )}
+                  )}
               >
                 <YouTube />
               </ListItemIcon>
@@ -292,7 +291,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
                 classes={{
                   primary: clsx(
                     downloadGroup === 'youtube' && classes.selectedDownloadGroup
-                  )
+                    )
                 }}
               >
                 YouTube
@@ -301,6 +300,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
           </List>
         </div>
       </div>
+      <AddNewDownload />
       <NewDownloadDialog />
       <YoutubeChooseFormat />
       <DownloadList />
