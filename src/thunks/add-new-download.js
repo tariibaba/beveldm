@@ -5,7 +5,6 @@ import {
   notify,
   openDialog
 } from '../actions';
-import request from 'request';
 import { getFilename, getFileSize, getAvailableFilename } from '../utilities';
 import { v4 } from 'uuid';
 import ytdl from 'ytdl-core';
@@ -13,6 +12,8 @@ import filenameReservedRegex from 'filename-reserved-regex';
 import remoteFilename from 'remote-file-info';
 import youtubeUrl from 'youtube-url';
 import isOnline from 'is-online';
+import http from 'http';
+import https from 'https';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
@@ -23,8 +24,10 @@ export default function addNewDownloadThunk(url, dirname) {
     const id = v4();
     dispatch(addNewDownload(id, 'file', url, dirname));
 
+    const protocol = new URL(url).protocol === 'http:' ? http : https;
+
     const res = await new Promise(async resolve =>
-      request
+      protocol
         .get(url, { headers: { Range: 'bytes=0-' } })
         .on('response', res => resolve(res))
         .on('error', () => {
