@@ -24,10 +24,14 @@ const useStyles = makeStyles(theme => ({
   },
   tableWrapper: {
     height: 204,
-    overflowY: 'auto'
+    overflowY: 'auto',
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'transparent'
+    },
+    '&:hover::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(100, 100, 100, 0.7)'
+    }
   },
-  table: {},
-  tableRow: {},
   tableHeadCell: {
     textAlign: 'center'
   },
