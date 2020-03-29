@@ -2,20 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { loadState, updateDownloadsProgressPeriodically } from './thunks';
 import './App.css';
-import { blue } from '@material-ui/core/colors';
-import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveState } from './utilities';
 import DownloadPage from './components/DownloadPage';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: blue['700']
-    }
-  }
-});
+import { lightTheme, darkTheme } from './themes';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -41,7 +32,7 @@ function App() {
   }, [loaded, dispatch]);
 
   return loaded ? (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={state.settings.darkMode ? darkTheme : lightTheme}>
       <DownloadPage />
     </ThemeProvider>
   ) : null;

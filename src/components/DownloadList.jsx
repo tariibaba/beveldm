@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import Download from './Download';
 import { CircularProgress, makeStyles } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors';
 import { connect } from 'react-redux';
 import when from 'when-expression';
 
@@ -11,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     minHeight: '70%',
     height: '70%',
-    backgroundColor: grey[100],
+    backgroundColor: theme.palette.background.default,
     overflowY: 'overlay',
     flex: '1 1 auto'
   },

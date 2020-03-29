@@ -5,7 +5,14 @@ import {
   pauseDownloadThunk,
   resumeDownload
 } from '../thunks';
-import { BlueButton, WhiteButton } from './CustomButtons';
+import { Button, makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1)
+  }
+}));
 
 function DownloadActionButton({ id, status, dispatch }) {
   let action;
@@ -46,19 +53,20 @@ function DownloadActionButton({ id, status, dispatch }) {
     }
   };
 
-  if (status !== 'complete' && status !== 'removed') {
-    const Button = action === 'Pause' ? WhiteButton : BlueButton;
-    return (
+  const classes = useStyles();
+
+  return status !== 'complete' && status !== 'removed' ?
+     (
       <Button
         onClick={handleClick}
         variant="contained"
         size="small"
-        style={{ marginRight: '5px' }}
+        className={classes.root}
+        color={action === 'Pause' ? 'secondary' : 'primary'}
       >
         {action}
       </Button>
-    );
-  } else return null;
+    ) :null;
 }
 
 export default connect()(DownloadActionButton);

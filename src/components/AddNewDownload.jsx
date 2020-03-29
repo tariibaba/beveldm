@@ -22,7 +22,12 @@ function AddNewDownload({ type, onClick }) {
   };
 
   return (
-    <Fab className={classes.root} onClick={handleClick} variant="extended">
+    <Fab
+      className={classes.root}
+      onClick={handleClick}
+      variant="extended"
+      color="primary"
+    >
       <Add />
       New download
     </Fab>

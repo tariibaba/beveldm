@@ -22,7 +22,7 @@ import {
   YouTube
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { toggleSaveData, changeDownloadGroup } from '../actions';
+import { toggleSaveData, changeDownloadGroup, toggleDarkMode } from '../actions';
 import clsx from 'clsx';
 import DownloadList from './DownloadList';
 import { grey } from '@material-ui/core/colors';
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'transparent',
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-      backgroundColor: '#fff',
+      backgroundColor: theme.palette.custom.drawer,
       boxShadow: theme.shadows[10],
       width: drawerWidth
     }
@@ -113,7 +113,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   selectedDownloadGroup: {
-    color: theme.palette.primary.main,
+    color: `${theme.palette.primary.main}`,
     fontWeight: 'bold'
   },
   downloadGroupListItem: {
@@ -146,7 +146,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
+function DownloadAppBar({ saveData, darkMode, downloadGroup, dispatch }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
@@ -160,9 +160,14 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
   };
 
   const handleToggleSaveData = () => {
-    setAnchorEl(null);
+    handlePopoverClose();
     dispatch(toggleSaveData(!saveData));
   };
+
+  const handleToggleDarkMode = () => {
+    handlePopoverClose();
+    dispatch(toggleDarkMode(!darkMode));
+  }
 
   const handleOpenDrawer = () => {
     setOpen(true);
@@ -210,7 +215,15 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
                     style={{ visibility: saveData ? 'visible' : 'hidden' }}
                   />
                 </ListItemIcon>
-                <Typography>Save Data</Typography>
+                <Typography>Save data</Typography>
+              </MenuItem>
+              <MenuItem button onClick={handleToggleDarkMode}>
+                <ListItemIcon className={classes.menuListIcon}>
+                  <Check
+                    style={{ visibility: darkMode ? 'visible' : 'hidden' }}
+                  />
+                </ListItemIcon>
+                <Typography>Dark mode</Typography>
               </MenuItem>
             </MenuList>
           </Menu>
@@ -257,7 +270,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
               <ListItemIcon
                 className={clsx(
                   downloadGroup === 'all' && classes.selectedDownloadGroup
-                  )}
+                )}
               >
                 <ClearAll />
               </ListItemIcon>
@@ -277,13 +290,13 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
               className={clsx(
                 classes.downloadGroupListItem,
                 downloadGroup === 'youtube' &&
-                classes.selectedDownloadGroupListItem
-                )}
+                  classes.selectedDownloadGroupListItem
+              )}
             >
               <ListItemIcon
                 className={clsx(
                   downloadGroup === 'youtube' && classes.selectedDownloadGroup
-                  )}
+                )}
               >
                 <YouTube />
               </ListItemIcon>
@@ -291,7 +304,7 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
                 classes={{
                   primary: clsx(
                     downloadGroup === 'youtube' && classes.selectedDownloadGroup
-                    )
+                  )
                 }}
               >
                 YouTube
@@ -311,5 +324,6 @@ function DownloadAppBar({ saveData = false, downloadGroup, dispatch }) {
 
 export default connect(({ settings, downloadGroup }) => ({
   downloadGroup,
-  saveData: settings.saveData
+  saveData: settings.saveData,
+  darkMode: settings.darkMode
 }))(DownloadAppBar);

@@ -21,6 +21,7 @@ export const CHOSEN_YOUTUBE_FORMAT = 'CHOSEN_YOUTUBE_FORMAT';
 export const NOTIFY = 'NOTIFY';
 
 export const TOGGLE_SAVE_DATA = 'TOGGLE_SAVE_DATA';
+export const TOGGLE_DARK_MODE = 'TOGGLE_DARK_MODE';
 
 export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
