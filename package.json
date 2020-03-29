@@ -54,7 +54,7 @@
     "eject": "react-scripts eject",
     "preelectron-pack": "yarn build",
     "electron-pack": "electron-builder --dir",
-    "prelectron-dist": "yarn build",
+    "preelectron-dist": "yarn build",
     "electron-dist": "electron-builder"
   },
   "eslintConfig": {
