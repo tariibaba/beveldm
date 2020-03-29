@@ -4,7 +4,7 @@
   "author": "Tari Ibaba <tariibabadev@gmail.com>",
   "version": "0.1.0",
   "private": true,
-  "main": "public/main.js",
+  "main": "public/electron.js",
   "homepage": ".",
   "build": {
     "appId": "com.tariibaba.beveldm",

@@ -22,7 +22,7 @@ function createWindow() {
     backgroundColor: '#fff'
   });
 
-  const indexHtmlUrl = url.pathToFileURL(path.resolve('../build/index.html'))
+  const indexHtmlUrl = url.pathToFileURL(path.resolve('../../build/index.html'))
     .href;
   mainWindow.loadURL(electronIsDev ? 'http://localhost:3000' : indexHtmlUrl);
 
