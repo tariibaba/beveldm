@@ -7,11 +7,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { saveState } from './utilities';
 import DownloadPage from './components/DownloadPage';
 import { lightTheme, darkTheme } from './themes';
+import { toggleDarkMode } from './actions';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
   const state = useSelector(state => state);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    ipcRenderer.on('system-theme-changed', (_event, isDarkMode) => {
+      dispatch(toggleDarkMode(isDarkMode));
+    });
+  }, [dispatch])
 
   useEffect(() => {
     ipcRenderer.removeAllListeners('before-close');

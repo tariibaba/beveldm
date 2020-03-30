@@ -3,7 +3,8 @@ const {
   dialog,
   app,
   BrowserWindow,
-  globalShortcut
+  globalShortcut,
+  nativeTheme
 } = require('electron');
 const electronIsDev = require('electron-is-dev');
 const path = require('path');
@@ -88,6 +89,11 @@ ipcMain.on('clear-progress', () => {
   mainWindow.setProgressBar(0, { mode: 'none' });
 });
 
-ipcMain.on('react-loaded', () => {
+ipcMain.on('react-loaded', event => {
   reactHasLoaded = true;
+  event.reply('system-theme-changed', nativeTheme.shouldUseDarkColors);
+});
+
+nativeTheme.on('updated', () => {
+  mainWindow.webContents.send('system-theme-changed', nativeTheme.shouldUseDarkColors)
 });

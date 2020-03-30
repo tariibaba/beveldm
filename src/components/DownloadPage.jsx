@@ -164,11 +164,6 @@ function DownloadAppBar({ saveData, darkMode, downloadGroup, dispatch }) {
     dispatch(toggleSaveData(!saveData));
   };
 
-  const handleToggleDarkMode = () => {
-    handlePopoverClose();
-    dispatch(toggleDarkMode(!darkMode));
-  }
-
   const handleOpenDrawer = () => {
     setOpen(true);
   };
@@ -216,14 +211,6 @@ function DownloadAppBar({ saveData, darkMode, downloadGroup, dispatch }) {
                   />
                 </ListItemIcon>
                 <Typography>Save data</Typography>
-              </MenuItem>
-              <MenuItem button onClick={handleToggleDarkMode}>
-                <ListItemIcon className={classes.menuListIcon}>
-                  <Check
-                    style={{ visibility: darkMode ? 'visible' : 'hidden' }}
-                  />
-                </ListItemIcon>
-                <Typography>Dark mode</Typography>
               </MenuItem>
             </MenuList>
           </Menu>
