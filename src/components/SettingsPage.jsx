@@ -8,11 +8,16 @@ import {
   MenuItem,
   IconButton,
   MuiThemeProvider,
-  createMuiTheme
+  createMuiTheme,
+  Switch
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { changePage, changeTheme } from '../actions';
+import {
+  changePage,
+  changeTheme,
+  toggleAlwaysOpenDownloadsWhenDone
+} from '../actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,13 +66,17 @@ const muiDarkInnerTheme = outerTheme =>
     }
   });
 
-function SettingsPage({ dispatch, theme }) {
+function SettingsPage({ dispatch, theme, alwaysOpenDownloadsWhenDone }) {
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
   };
 
   const handleThemeChange = event => {
     dispatch(changeTheme(event.target.value));
+  };
+
+  const handleToggleAlwaysOpenDownloadsWhenDone = event => {
+    dispatch(toggleAlwaysOpenDownloadsWhenDone(event.target.checked));
   };
 
   const classes = useStyles();
@@ -100,6 +109,14 @@ function SettingsPage({ dispatch, theme }) {
                 <MenuItem value="system">System</MenuItem>
               </Select>
             </div>
+            <div className={classes.setting}>
+              <Typography>Always open downloads when done</Typography>
+              <Switch
+                color="primary"
+                checked={alwaysOpenDownloadsWhenDone}
+                onChange={handleToggleAlwaysOpenDownloadsWhenDone}
+              ></Switch>
+            </div>
           </div>
         </div>
       </div>
@@ -107,6 +124,7 @@ function SettingsPage({ dispatch, theme }) {
   );
 }
 
-export default connect(({ settings }) => ({ theme: settings.theme }))(
-  SettingsPage
-);
+export default connect(({ settings }) => ({
+  theme: settings.theme,
+  alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone
+}))(SettingsPage);
