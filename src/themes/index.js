@@ -139,6 +139,9 @@ export const darkTheme = createMuiTheme({
       }
     },
     MuiTypography: {
+      root: {
+        color: '#999ea4'
+      },
       h6: {
         color: '#fff'
       }

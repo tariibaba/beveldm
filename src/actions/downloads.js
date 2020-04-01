@@ -92,7 +92,8 @@ export function gotDownloadInfo(
   defaultFilename,
   availableFilename,
   size,
-  resumable
+  resumable,
+  timestamp
 ) {
   return {
     type: GOT_DOWNLOAD_INFO,
@@ -105,7 +106,8 @@ export function gotDownloadInfo(
     size,
     resumable,
     status: 'notstarted',
-    show: true
+    show: true,
+    timestamp
   };
 }
 
@@ -189,7 +191,8 @@ export function chosenYouTubeFormat(
   defaultFilename,
   availableFilename,
   size,
-  format
+  format,
+  timestamp
 ) {
   return {
     type: CHOSEN_YOUTUBE_FORMAT,
@@ -203,6 +206,7 @@ export function chosenYouTubeFormat(
     bytesDownloadedShown: 0,
     status: 'notstarted',
     show: true,
-    resumable: true
+    resumable: true,
+    timestamp
   };
 }

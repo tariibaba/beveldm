@@ -104,7 +104,8 @@ function gotDownloadInfo(state, action) {
       bytesDownloadedShown: action.bytesDownloadedShown,
       size: action.size,
       resumable: action.resumable,
-      show: action.show
+      show: action.show,
+      timestamp: action.timestamp
     })
   );
 }
@@ -157,7 +158,8 @@ function chosenYouTubeFormat(state, action) {
       bytesDownloadedShown: action.bytesDownloadedShown,
       status: action.status,
       show: action.show,
-      resumable: action.resumable
+      resumable: action.resumable,
+      timestamp: action.timestamp
     })
   );
 }

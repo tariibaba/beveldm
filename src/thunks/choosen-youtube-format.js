@@ -17,7 +17,8 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
         filename,
         availableFilename,
         format.contentLength,
-        format
+        format,
+        new Date().toISOString()
       )
     );
 
