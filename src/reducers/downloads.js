@@ -105,7 +105,8 @@ function gotDownloadInfo(state, action) {
       size: action.size,
       resumable: action.resumable,
       show: action.show,
-      timestamp: action.timestamp
+      timestamp: action.timestamp,
+      openWhenDone: action.openWhenDone
     })
   );
 }
@@ -159,7 +160,8 @@ function chosenYouTubeFormat(state, action) {
       status: action.status,
       show: action.show,
       resumable: action.resumable,
-      timestamp: action.timestamp
+      timestamp: action.timestamp,
+      openWhenDone: action.openWhenDone
     })
   );
 }

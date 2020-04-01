@@ -15,7 +15,10 @@ export default function loadState() {
     getState().downloads = savedDownloads;
     setTaskbarProgress(savedDownloads);
 
-    getState().settings = store.get('settings') || {};
+    getState().settings = {
+      ...getState().settings,
+      ...(store.get('settings') || {})
+    };
     getState().downloadGroup = store.get('downloadGroup') || 'all';
 
     return Promise.resolve();

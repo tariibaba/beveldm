@@ -9,7 +9,8 @@ import {
   currentNotificationReducer,
   settingsReducer,
   downloadGroupReducer,
-  dialogReducer
+  dialogReducer,
+  pageReducer
 } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto';
@@ -21,7 +22,8 @@ const store = createStore(
     currentNotification: currentNotificationReducer,
     settings: settingsReducer,
     downloadGroup: downloadGroupReducer,
-    dialog: dialogReducer
+    dialog: dialogReducer,
+    page: pageReducer
   }),
   applyMiddleware(reduxThunk, windowProgressSyncer)
 );

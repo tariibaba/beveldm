@@ -93,6 +93,7 @@ export function gotDownloadInfo(
   availableFilename,
   size,
   resumable,
+  openWhenDone,
   timestamp
 ) {
   return {
@@ -107,7 +108,8 @@ export function gotDownloadInfo(
     resumable,
     status: 'notstarted',
     show: true,
-    timestamp
+    timestamp,
+    openWhenDone
   };
 }
 
@@ -192,6 +194,7 @@ export function chosenYouTubeFormat(
   availableFilename,
   size,
   format,
+  openWhenDone,
   timestamp
 ) {
   return {
@@ -207,6 +210,7 @@ export function chosenYouTubeFormat(
     status: 'notstarted',
     show: true,
     resumable: true,
-    timestamp
+    timestamp,
+    openWhenDone
   };
 }

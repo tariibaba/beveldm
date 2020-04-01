@@ -1,4 +1,9 @@
-import { TOGGLE_SAVE_DATA, TOGGLE_DARK_MODE } from './constants';
+import {
+  TOGGLE_SAVE_DATA,
+  TOGGLE_DARK_MODE,
+  CHANGE_THEME,
+  TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE
+} from './constants';
 
 export function toggleSaveData(value) {
   return {
@@ -10,6 +15,20 @@ export function toggleSaveData(value) {
 export function toggleDarkMode(value) {
   return {
     type: TOGGLE_DARK_MODE,
+    value
+  };
+}
+
+export function changeTheme(value) {
+  return {
+    type: CHANGE_THEME,
+    value
+  };
+}
+
+export function toggleAlwaysOpenDownloadsWhenDone(value) {
+  return {
+    type: TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
     value
   };
 }

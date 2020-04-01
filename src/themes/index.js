@@ -48,6 +48,11 @@ export const lightTheme = createMuiTheme({
       colorPrimary: {
         backgroundColor: grey[300]
       }
+    },
+    MuiAppBar: {
+      colorPrimary: {
+        color: '#fff'
+      }
     }
   }
 });

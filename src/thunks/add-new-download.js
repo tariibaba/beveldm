@@ -14,7 +14,6 @@ import youtubeUrl from 'youtube-url';
 import isOnline from 'is-online';
 import http from 'http';
 import https from 'https';
-import moment from 'moment';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
@@ -60,7 +59,8 @@ export default function addNewDownloadThunk(url, dirname) {
         await getAvailableFilename(dirname, filename, getState().downloads),
         size,
         res.statusCode === 206,
-        moment([2020, 1, 2]).toISOString()
+        getState().settings.alwaysOpenDownloadsWhenDone,
+        new Date().toISOString()
       )
     );
 

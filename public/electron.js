@@ -94,6 +94,10 @@ ipcMain.on('react-loaded', event => {
   event.reply('system-theme-changed', nativeTheme.shouldUseDarkColors);
 });
 
+ipcMain.on('change-theme', (_event, args) => {
+  nativeTheme.themeSource = args;
+});
+
 nativeTheme.on('updated', () => {
   mainWindow.webContents.send('system-theme-changed', nativeTheme.shouldUseDarkColors)
 });

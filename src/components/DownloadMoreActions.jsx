@@ -36,10 +36,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function DownloadMoreActions({
-  dispatch,
   id,
   openWhenDone = false,
-  onChangeUrl
+  onChangeUrl,
+  onToggleOpenWhenDone
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -57,8 +57,8 @@ function DownloadMoreActions({
   };
 
   const handleToggleOpenWhenDone = () => {
-    dispatch(toggleOpenWhenDone(id, !openWhenDone));
     handlePopoverClose();
+    onToggleOpenWhenDone(id, !openWhenDone);
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -111,5 +111,11 @@ function DownloadMoreActions({
 export default connect(null, dispatch => ({
   onChangeUrl(id) {
     dispatch(openDialog('changeurl', { downloadId: id }));
+  },
+  onToggleOpenWhenDone(id, openWhenDone) {
+    console.log(
+      `dispatching, trying to change openWhenDone to ${openWhenDone}`
+    );
+    dispatch(toggleOpenWhenDone(id, openWhenDone));
   }
 }))(DownloadMoreActions);

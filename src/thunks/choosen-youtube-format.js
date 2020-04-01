@@ -18,6 +18,7 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
         availableFilename,
         format.contentLength,
         format,
+        getState().settings.alwaysOpenDownloadsWhenDone,
         new Date().toISOString()
       )
     );

@@ -18,10 +18,11 @@ import {
   Menu as MenuIcon,
   YouTube,
   ClearAll,
-  Check
+  Check,
+  Settings
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import { toggleSaveData, changeDownloadGroup } from '../actions';
+import { toggleSaveData, changeDownloadGroup, changePage } from '../actions';
 import { connect } from 'react-redux';
 
 const drawerWidth = 240;
@@ -164,6 +165,10 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
     dispatch(changeDownloadGroup(group));
   };
 
+  const handleGoToSettings = () => {
+    dispatch(changePage('settings'));
+  };
+
   const popoverOpen = Boolean(anchorEl);
 
   return (
@@ -180,6 +185,9 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             Downloads
           </Typography>
+          <IconButton edge="end" color="inherit" onClick={handleGoToSettings}>
+            <Settings />
+          </IconButton>
           <IconButton edge="end" color="inherit" onClick={handlePopoverOpen}>
             <MoreVert />
           </IconButton>
