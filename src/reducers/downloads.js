@@ -117,7 +117,11 @@ function cancelDownload(state, action) {
 
 function showDownloadError(state, action) {
   return updateItemInArray(state, action.id, download =>
-    updateObject(download, { status: action.status, error: action.error })
+    updateObject(download, {
+      status: action.status,
+      error: action.error,
+      res: action.res
+    })
   );
 }
 
