@@ -10,9 +10,14 @@ export default function downloadFile(id, res) {
     let download = state.downloads.find(download => download.id === id);
 
     const partialDownloadPath = getPartialDownloadPath(download);
-    const fileStream = fs.createWriteStream(partialDownloadPath, {
-      flags: 'a'
-    });
+    const fileStream = fs.createWriteStream(
+      partialDownloadPath,
+      download.bytesDownloaded > 0
+        ? {
+            flags: 'a'
+          }
+        : undefined
+    );
     const timeout = new Timeout();
     let buffer;
     let hasResEnded = false;
@@ -33,11 +38,7 @@ export default function downloadFile(id, res) {
           state = getState();
           download = state.downloads.find(download => download.id === id);
 
-          if (
-            download.status === 'paused' ||
-            download.status === 'canceled' ||
-            download.status === 'complete'
-          ) {
+          if (['paused', 'canceled', 'complete'].includes(download.status)) {
             return;
           }
 
