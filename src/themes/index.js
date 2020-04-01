@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core';
 import { blue, grey } from '@material-ui/core/colors';
+import hexToRgba from 'hex-to-rgba';
 
 export const lightTheme = createMuiTheme({
   palette: {
@@ -12,13 +13,13 @@ export const lightTheme = createMuiTheme({
     },
     custom: {
       cardDefault: '#fff',
-      cardError: '#ffffff99',
+      cardError: hexToRgba('#fff', 0.6),
       cardErrorBorder: '#e0e0e0',
       urlDefault: undefined,
-      urlError: '#999ea4b3',
+      urlError: hexToRgba('#999ea4', 0.7),
       progressText: undefined,
       filenameDefault: blue[700],
-      filenameError: '#999ea4',
+      filenameError: hexToRgba('#999ea4', 0.7),
       showInFolder: blue[700],
       downloadStatusText: '#999ea4',
       downloadGroupSelected: '#8ab4f8',
@@ -36,10 +37,10 @@ export const lightTheme = createMuiTheme({
       containedSecondary: {
         backgroundColor: 'transparent',
         boxShadow: 'none',
-        border: '0.5px solid #999ea499',
+        border: `0.5px solid ${hexToRgba('#999ea4', 0.6)}`,
         color: blue[700],
         '&:hover': {
-          backgroundColor: '#8ab4f81a'
+          backgroundColor: hexToRgba('#8ab4f8', 0.1)
         }
       }
     },
@@ -69,14 +70,14 @@ export const darkTheme = createMuiTheme({
     custom: {
       cardDefault: '#202124',
       cardError: '#202124',
-      cardErrorBorder: '#e0e0e02a',
+      cardErrorBorder: hexToRgba('#e0e0e0', 0.15),
       urlDefault: '#999ea4',
-      urlError: '#999ea4b3',
+      urlError: hexToRgba('#999ea4', 0.7),
       progressText: '#999ea4',
       filenameDefault: '#8ab4f8',
-      filenameError: '#999ea4',
-      showInFolder: '#999ea4',
-      downloadStatusText: undefined,
+      filenameError: hexToRgba('#999ea4', 0.7),
+      showInFolder: '#8ab4f8',
+      downloadStatusText: hexToRgba('#999ea4', 0.9),
       downloadGroupSelected: '#8ab4f8',
       drawer: '#202124'
     }
@@ -96,10 +97,10 @@ export const darkTheme = createMuiTheme({
       containedSecondary: {
         backgroundColor: 'transparent',
         boxShadow: 'none',
-        border: '0.5px solid #999ea499',
+        border: `0.5px solid ${hexToRgba('#999ea4', 0.6)}`,
         color: '#8ab4f8',
         '&:hover': {
-          backgroundColor: '#8ab4f81a'
+          backgroundColor: hexToRgba('#8ab4f8', 0.1)
         }
       }
     },
@@ -108,7 +109,7 @@ export const darkTheme = createMuiTheme({
         backgroundColor: '#8ab4f8'
       },
       colorPrimary: {
-        backgroundColor: '#8ab4f81a'
+        backgroundColor: hexToRgba('#8ab4f8', 0.1)
       }
     },
     MuiListItem: {

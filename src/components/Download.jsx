@@ -214,7 +214,7 @@ function Download({
                   })
                 )}
               >
-                <Typography style={{ fontWeight: 500 }}>
+                <Typography style={{ fontWeight: 500, color: 'inherit' }}>
                   {availableFilename}
                 </Typography>
               </button>
@@ -249,7 +249,7 @@ function Download({
                   inactive && classes.urlStylesError
                 )}
               >
-                <Typography>{url}</Typography>
+                <Typography style={{ color: 'inherit' }}>{url}</Typography>
               </button>
             </div>
 
@@ -275,7 +275,9 @@ function Download({
                   classes.showInFolderButtonStyles
                 )}
               >
-                <Typography>Show in folder</Typography>
+                <Typography style={{ color: 'inherit' }}>
+                  Show in folder
+                </Typography>
               </button>
             )}
 
