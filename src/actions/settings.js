@@ -2,7 +2,8 @@ import {
   TOGGLE_SAVE_DATA,
   TOGGLE_DARK_MODE,
   CHANGE_THEME,
-  TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE
+  TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
+  TOGGLE_START_DOWNLOADS_AUTOMATICALLY
 } from './constants';
 
 export function toggleSaveData(value) {
@@ -31,4 +32,11 @@ export function toggleAlwaysOpenDownloadsWhenDone(value) {
     type: TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
     value
   };
+}
+
+export function toggleStartDownloadsAutomatically(value) {
+  return {
+    type: TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
+    value
+  }
 }

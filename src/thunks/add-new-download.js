@@ -14,6 +14,7 @@ import youtubeUrl from 'youtube-url';
 import isOnline from 'is-online';
 import http from 'http';
 import https from 'https';
+import startDownload from './start-download';
 
 export default function addNewDownloadThunk(url, dirname) {
   return async (dispatch, getState) => {
@@ -63,6 +64,10 @@ export default function addNewDownloadThunk(url, dirname) {
         new Date().toISOString()
       )
     );
+
+    if (getState().settings.startDownloadsAutomatically) {
+      dispatch(startDownload(id));
+    }
 
     return Promise.resolve();
   };

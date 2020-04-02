@@ -1,5 +1,6 @@
 import { chosenYouTubeFormat } from '../actions';
 import { getAvailableFilename } from '../utilities';
+import startDownload from './start-download';
 
 export default function choosenYouTubeFormatThunk(id, title, format) {
   return async (dispatch, getState) => {
@@ -22,6 +23,10 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
         new Date().toISOString()
       )
     );
+
+    if (getState().settings.startDownloadsAutomatically) {
+      dispatch(startDownload(id));
+    }
 
     return Promise.resolve();
   };

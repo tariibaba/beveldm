@@ -16,7 +16,8 @@ import { connect } from 'react-redux';
 import {
   changePage,
   changeTheme,
-  toggleAlwaysOpenDownloadsWhenDone
+  toggleAlwaysOpenDownloadsWhenDone,
+  toggleStartDownloadsAutomatically
 } from '../actions';
 
 const useStyles = makeStyles(theme => ({
@@ -66,7 +67,12 @@ const muiDarkInnerTheme = outerTheme =>
     }
   });
 
-function SettingsPage({ dispatch, theme, alwaysOpenDownloadsWhenDone }) {
+function SettingsPage({
+  dispatch,
+  theme,
+  alwaysOpenDownloadsWhenDone,
+  startDownloadsAutomatically
+}) {
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
   };
@@ -77,6 +83,10 @@ function SettingsPage({ dispatch, theme, alwaysOpenDownloadsWhenDone }) {
 
   const handleToggleAlwaysOpenDownloadsWhenDone = event => {
     dispatch(toggleAlwaysOpenDownloadsWhenDone(event.target.checked));
+  };
+
+  const handleToggleStartDownloadsAutomatically = event => {
+    dispatch(toggleStartDownloadsAutomatically(event.target.checked));
   };
 
   const classes = useStyles();
@@ -117,6 +127,14 @@ function SettingsPage({ dispatch, theme, alwaysOpenDownloadsWhenDone }) {
                 onChange={handleToggleAlwaysOpenDownloadsWhenDone}
               ></Switch>
             </div>
+            <div className={classes.setting}>
+              <Typography>Start downloads automatically</Typography>
+              <Switch
+                color="primary"
+                checked={startDownloadsAutomatically}
+                onChange={handleToggleStartDownloadsAutomatically}
+              ></Switch>
+            </div>
           </div>
         </div>
       </div>
@@ -126,5 +144,6 @@ function SettingsPage({ dispatch, theme, alwaysOpenDownloadsWhenDone }) {
 
 export default connect(({ settings }) => ({
   theme: settings.theme,
-  alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone
+  alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone,
+  startDownloadsAutomatically: settings.startDownloadsAutomatically
 }))(SettingsPage);
