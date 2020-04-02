@@ -4,12 +4,12 @@ import { loadState, updateDownloadsProgressPeriodically } from './thunks';
 import './App.css';
 import { ThemeProvider } from '@material-ui/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { saveState } from './utilities';
 import DownloadPage from './components/DownloadPage';
 import { lightTheme, darkTheme } from './themes';
 import { toggleDarkMode } from './actions';
 import SettingsPage from './components/SettingsPage';
 import { connect } from 'react-redux';
+import { cleanUp } from './utilities';
 
 function App({ page }) {
   const [loaded, setLoaded] = useState(false);
@@ -31,7 +31,7 @@ function App({ page }) {
   useEffect(() => {
     ipcRenderer.removeAllListeners('before-close');
     ipcRenderer.on('before-close', async () => {
-      await saveState(state);
+      await cleanUp(state);
       ipcRenderer.send('saved', null);
     });
   }, [state]);

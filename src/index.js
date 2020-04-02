@@ -14,6 +14,7 @@ import {
 } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto';
+import { windowProgressSyncer, stateSaver } from './middlewares';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 const store = createStore(
@@ -26,7 +27,7 @@ const store = createStore(
     page: pageReducer
   }),
   composeWithDevTools(
-    applyMiddleware(reduxThunk, windowProgressSyncer)
+    applyMiddleware(reduxThunk, stateSaver, windowProgressSyncer)
   )
 );
 
