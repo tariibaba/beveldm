@@ -1,7 +1,6 @@
 import React from 'react';
 import AddNewDownload from './AddNewDownload';
 import DownloadList from './DownloadList';
-import CustomSnackbar from './CustomSnackbar';
 import NewDownloadDialog from './NewDownloadDialog';
 import ChangeUrlDialog from './ChangeUrlDialog';
 import YoutubeChooseFormat from './YouTubeChooseFormat';
@@ -28,7 +27,6 @@ function DownloadPage() {
       <ChangeUrlDialog />
       <YoutubeChooseFormat />
       <DownloadList />
-      <CustomSnackbar />
     </div>
   );
 }

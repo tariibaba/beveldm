@@ -10,6 +10,7 @@ import { toggleDarkMode } from './actions';
 import SettingsPage from './components/SettingsPage';
 import { connect } from 'react-redux';
 import { cleanUp } from './utilities';
+import CustomSnackbar from './components/CustomSnackbar';
 
 function App({ page }) {
   const [loaded, setLoaded] = useState(false);
@@ -51,6 +52,7 @@ function App({ page }) {
     <ThemeProvider theme={state.settings.darkMode ? darkTheme : lightTheme}>
       {page === 'downloads' && <DownloadPage />}
       {page === 'settings' && <SettingsPage />}
+      <CustomSnackbar />
     </ThemeProvider>
   ) : null;
 }
