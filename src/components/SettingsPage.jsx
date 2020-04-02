@@ -50,22 +50,32 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const muiDarkInnerTheme = outerTheme =>
+const muiInnerTheme = outerTheme =>
   createMuiTheme({
     ...outerTheme,
-    palette: {
-      ...outerTheme.palette,
-      text: {
-        primary: '#fff'
-      }
-    },
     typography: {
       ...outerTheme.typography,
-      allVariants: {
-        color: '#fff'
+      body1: {
+        fontSize: 15
       }
     }
   });
+
+const muiDarkInnerTheme = outerTheme => createMuiTheme({
+  ...muiInnerTheme(outerTheme),
+  palette: {
+    ...muiInnerTheme(outerTheme).palette,
+    text: {
+      primary: '#fff'
+    }
+  },
+  typography: {
+    ...muiInnerTheme(outerTheme).typography,
+    allVariants: {
+      color: '#fff'
+    }
+  }
+});
 
 function SettingsPage({
   dispatch,
@@ -96,7 +106,7 @@ function SettingsPage({
       theme={outerTheme =>
         outerTheme.palette.type === 'dark'
           ? muiDarkInnerTheme(outerTheme)
-          : outerTheme
+          : muiInnerTheme(outerTheme)
       }
     >
       <div className={classes.root}>
