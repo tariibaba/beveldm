@@ -41,6 +41,7 @@
     "react-redux": "^7.1.0",
     "react-scripts": "3.0.1",
     "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "remote-file-info": "^1.0.1",
     "sum-by": "^1.0.3",
@@ -49,7 +50,8 @@
     "valid-url": "^1.0.9",
     "when-expression": "^0.0.2",
     "youtube-url": "^0.5.0",
-    "ytdl-core": "^2.0.0"
+    "ytdl-core": "^2.0.0",
+    "electron-devtools-installer": "^2.2.4"
   },
   "scripts": {
     "start": "rescripts start",

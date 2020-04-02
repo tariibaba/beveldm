@@ -9,6 +9,11 @@ const {
 const electronIsDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS
+} = require('electron-devtools-installer');
 
 let mainWindow;
 let reactHasLoaded = false;
@@ -35,6 +40,13 @@ function createWindow() {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  installExtension(REACT_DEVELOPER_TOOLS).then(name =>
+    console.log(`Added extension: ${name}`)
+  );
+  installExtension(REDUX_DEVTOOLS).then(name =>
+    console.log(`Added extension: ${name}`)
+  );
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -99,5 +111,8 @@ ipcMain.on('change-theme', (_event, args) => {
 });
 
 nativeTheme.on('updated', () => {
-  mainWindow.webContents.send('system-theme-changed', nativeTheme.shouldUseDarkColors)
+  mainWindow.webContents.send(
+    'system-theme-changed',
+    nativeTheme.shouldUseDarkColors
+  );
 });
