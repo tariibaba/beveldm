@@ -4,13 +4,9 @@ import completeDownloadThunk from './complete-download';
 export default function updateDownloadsProgressPeriodically() {
   return async (dispatch, getState) => {
     setInterval(() => {
-      getState().downloads.forEach(download => {
-        if (
-          download.status !== 'complete' &&
-          download.status !== 'notstarted' &&
-          download.status !== 'gettinginfo' &&
-          download.status !== 'removed'
-        ) {
+      getState()
+        .downloads.filter((download) => download.status === 'progressing')
+        .forEach((download) => {
           const bytesDownloaded = download.bytesDownloaded;
           dispatch(
             changeDownloadSpeed(
@@ -26,8 +22,7 @@ export default function updateDownloadsProgressPeriodically() {
           if (bytesDownloaded === download.size) {
             dispatch(completeDownloadThunk(download.id));
           }
-        }
-      });
+        });
     }, 500);
   };
 }
