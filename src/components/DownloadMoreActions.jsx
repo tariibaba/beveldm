@@ -1,48 +1,48 @@
 import React, { useState } from 'react';
 import {
-  Popover,
   IconButton,
-  List,
-  ListItem,
   ListItemText,
-  Button,
-  makeStyles
+  ListItemIcon,
+  makeStyles,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { toggleOpenWhenDone, openDialog } from '../actions';
 
-const useStyles = makeStyles(theme => ({
-  listItem: {
-    padding: 0
-  },
-  listItemText: {
+const useStyles = makeStyles((theme) => ({
+  menuListItemText: {
     padding: 0,
-    margin: 0
+    margin: 0,
+    fontSize: 14,
+  },
+  menuListItemIcon: {
+    minWidth: 40,
   },
   button: {
     borderRadius: 0,
     textTransform: 'none',
-    width: '100%'
+    width: '100%',
   },
   openWhenDoneCheck: {
     float: 'left',
-    marginRight: theme.spacing(1) + 'px'
+    marginRight: theme.spacing(1) + 'px',
   },
   iconButton: {
-    padding: '10px'
-  }
+    padding: '10px',
+  },
 }));
 
 function DownloadMoreActions({
   id,
   openWhenDone = false,
   onChangeUrl,
-  onToggleOpenWhenDone
+  onToggleOpenWhenDone,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handlePopoverOpen = event => {
+  const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -69,43 +69,51 @@ function DownloadMoreActions({
         <MoreVert fontSize="small" />
       </IconButton>
 
-      <Popover
+      <Menu
         className={classes.popover}
         open={popoverOpen}
         anchorEl={anchorEl}
         anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        getContentAnchorEl={null}
         onClose={handlePopoverClose}
       >
-        <List>
-          <ListItem className={classes.listItem}>
-            <ListItemText className={classes.listItemText}>
-              <Button className={classes.button} onClick={handleDialogOpen}>
-                Change URL
-              </Button>
-            </ListItemText>
-          </ListItem>
-          <ListItem className={classes.listItem}>
-            <ListItemText className={classes.listItemText}>
-              <Button
-                className={classes.button}
-                onClick={handleToggleOpenWhenDone}
-              >
-                <Check
-                  className={classes.openWhenDoneCheck}
-                  style={{ visibility: openWhenDone ? 'visible' : 'hidden' }}
-                />
-                Open when done
-              </Button>
-            </ListItemText>
-          </ListItem>
-        </List>
-      </Popover>
+        <MenuItem
+          button
+          className={classes.menuListItem}
+          onClick={handleDialogOpen}
+        >
+          <ListItemIcon className={classes.menuListItemIcon}>
+            <span></span>
+          </ListItemIcon>
+          <ListItemText
+            className={classes.menuListItemText}
+            classes={{ primary: classes.menuListItemText }}
+          >
+            Change URL
+          </ListItemText>
+        </MenuItem>
+        <MenuItem button className={classes.menuListItem}>
+          <ListItemIcon className={classes.menuListItemIcon}>
+            <Check
+              className={classes.openWhenDoneCheck}
+              style={{ visibility: openWhenDone ? 'visible' : 'hidden' }}
+            />
+          </ListItemIcon>
+          <ListItemText
+            className={classes.menuListItemText}
+            classes={{ primary: classes.menuListItemText }}
+            onClick={handleToggleOpenWhenDone}
+          >
+            Open when done
+          </ListItemText>
+        </MenuItem>
+      </Menu>
     </>
   );
 }
 
-export default connect(null, dispatch => ({
+export default connect(null, (dispatch) => ({
   onChangeUrl(id) {
     dispatch(openDialog('changeurl', { downloadId: id }));
   },
@@ -114,5 +122,5 @@ export default connect(null, dispatch => ({
       `dispatching, trying to change openWhenDone to ${openWhenDone}`
     );
     dispatch(toggleOpenWhenDone(id, openWhenDone));
-  }
+  },
 }))(DownloadMoreActions);

@@ -4,14 +4,13 @@ import {
   Menu,
   Toolbar,
   IconButton,
-  MenuList,
   MenuItem,
   Typography,
   ListItem,
   ListItemIcon,
   List,
   ListItemText,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
 import {
   MoreVert,
@@ -19,7 +18,7 @@ import {
   YouTube,
   ClearAll,
   Check,
-  Settings
+  Settings,
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import { toggleSaveData, changeDownloadGroup, changePage } from '../actions';
@@ -27,11 +26,7 @@ import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
-  saveDataCheck: {
-    float: 'left',
-    marginRight: theme.spacing(1)
-  },
+const useStyles = makeStyles((theme) => ({
   drawer: {
     float: 'left',
     height: '100%',
@@ -40,26 +35,26 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('md')]: {
       backgroundColor: theme.palette.custom.drawer,
       boxShadow: theme.shadows[10],
-      width: drawerWidth
-    }
+      width: drawerWidth,
+    },
   },
   drawerOpen: {
     [theme.breakpoints.down('md')]: {
       left: 0,
       transition: theme.transitions.create('left', {
         duration: theme.transitions.duration.enteringScreen,
-        easing: theme.transitions.easing.sharp
-      })
-    }
+        easing: theme.transitions.easing.sharp,
+      }),
+    },
   },
   drawerClose: {
     [theme.breakpoints.down('md')]: {
       left: -drawerWidth - 10,
       transition: theme.transitions.create('left', {
         duration: theme.transitions.duration.leavingScreen,
-        easing: theme.transitions.easing.sharp
-      })
-    }
+        easing: theme.transitions.easing.sharp,
+      }),
+    },
   },
   overlay: {
     height: 0,
@@ -71,67 +66,61 @@ const useStyles = makeStyles(theme => ({
       position: 'absolute',
       transition: theme.transitions.create('background-color', {
         easing: theme.transitions.easing.sharp,
-        duration: 200
-      })
-    }
+        duration: 200,
+      }),
+    },
   },
   overlayOpen: {
     [theme.breakpoints.down('md')]: {
       width: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    }
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
   },
   overlayClose: {
     [theme.breakpoints.down('md')]: {
       width: 0,
       transition: `${theme.transitions.create('background-color', {
         easing: theme.transitions.easing.sharp,
-        duration: 200
+        duration: 200,
       })}, ${theme.transitions.create('width', {
         duration: 1,
-        delay: 200
-      })}`
-    }
+        delay: 200,
+      })}`,
+    },
   },
   menuIconButton: {
     display: 'none',
     color: '#fff',
     [theme.breakpoints.down('md')]: {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   },
   selectedDownloadGroup: {
     color: `${theme.palette.primary.main}`,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   downloadGroupListItem: {
     borderLeft: '2px solid transparent',
     [theme.breakpoints.down('md')]: {
-      border: 'none'
-    }
+      border: 'none',
+    },
   },
   selectedDownloadGroupListItem: {
     borderLeft: `2px solid ${theme.palette.primary.main}`,
     [theme.breakpoints.down('md')]: {
-      border: 'none'
-    }
+      border: 'none',
+    },
   },
   drawerAppBar: {
     display: 'none',
     position: 'relative',
     [theme.breakpoints.down('md')]: {
-      display: 'block'
-    }
-  },
-  menuList: {
-    padding: '3px 0',
-    '&:focus': {
-      outline: 'none'
-    }
+      display: 'block',
+    },
   },
   menuListIcon: {
-    minWidth: 40
-  }
+    minWidth: 40,
+  },
 }));
 
 function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
@@ -139,7 +128,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
-  const handlePopoverOpen = event => {
+  const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -160,7 +149,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
     setOpen(false);
   };
 
-  const handleChangeDownloadGroup = group => {
+  const handleChangeDownloadGroup = (group) => {
     handleCloseDrawer();
     dispatch(changeDownloadGroup(group));
   };
@@ -196,18 +185,17 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
             anchorEl={anchorEl}
             anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
             transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+            getContentAnchorEl={null}
             onClose={handlePopoverClose}
           >
-            <MenuList className={classes.menuList}>
-              <MenuItem button onClick={handleToggleSaveData}>
-                <ListItemIcon className={classes.menuListIcon}>
-                  <Check
-                    style={{ visibility: saveData ? 'visible' : 'hidden' }}
-                  />
-                </ListItemIcon>
-                <Typography>Save data</Typography>
-              </MenuItem>
-            </MenuList>
+            <MenuItem button onClick={handleToggleSaveData}>
+              <ListItemIcon className={classes.menuListIcon}>
+                <Check
+                  style={{ visibility: saveData ? 'visible' : 'hidden' }}
+                />
+              </ListItemIcon>
+              <Typography>Save data</Typography>
+            </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
@@ -215,16 +203,16 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
       <div
         className={clsx(classes.overlay, {
           [classes.overlayOpen]: open,
-          [classes.overlayClose]: !open
+          [classes.overlayClose]: !open,
         })}
         onClick={handleCloseDrawer}
       >
         <div
           className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open
+            [classes.drawerClose]: !open,
           })}
-          onClick={e => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
           <AppBar className={classes.drawerAppBar} position="fixed">
             <Toolbar>
@@ -260,7 +248,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
                 classes={{
                   primary: clsx(
                     downloadGroup === 'all' && classes.selectedDownloadGroup
-                  )
+                  ),
                 }}
               >
                 All
@@ -286,7 +274,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
                 classes={{
                   primary: clsx(
                     downloadGroup === 'youtube' && classes.selectedDownloadGroup
-                  )
+                  ),
                 }}
               >
                 YouTube
@@ -302,5 +290,5 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
 export default connect(({ settings, downloadGroup }) => ({
   downloadGroup,
   saveData: settings.saveData,
-  darkMode: settings.darkMode
+  darkMode: settings.darkMode,
 }))(DownloadAppBar);
