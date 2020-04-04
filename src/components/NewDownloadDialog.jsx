@@ -29,10 +29,15 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
     url && dirname && !urlHelperText && !dirnameHelperText;
 
   useEffect(() => {
-    ipcRenderer.on('choosen-file', (_event, args) => {
+    const listener = (_event, args) => {
       if (args) setDirname(args);
       dirnameRef.current.focus();
-    });
+    };
+    ipcRenderer.on('choosen-file', listener);
+
+    return () => {
+      ipcRenderer.removeListener('choosen-file', listener);
+    };
   }, []);
 
   useEffect(() => {
