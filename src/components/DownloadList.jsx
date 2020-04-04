@@ -56,7 +56,7 @@ function DownloadList({ downloads = [] }) {
     <MuiThemeProvider theme={innerTheme}>
       <div className={classes.main}>
         {orderBy(Object.keys(grouped)).map(day => (
-          <div className={classes.list}>
+          <div key={day} className={classes.list}>
             {grouped[day].some(
               download => download.status !== 'getting info' && download.show
             ) > 0 && (
