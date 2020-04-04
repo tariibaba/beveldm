@@ -10,6 +10,7 @@ import {
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { toggleOpenWhenDone, openDialog } from '../actions';
+import { clipboard } from 'electron';
 
 const useStyles = makeStyles((theme) => ({
   menuListItemText: {
@@ -39,6 +40,8 @@ function DownloadMoreActions({
   openWhenDone = false,
   onChangeUrl,
   onToggleOpenWhenDone,
+  currentUrl,
+  status,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -60,8 +63,14 @@ function DownloadMoreActions({
     onToggleOpenWhenDone(id, !openWhenDone);
   };
 
+  const handleCopyUrl = () => {
+    handlePopoverClose();
+    clipboard.writeText(currentUrl);
+  };
+
   const popoverOpen = Boolean(anchorEl);
   const classes = useStyles();
+  const showExtraItems = status !== 'complete' && status !== 'removed';
 
   return (
     <>
@@ -81,33 +90,56 @@ function DownloadMoreActions({
         <MenuItem
           button
           className={classes.menuListItem}
-          onClick={handleDialogOpen}
+          onClick={handleCopyUrl}
         >
-          <ListItemIcon className={classes.menuListItemIcon}>
-            <span></span>
-          </ListItemIcon>
+          {showExtraItems && (
+            <ListItemIcon className={classes.menuListItemIcon}>
+              <span></span>
+            </ListItemIcon>
+          )}
           <ListItemText
             className={classes.menuListItemText}
             classes={{ primary: classes.menuListItemText }}
           >
-            Change URL
+            Copy URL
           </ListItemText>
         </MenuItem>
-        <MenuItem button className={classes.menuListItem}>
-          <ListItemIcon className={classes.menuListItemIcon}>
-            <Check
-              className={classes.openWhenDoneCheck}
-              style={{ visibility: openWhenDone ? 'visible' : 'hidden' }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            className={classes.menuListItemText}
-            classes={{ primary: classes.menuListItemText }}
-            onClick={handleToggleOpenWhenDone}
-          >
-            Open when done
-          </ListItemText>
-        </MenuItem>
+        {showExtraItems && (
+          <>
+            <MenuItem
+              button
+              className={classes.menuListItem}
+              onClick={handleDialogOpen}
+            >
+              {showExtraItems && (
+                <ListItemIcon className={classes.menuListItemIcon}>
+                  <span></span>
+                </ListItemIcon>
+              )}
+              <ListItemText
+                className={classes.menuListItemText}
+                classes={{ primary: classes.menuListItemText }}
+              >
+                Change URL
+              </ListItemText>
+            </MenuItem>
+            <MenuItem button className={classes.menuListItem}>
+              <ListItemIcon className={classes.menuListItemIcon}>
+                <Check
+                  className={classes.openWhenDoneCheck}
+                  style={{ visibility: openWhenDone ? 'visible' : 'hidden' }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                className={classes.menuListItemText}
+                classes={{ primary: classes.menuListItemText }}
+                onClick={handleToggleOpenWhenDone}
+              >
+                Open when done
+              </ListItemText>
+            </MenuItem>
+          </>
+        )}
       </Menu>
     </>
   );

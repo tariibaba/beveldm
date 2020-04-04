@@ -182,15 +182,14 @@ function Download({
           )}
 
           {/* More vert icon button */}
-          {status !== 'complete' && status !== 'removed' && (
-            <div className={classes.moreVert}>
-              <DownloadMoreActions
-                id={id}
-                currentUrl={url}
-                openWhenDone={openWhenDone}
-              />
-            </div>
-          )}
+          <div className={classes.moreVert}>
+            <DownloadMoreActions
+              id={id}
+              currentUrl={url}
+              openWhenDone={openWhenDone}
+              status={status}
+            />
+          </div>
 
           {/* Available file name */}
           <div>
