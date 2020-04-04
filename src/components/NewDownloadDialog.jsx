@@ -95,7 +95,7 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
             autoFocus
             name="url"
             type="text"
-            placeholder={
+            label={
               type &&
               when(type)({
                 addtoall: 'URL',
@@ -114,7 +114,7 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
           <TextField
             name="dirname"
             type="text"
-            placeholder="Save Folder"
+            label="Save Folder"
             inputRef={dirnameRef}
             error={dirnameHelperText !== null}
             helperText={dirnameHelperText}

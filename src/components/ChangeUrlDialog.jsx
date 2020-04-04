@@ -46,7 +46,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
             autoFocus
             name="url"
             type="text"
-            placeholder="URL"
+            label="New URL"
             helperText={urlHelperText}
             error={urlHelperText !== null}
             onChange={handleDialogUrlChange}
