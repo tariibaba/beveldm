@@ -6,7 +6,7 @@ import {
   TextField,
   DialogActions,
   Button,
-  IconButton
+  IconButton,
 } from '@material-ui/core';
 import { FolderOpen } from '@material-ui/icons';
 import { clipboard, ipcRenderer } from 'electron';
@@ -20,76 +20,62 @@ import { addNewYoutubeDownloadThunk } from '../thunks/add-new-download';
 import youtubeUrl from 'youtube-url';
 
 function NewDownloadDialog({ type, open, onAdd, onClose }) {
-  const url = useRef();
-  const dirname = useRef();
-  const [defaultUrl, setDefaultUrl] = useState(null);
+  const [url, setUrl] = useState('');
+  const [dirname, setDirname] = useState('');
   let [urlHelperText, setUrlHelperText] = useState(null);
   let [dirnameHelperText, setDirnameHelperText] = useState(null);
-  const [formSubmittable, setFormSubmittable] = useState(false);
+  const dirnameRef = useRef();
+  const formSubmittable =
+    url && dirname && !urlHelperText && !dirnameHelperText;
+
+  useEffect(() => {
+    ipcRenderer.on('choosen-file', (_event, args) => {
+      if (args) setDirname(args);
+      dirnameRef.current.focus();
+    });
+  }, []);
 
   useEffect(() => {
     if (open) {
       const clipboardText = clipboard.readText();
-      if (validUrl.isWebUri(clipboardText)) {
-        setDefaultUrl(clipboardText);
-      } else {
-        setDefaultUrl(null);
-      }
-      setFormSubmittable(false);
+      setUrl((validUrl.isWebUri(clipboardText) && clipboardText) || '');
     }
   }, [open]);
 
-  const handleSubmit = event => {
-    onClose();
-    event.preventDefault();
-    onAdd(type, url.current.value, dirname.current.value);
-    url.current.value = '';
-    dirname.current.value = '';
+  useEffect(() => {
+    (async () => {
+      if (dirname && !(await pathExists(dirname))) {
+        setDirnameHelperText("This folder doesn't exist");
+      } else setDirnameHelperText(null);
+    })();
+  }, [dirname]);
+
+  useEffect(() => {
+    if (url && !validUrl.isWebUri(url)) {
+      setUrlHelperText('This URL is invalid');
+    } else if (url && type === 'youtube' && !youtubeUrl.valid(url)) {
+      setUrlHelperText('Invalid YouTube URL');
+    } else setUrlHelperText(null);
+  }, [url, type]);
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
   };
 
-  const handleUrlChange = () => {
-    if (url.current.value !== '' && !validUrl.isWebUri(url.current.value)) {
-      urlHelperText = 'This URL is invalid';
-    } else if (type === 'youtube' && !youtubeUrl.valid(url.current.value)) {
-      urlHelperText = 'Invalid YouTube URL';
-    } else {
-      urlHelperText = null;
-    }
-    setUrlHelperText(urlHelperText);
-    setFormSubmittable(isFormSubmittable());
+  const handleDirnameChange = (event) => {
+    setDirname(event.target.value);
   };
 
-  const handleDirnameChange = async () => {
-    if (
-      dirname.current.value !== '' &&
-      !(await pathExists(dirname.current.value))
-    ) {
-      dirnameHelperText = "This folder doesn't exist";
-    } else {
-      dirnameHelperText = null;
-    }
-    setDirnameHelperText(dirnameHelperText);
-    setFormSubmittable(isFormSubmittable());
-  };
-
-  const isFormSubmittable = () => {
-    return (
-      !urlHelperText &&
-      !dirnameHelperText &&
-      url.current.value &&
-      dirname.current.value
-    );
-  };
-
-  const chooseFile = () => {
+  const handleChooseDir = () => {
     ipcRenderer.send('choose-file');
-    ipcRenderer.on('choosen-file', (_event, args) => {
-      if (args) {
-        dirname.current.value = args;
-      }
-      handleDirnameChange();
-      dirname.current.focus();
-    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onClose();
+    onAdd(type, url, dirname);
+    setUrl('');
+    setDirname('');
   };
 
   const handleCancel = onClose;
@@ -109,14 +95,13 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
               when(type)({
                 addtoall: 'URL',
                 addyoutube: 'Video URL',
-                else: null
+                else: null,
               })
             }
-            inputRef={url}
             error={urlHelperText !== null}
             helperText={urlHelperText}
             onChange={handleUrlChange}
-            defaultValue={defaultUrl}
+            value={url}
           />
 
           <br />
@@ -125,13 +110,14 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
             name="dirname"
             type="text"
             placeholder="Save Folder"
-            inputRef={dirname}
+            inputRef={dirnameRef}
             error={dirnameHelperText !== null}
             helperText={dirnameHelperText}
             onChange={handleDirnameChange}
+            value={dirname}
           />
 
-          <IconButton onClick={chooseFile}>
+          <IconButton onClick={handleChooseDir}>
             <FolderOpen />
           </IconButton>
 
@@ -153,9 +139,9 @@ export default connect(
     type: dialog.type,
     open:
       dialog.open &&
-      (dialog.type === 'addtoall' || dialog.type === 'addyoutube')
+      (dialog.type === 'addtoall' || dialog.type === 'addyoutube'),
   }),
-  dispatch => ({
+  (dispatch) => ({
     onAdd(type, url, dirname) {
       if (type === 'addtoall') {
         dispatch(addNewDownloadThunk(url, dirname));
@@ -165,6 +151,6 @@ export default connect(
     },
     onClose() {
       dispatch(closeDialog());
-    }
+    },
   })
 )(NewDownloadDialog);
