@@ -2,8 +2,6 @@ import { getPartialDownloadPath, getDownloadPath } from '../utilities';
 import pify from 'pify';
 import fs from 'fs';
 import { completeDownload } from '../actions';
-import { shell } from 'electron';
-import Timeout from 'await-timeout';
 import open from 'open';
 
 export default function completeDownloadThunk(id) {
