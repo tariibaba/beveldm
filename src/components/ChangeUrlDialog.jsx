@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
   DialogActions,
-  Button
+  Button,
 } from '@material-ui/core';
 import { isWebUri } from 'valid-url';
 import { connect } from 'react-redux';
@@ -13,31 +13,27 @@ import { changeDownloadUrlThunk } from '../thunks';
 import { closeDialog } from '../actions';
 
 function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
-  const newUrl = useRef();
-  const [formSubmittable, setFormSubmittable] = useState(false);
+  const [newUrl, setNewUrl] = useState(currentUrl);
   const [urlHelperText, setUrlHelperText] = useState(null);
+  const formSubmittable = newUrl && newUrl !== currentUrl && !urlHelperText;
 
   useEffect(() => {
-    setFormSubmittable(false);
-  }, [open]);
+    if (open) setNewUrl(currentUrl);
+  }, [open, currentUrl]);
 
-  const handleChangeUrl = event => {
+  useEffect(() => {
+    if (newUrl && !isWebUri(newUrl)) setUrlHelperText('This url is invalid');
+    else setUrlHelperText(null);
+  }, [newUrl]);
+
+  const handleChangeUrl = (event) => {
     event.preventDefault();
     onClose();
-    onChange(id, newUrl.current.value);
+    onChange(id, newUrl);
   };
 
-  const handleDialogUrlChange = () => {
-    if (!isWebUri(newUrl.current.value)) {
-      setUrlHelperText('This url is invalid');
-      setFormSubmittable(false);
-    } else if (newUrl.current.value === currentUrl) {
-      setUrlHelperText(null);
-      setFormSubmittable(false);
-    } else {
-      setUrlHelperText(null);
-      setFormSubmittable(true);
-    }
+  const handleDialogUrlChange = (event) => {
+    setNewUrl(event.target.value);
   };
 
   return (
@@ -50,12 +46,11 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
             autoFocus
             name="url"
             type="text"
-            placeholder="Url"
-            inputRef={newUrl}
-            defaultValue={currentUrl}
+            placeholder="URL"
             helperText={urlHelperText}
             error={urlHelperText !== null}
             onChange={handleDialogUrlChange}
+            value={newUrl}
           />
 
           <br />
@@ -76,17 +71,17 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
 export default connect(
   ({ downloads, dialog }) => ({
     id: dialog.data && dialog.data.downloadId,
-    url:
+    currentUrl:
       dialog.data &&
-      downloads.find(download => download.id === dialog.data.downloadId).url,
-    open: dialog.open && dialog.type === 'changeurl'
+      downloads.find((download) => download.id === dialog.data.downloadId).url,
+    open: dialog.open && dialog.type === 'changeurl',
   }),
-  dispatch => ({
+  (dispatch) => ({
     onClose() {
       dispatch(closeDialog());
     },
     onChange(id, newUrl) {
       dispatch(changeDownloadUrlThunk(id, newUrl));
-    }
+    },
   })
 )(ChangeUrlDialog);

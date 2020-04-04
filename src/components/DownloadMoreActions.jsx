@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import ChangeUrlDialog from './ChangeUrlDialog';
 import { toggleOpenWhenDone, openDialog } from '../actions';
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +51,7 @@ function DownloadMoreActions({
   };
 
   const handleDialogOpen = () => {
-    onChangeUrl();
+    onChangeUrl(id);
     handlePopoverClose();
   };
 
@@ -102,8 +101,6 @@ function DownloadMoreActions({
           </ListItem>
         </List>
       </Popover>
-
-      <ChangeUrlDialog />
     </>
   );
 }

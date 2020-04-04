@@ -3,6 +3,7 @@ import AddNewDownload from './AddNewDownload';
 import DownloadList from './DownloadList';
 import CustomSnackbar from './CustomSnackbar';
 import NewDownloadDialog from './NewDownloadDialog';
+import ChangeUrlDialog from './ChangeUrlDialog';
 import YoutubeChooseFormat from './YouTubeChooseFormat';
 import DownloadAppBar from './DownloadAppBar';
 import { makeStyles } from '@material-ui/core';
@@ -24,6 +25,7 @@ function DownloadPage() {
       <DownloadAppBar />
       <AddNewDownload />
       <NewDownloadDialog />
+      <ChangeUrlDialog />
       <YoutubeChooseFormat />
       <DownloadList />
       <CustomSnackbar />
