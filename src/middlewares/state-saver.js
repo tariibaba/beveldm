@@ -7,9 +7,10 @@ import {
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   SET_DOWNLOAD_RES,
   CHANGE_DOWNLOAD_GROUP,
-  ADD_NEW_DOWNLOAD
+  ADD_NEW_DOWNLOAD,
 } from '../actions';
 import Store from 'electron-store';
+import electronIsDev from 'electron-is-dev';
 
 export default function stateSaver(store) {
   return (next) => (action) => {
@@ -22,7 +23,7 @@ export default function stateSaver(store) {
       UPDATE_BYTES_DOWNLOADED_SHOWN,
       SET_DOWNLOAD_RES,
       CHANGE_DOWNLOAD_GROUP,
-      ADD_NEW_DOWNLOAD
+      ADD_NEW_DOWNLOAD,
     ];
 
     const result = next(action);
@@ -36,7 +37,7 @@ export default function stateSaver(store) {
 }
 
 function saveStore(state) {
-  const store = new Store();
+  const store = new Store({ name: electronIsDev ? 'dev_config' : 'config' });
   const { downloads, settings, downloadGroup } = state;
   const downloadsToSaveById = Object.values(downloads.byId)
     .filter(isDownloadToBeSaved)
