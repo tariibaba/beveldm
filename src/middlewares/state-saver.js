@@ -6,6 +6,8 @@ import {
   CHANGE_PAGE,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   SET_DOWNLOAD_RES,
+  CHANGE_DOWNLOAD_GROUP,
+  ADD_NEW_DOWNLOAD
 } from '../actions';
 import Store from 'electron-store';
 
@@ -19,6 +21,8 @@ export default function saveState(store) {
       DOWNLOAD_PROGRESSING,
       UPDATE_BYTES_DOWNLOADED_SHOWN,
       SET_DOWNLOAD_RES,
+      CHANGE_DOWNLOAD_GROUP,
+      ADD_NEW_DOWNLOAD
     ];
 
     const result = next(action);
