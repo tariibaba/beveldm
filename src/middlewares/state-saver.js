@@ -11,7 +11,7 @@ import {
 } from '../actions';
 import Store from 'electron-store';
 
-export default function saveState(store) {
+export default function stateSaver(store) {
   return (next) => (action) => {
     const ignoredActionTypes = [
       NOTIFY,
