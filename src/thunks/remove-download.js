@@ -5,9 +5,9 @@ import pathExists from 'path-exists';
 
 export default function removeDownloadThunk(id) {
   return async (dispatch, getState) => {
-    dispatch(hideDownload(id))
+    dispatch(hideDownload(id));
 
-    let download = getState().downloads.find(download => download.id === id);
+    let download = getState().downloads.byId[id];
 
     const timeout = setTimeout(async () => {
       if (download.status === 'canceled') {

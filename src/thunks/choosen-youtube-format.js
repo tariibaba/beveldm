@@ -4,8 +4,8 @@ import startDownload from './start-download';
 
 export default function choosenYouTubeFormatThunk(id, title, format) {
   return async (dispatch, getState) => {
-    const downloads = getState().downloads;
-    const download = downloads.find(download => download.id === id);
+    const { downloads, settings } = getState();
+    const download = downloads.byId[id];
     const filename = `${title}.${format.container}`;
     const availableFilename = await getAvailableFilename(
       download.dirname,
@@ -19,15 +19,11 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
         availableFilename,
         format.contentLength,
         format,
-        getState().settings.alwaysOpenDownloadsWhenDone,
+        settings.alwaysOpenDownloadsWhenDone,
         new Date().toISOString()
       )
     );
 
-    if (getState().settings.startDownloadsAutomatically) {
-      dispatch(startDownload(id));
-    }
-
-    return Promise.resolve();
+    if (settings.startDownloadsAutomatically) dispatch(startDownload(id));
   };
 }

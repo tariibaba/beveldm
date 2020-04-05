@@ -15,10 +15,10 @@ export default async function getAvailableFilename(
   let fullPath = path.join(dirname, availableFilename);
   const filesInDir = await pify(fs.readdir)(dirname);
 
-  const downloadWithFullPathExists = fullPath =>
-    downloads
-      .filter(download => download.status !== 'gettinginfo')
-      .some(download => fullPath === getDownloadPath(download));
+  const downloadWithFullPathExists = (fullPath) =>
+    Object.values(downloads.byId)
+      .filter((download) => download.status !== 'gettinginfo')
+      .some((download) => fullPath === getDownloadPath(download));
 
   while (
     filesInDir.includes(availableFilename) ||

@@ -4,8 +4,8 @@ import completeDownloadThunk from './complete-download';
 export default function updateDownloadsProgressPeriodically() {
   return async (dispatch, getState) => {
     setInterval(() => {
-      getState()
-        .downloads.filter((download) => download.status === 'progressing')
+        Object.values(getState().downloads.byId)
+        .filter((download) => download.status === 'progressing')
         .forEach((download) => {
           const bytesDownloaded = download.bytesDownloaded;
           dispatch(

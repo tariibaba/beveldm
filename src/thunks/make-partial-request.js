@@ -33,7 +33,7 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
 
 export function makePartialYouTubeRequest(id, url, rangeStart, rangeEnd) {
   return async (dispatch, getState) => {
-    const download = getState().downloads.find(download => download.id);
+    const download = getState().downloads.byId[id];
     return new Promise((resolve, reject) => {
       ytdl(url, {
         range: { start: rangeStart, end: rangeEnd },

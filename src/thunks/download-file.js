@@ -7,26 +7,22 @@ import Timeout from 'await-timeout';
 export default function downloadFile(id, res) {
   return async (dispatch, getState) => {
     let state = getState();
-    let download = state.downloads.find(download => download.id === id);
+    let download = state.downloads.byId[id];
 
     const partialDownloadPath = getPartialDownloadPath(download);
     const fileStream = fs.createWriteStream(
       partialDownloadPath,
-      download.bytesDownloaded > 0
-        ? {
-            flags: 'a'
-          }
-        : undefined
+      download.bytesDownloaded > 0 ? { flags: 'a' } : undefined
     );
     const timeout = new Timeout();
     let buffer;
     let hasResEnded = false;
 
-    res.on('data', async chunk => {
+    res.on('data', async (chunk) => {
       res.pause();
 
       state = getState();
-      download = state.downloads.find(download => download.id === id);
+      download = state.downloads.byId[id];
       let saveData = state.settings.saveData;
 
       buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
@@ -36,7 +32,7 @@ export default function downloadFile(id, res) {
           await timeout.set(500);
 
           state = getState();
-          download = state.downloads.find(download => download.id === id);
+          download = state.downloads.byId[id];
 
           if (['paused', 'canceled', 'complete'].includes(download.status)) {
             return;
@@ -53,7 +49,7 @@ export default function downloadFile(id, res) {
           );
 
           state = getState();
-          download = state.downloads.find(download => download.id === id);
+          download = state.downloads.byId[id];
           saveData = state.settings.saveData;
 
           if (download.status !== 'paused' && download.status !== 'canceled') {
@@ -87,7 +83,7 @@ export default function downloadFile(id, res) {
 
 function writeStreamWritePromise(writeStream, chunk) {
   return new Promise((resolve, reject) => {
-    writeStream.write(chunk, err => {
+    writeStream.write(chunk, (err) => {
       if (err) reject(err);
       resolve();
     });

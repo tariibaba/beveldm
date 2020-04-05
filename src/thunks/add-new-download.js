@@ -3,7 +3,7 @@ import {
   gotDownloadInfo,
   removeDownload,
   notify,
-  openDialog
+  openDialog,
 } from '../actions';
 import { getFilename, getFileSize, getAvailableFilename } from '../utilities';
 import { v4 } from 'uuid';
@@ -27,10 +27,10 @@ export default function addNewDownloadThunk(url, dirname) {
 
     const protocol = new URL(url).protocol === 'http:' ? http : https;
 
-    const res = await new Promise(async resolve =>
+    const res = await new Promise(async (resolve) =>
       protocol
         .get(url, { headers: { Range: 'bytes=0-' } })
-        .on('response', res => resolve(res))
+        .on('response', (res) => resolve(res))
         .on('error', () => {
           dispatch(removeDownload(id));
           dispatch(
@@ -45,36 +45,35 @@ export default function addNewDownloadThunk(url, dirname) {
     if (res.statusCode === 403) {
       dispatch(removeDownload(id));
       dispatch(notify('error', 'Forbidden request'));
-
-      return Promise.resolve();
+      return;
     }
 
     // Get info from the request.
     const filename = getFilename(url, res.headers);
     const size = getFileSize(res.headers);
 
+    const { downloads, settings } = getState();
+
     dispatch(
       gotDownloadInfo(
         id,
         filename,
-        await getAvailableFilename(dirname, filename, getState().downloads),
+        await getAvailableFilename(dirname, filename, downloads),
         size,
         res.statusCode === 206,
-        getState().settings.alwaysOpenDownloadsWhenDone,
+        settings.alwaysOpenDownloadsWhenDone,
         new Date().toISOString()
       )
     );
 
-    if (getState().settings.startDownloadsAutomatically) {
+    if (settings.startDownloadsAutomatically) {
       dispatch(startDownload(id));
     }
-
-    return Promise.resolve();
   };
 }
 
 export function addNewYoutubeDownloadThunk(url, dirname) {
-  return async dispatch => {
+  return async (dispatch) => {
     const id = v4();
     dispatch(addNewDownload(id, 'youtube', url, dirname));
 
@@ -101,15 +100,15 @@ export function addNewYoutubeDownloadThunk(url, dirname) {
           videoTitle: info.title.replace(filenameReservedRegex(), ' '),
           videoFormats: await Promise.all(
             info.formats
-              .filter(format => format.qualityLabel && format.audioQuality)
-              .map(async format => ({
+              .filter((format) => format.qualityLabel && format.audioQuality)
+              .map(async (format) => ({
                 ...format,
                 contentLength: format.contentLength
                   ? Number.parseInt(format.contentLength)
-                  : (await remoteFilename(format.url).catch(reason => false))
-                      .fileSize
+                  : (await remoteFilename(format.url).catch((reason) => false))
+                      .fileSize,
               }))
-          )
+          ),
         })
       );
     });

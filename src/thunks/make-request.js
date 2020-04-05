@@ -4,7 +4,7 @@ import { showDownloadError } from '../actions';
 import ytdl from 'ytdl-core';
 
 export default function makeRequest(id, url) {
-  return async (dispatch, _getState) => {
+  return (dispatch, _getState) => {
     return new Promise((resolve, reject) => {
       const protocol = new URL(url).protocol === 'http:' ? http : https;
       const options = { headers: { Connection: 'keep-alive' } };
@@ -26,8 +26,8 @@ export default function makeRequest(id, url) {
 }
 
 export function makeYouTubeRequest(id, url) {
-  return async (dispatch, getState) => {
-    const download = getState().downloads.find(download => download.id);
+  return (dispatch, getState) => {
+    const download = getState().downloads.byId[id];
 
     return new Promise((resolve, reject) => {
       ytdl(url, { format: download.format })

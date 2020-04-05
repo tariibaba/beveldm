@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DownloadList({ downloads = [] }) {
+function DownloadList({ downloads = [], test }) {
   const classes = useStyles();
 
   const grouped = groupBy(downloads, (download) =>
@@ -71,7 +71,10 @@ function DownloadList({ downloads = [] }) {
 
 export default connect(({ downloads, downloadGroup }) => ({
   downloads: when(downloadGroup)({
-    all: downloads,
-    else: downloads.filter((download) => download.type === downloadGroup),
+    all: Object.values(downloads.byId),
+    else: Object.values(downloads.byId).filter(
+      (download) => download.type === downloadGroup
+    ),
   }),
+  test: downloads
 }))(DownloadList);

@@ -9,19 +9,29 @@ export default function loadState() {
   return async (_dispatch, getState) => {
     const store = new Store();
 
-    let savedDownloads = store.get('downloads') || [];
-    savedDownloads = await Promise.all(savedDownloads.map(fillMissingProps));
+    const savedDownloads = store.get('downloads') || { byId: {}, allIds: [] };
+
+    savedDownloads.byId = (
+      await Promise.all(
+        Object.values(savedDownloads.byId).map(fillMissingProps)
+      )
+    ).reduce(
+      (downloadObj, download) => ({
+        ...downloadObj,
+        [download.id]: download,
+      }),
+      {}
+    );
 
     getState().downloads = savedDownloads;
     setTaskbarProgress(savedDownloads);
 
     getState().settings = {
       ...getState().settings,
-      ...(store.get('settings') || {})
+      ...(store.get('settings') || {}),
     };
-    getState().downloadGroup = store.get('downloadGroup') || 'all';
 
-    return Promise.resolve();
+    getState().downloadGroup = store.get('downloadGroup') || 'all';
   };
 }
 
@@ -34,7 +44,7 @@ async function fillMissingProps(savedDownload) {
     if (!(await pathExists(path))) {
       downloadWithRequiredProps = {
         ...savedDownload,
-        status: 'removed'
+        status: 'removed',
       };
     }
   } else if (
@@ -44,13 +54,13 @@ async function fillMissingProps(savedDownload) {
   ) {
     downloadWithRequiredProps = {
       ...savedDownload,
-      status: 'removed'
+      status: 'removed',
     };
   } else if (savedDownload.status === 'canceled') {
     if (!(await pathExists(partialPath))) {
       downloadWithRequiredProps = {
         ...savedDownload,
-        bytesDownloaded: 0
+        bytesDownloaded: 0,
       };
     }
   } else if (savedDownload.status === 'paused') {
@@ -58,14 +68,14 @@ async function fillMissingProps(savedDownload) {
     const partialFileSize = (await stat(partialPath)).size;
     downloadWithRequiredProps = {
       ...savedDownload,
-      bytesDownloaded: partialFileSize
+      bytesDownloaded: partialFileSize,
     };
   }
 
   downloadWithRequiredProps = {
     ...downloadWithRequiredProps,
     bytesDownloadedShown: downloadWithRequiredProps.bytesDownloaded,
-    speed: 0
+    speed: 0,
   };
 
   return downloadWithRequiredProps;

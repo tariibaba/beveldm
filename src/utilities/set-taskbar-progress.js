@@ -2,22 +2,25 @@ import { ipcRenderer } from 'electron';
 import sumBy from 'sum-by';
 
 export default function setTaskbarProgress(downloads) {
-  const activeDownloads = downloads.filter(download =>
-    ['notstarted', 'progressing', 'paused', 'gettinginfo'].includes(
-      download.status
-    )
+  const statusFilter = ['notstarted', 'progressing', 'paused', 'gettinginfo'];
+  const activeDownloads = Object.values(downloads.byId).filter((download) =>
+    statusFilter.includes(download.status)
   );
+
   const activeDownloadsBytesDownloaded = sumBy(
     activeDownloads,
-    download => download.bytesDownloaded
+    (download) => download.bytesDownloaded
   );
-  const activeDownloadsSize = sumBy(activeDownloads, download => download.size);
+  const activeDownloadsSize = sumBy(
+    activeDownloads,
+    (download) => download.size
+  );
   const activeDownloadsProgress =
     activeDownloadsBytesDownloaded / activeDownloadsSize || 0;
 
   const downloadsIsOnlyGettingInfo =
     activeDownloads.length > 0 &&
-    activeDownloads.every(download => download.status === 'gettinginfo');
+    activeDownloads.every((download) => download.status === 'gettinginfo');
 
   if (downloadsIsOnlyGettingInfo) {
     ipcRenderer.send('set-progress-indeterminate');

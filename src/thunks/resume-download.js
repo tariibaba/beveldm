@@ -2,24 +2,24 @@ import {
   changeDownloadInfo,
   setDownloadRes,
   downloadProgressing,
-  showDownloadError
+  showDownloadError,
 } from '../actions';
 import {
   getAvailableFilename,
   getPartialDownloadPath,
   deleteFile,
   getFilename,
-  getFileSize
+  getFileSize,
 } from '../utilities';
 import downloadFile from './download-file';
 import makePartialRequest, {
-  makePartialYouTubeRequest
+  makePartialYouTubeRequest,
 } from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
-    let download = getState().downloads.find(download => download.id === id);
+    let download = getState().downloads.byId[id];
 
     if (download.res) {
       dispatch(downloadProgressing(id));
@@ -39,7 +39,7 @@ export default function resumeDownload(id) {
         );
       }
 
-      download = getState().downloads.find(download => download.id === id);
+      download = getState().downloads.byId[id];
       if (download.status !== 'progressing') return;
 
       dispatch(setDownloadRes(id, res));
@@ -55,8 +55,6 @@ export default function resumeDownload(id) {
         dispatch(downloadFile(id, res));
       }
     }
-
-    return Promise.resolve();
   };
 }
 
@@ -65,7 +63,7 @@ function resumeFromError(id, code) {
     dispatch(downloadProgressing(id));
 
     let state = getState();
-    let download = state.downloads.find(download => download.id === id);
+    let download = state.downloads.byId[id];
 
     switch (code) {
       case 'EFILECHANGED':
@@ -75,7 +73,7 @@ function resumeFromError(id, code) {
         const res = await new dispatch(makePartialRequest(id, download.url, 0));
 
         state = getState();
-        download = state.downloads.find(download => download.id === id);
+        download = state.downloads.byId[id];
         if (download.status !== 'progressing') return;
 
         dispatch(setDownloadRes(id, res));
@@ -102,7 +100,5 @@ function resumeFromError(id, code) {
       default:
         break;
     }
-
-    return Promise.resolve();
   };
 }

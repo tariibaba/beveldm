@@ -69,11 +69,11 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
 }
 
 export default connect(
-  ({ downloads, dialog }) => ({
-    id: dialog.data && dialog.data.downloadId,
+  ({ downloads, dialog: { data }, dialog }) => ({
+    id: data && data.downloadId,
     currentUrl:
-      dialog.data &&
-      downloads.find((download) => download.id === dialog.data.downloadId).url,
+      data &&
+      downloads.byId[data.downloadId].url,
     open: dialog.open && dialog.type === 'changeurl',
   }),
   (dispatch) => ({

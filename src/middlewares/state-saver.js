@@ -5,12 +5,12 @@ import {
   CLOSE_DIALOG,
   CHANGE_PAGE,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
-  SET_DOWNLOAD_RES
+  SET_DOWNLOAD_RES,
 } from '../actions';
 import Store from 'electron-store';
 
 export default function saveState(store) {
-  return next => action => {
+  return (next) => (action) => {
     const ignoredActionTypes = [
       NOTIFY,
       OPEN_DIALOG,
@@ -33,14 +33,27 @@ export default function saveState(store) {
 
 function saveStore(state) {
   const store = new Store();
-  const downloadsToSave = state.downloads
+  const { downloads, settings, downloadGroup } = state;
+  const downloadsToSaveById = Object.values(downloads.byId)
+    .filter(isDownloadToBeSaved)
     .map(processDownloadForSaving)
-    .filter(isDownloadToBeSaved);
+    .reduce(
+      (downloadsObj, download) => ({
+        ...downloadsObj,
+        [download.id]: download,
+      }),
+      {}
+    );
+
+  const downloadsToSave = {
+    byId: downloadsToSaveById,
+    allIds: Object.keys(downloadsToSaveById),
+  };
 
   store.set({
     downloads: downloadsToSave,
-    settings: state.settings,
-    downloadGroup: state.downloadGroup
+    settings,
+    downloadGroup,
   });
 }
 

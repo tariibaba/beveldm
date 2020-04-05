@@ -11,7 +11,7 @@ export default function startDownload(id) {
   return async (dispatch, getState) => {
     dispatch(downloadProgressing(id));
 
-    let download = getState().downloads.find(download => download.id === id);
+    let download = getState().downloads.byId[id];
 
     let res;
     switch (download.type) {
@@ -19,7 +19,7 @@ export default function startDownload(id) {
         res = await dispatch(makeRequest(id, download.url));
 
         // The download status might have changed since making the request.
-        download = getState().downloads.find(download => download.id === id);
+        download = getState().downloads.byId[id];
         if (download.status !== 'progressing') return;
 
         dispatch(setDownloadRes(id, res));
@@ -37,6 +37,5 @@ export default function startDownload(id) {
       default:
         break;
     }
-    return Promise.resolve();
   };
 }
