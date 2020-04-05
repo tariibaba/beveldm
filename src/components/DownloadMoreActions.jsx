@@ -150,9 +150,6 @@ export default connect(null, (dispatch) => ({
     dispatch(openDialog('changeurl', { downloadId: id }));
   },
   onToggleOpenWhenDone(id, openWhenDone) {
-    console.log(
-      `dispatching, trying to change openWhenDone to ${openWhenDone}`
-    );
     dispatch(toggleOpenWhenDone(id, openWhenDone));
   },
 }))(DownloadMoreActions);
