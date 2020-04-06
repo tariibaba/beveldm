@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import when from 'when-expression';
 import moment from 'moment';
 import groupBy from 'lodash.groupby';
-import { orderBy } from 'natural-orderby';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -38,33 +37,36 @@ function DownloadList({ downloads = [], test }) {
   const classes = useStyles();
 
   const grouped = groupBy(downloads, (download) =>
-    moment(download.timestamp).startOf('day').format('MMMM D, YYYY')
+    moment(download.timestamp).startOf('day').toISOString()
   );
 
   return (
     <div className={classes.main}>
-      {orderBy(Object.keys(grouped)).map((day) => (
-        <div key={day} className={classes.list}>
-          {grouped[day].some(
-            (download) => download.status !== 'getting info' && download.show
-          ) > 0 && (
-            <Typography style={{ fontWeight: 500, fontSize: 14 }}>
-              {day}
-            </Typography>
-          )}
-          {grouped[day].map((download) => (
-            <Fragment key={download.id}>
-              {download.status === 'gettinginfo' ? (
-                <div className={classes.gettingInfo}>
-                  <CircularProgress />
-                </div>
-              ) : (
-                <Download {...download} />
-              )}
-            </Fragment>
-          ))}
-        </div>
-      ))}
+      {Object.keys(grouped)
+        .sort()
+        .reverse()
+        .map((day) => (
+          <div key={day} className={classes.list}>
+            {grouped[day].some(
+              (download) => download.status !== 'getting info' && download.show
+            ) > 0 && (
+              <Typography style={{ fontWeight: 500, fontSize: 14 }}>
+                {moment(day).format('MMMM D, YYYY')}
+              </Typography>
+            )}
+            {grouped[day].map((download) => (
+              <Fragment key={download.id}>
+                {download.status === 'gettinginfo' ? (
+                  <div className={classes.gettingInfo}>
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <Download {...download} />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        ))}
     </div>
   );
 }
@@ -76,5 +78,5 @@ export default connect(({ downloads, downloadGroup }) => ({
       (download) => download.type === downloadGroup
     ),
   }),
-  test: downloads
+  test: downloads,
 }))(DownloadList);

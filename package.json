@@ -25,6 +25,7 @@
     "clsx": "^1.0.4",
     "compare-urls": "^2.0.0",
     "content-disposition-filename": "^0.0.1",
+    "electron-devtools-installer": "^2.2.4",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^5.0.0",
     "filename-reserved-regex": "^2.0.0",
@@ -32,7 +33,6 @@
     "is-online": "^8.2.1",
     "lodash.groupby": "^4.6.0",
     "moment": "^2.24.0",
-    "natural-orderby": "^2.0.3",
     "open": "^7.0.1",
     "path-exists": "^4.0.0",
     "pify": "^4.0.1",
@@ -50,8 +50,7 @@
     "valid-url": "^1.0.9",
     "when-expression": "^0.0.2",
     "youtube-url": "^0.5.0",
-    "ytdl-core": "^2.0.0",
-    "electron-devtools-installer": "^2.2.4"
+    "ytdl-core": "^2.0.0"
   },
   "scripts": {
     "start": "rescripts start",
