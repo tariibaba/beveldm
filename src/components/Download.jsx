@@ -232,6 +232,7 @@ function Download({
                       ENOTFOUND: 'Network error',
                       ECONNRESET: 'Network error',
                       EFORBIDDEN: 'Forbidden',
+                      ETIMEDOUT: 'Network error',
                       else: null,
                     })
                   : null,
