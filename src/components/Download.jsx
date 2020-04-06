@@ -66,12 +66,16 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.custom.urlDefault,
     cursor: 'pointer',
     maxWidth: '90%',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
   urlStylesError: {
     color: theme.palette.custom.urlError,
+  },
+  urlTypography: {
+    maxWidth: '100%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    textAlign: 'left'
   },
   showInFolderButtonStyles: {
     marginTop: '30px',
@@ -248,7 +252,7 @@ function Download({
               )}
             >
               <Typography
-                className={classes.typography}
+                className={clsx(classes.typography, classes.urlTypography)}
                 style={{ color: 'inherit' }}
               >
                 {url}
