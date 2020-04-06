@@ -77,6 +77,7 @@ async function fillMissingProps(savedDownload) {
     ...downloadWithRequiredProps,
     bytesDownloadedShown: downloadWithRequiredProps.bytesDownloaded,
     speed: 0,
+    show: true,
   };
 
   return downloadWithRequiredProps;

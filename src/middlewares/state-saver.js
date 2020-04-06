@@ -63,7 +63,13 @@ function saveStore(state) {
 }
 
 function processDownloadForSaving(download) {
-  const { res, speed, bytesDownloadedShown, ...downloadToSave } = download;
+  const {
+    res,
+    speed,
+    bytesDownloadedShown,
+    show,
+    ...downloadToSave
+  } = download;
 
   if (download.status === 'progressing' || download.status === 'paused') {
     const {
