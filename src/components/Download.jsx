@@ -47,11 +47,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 13,
   },
   filenameStylesError: {
-    color: `${theme.palette.custom.filenameError}`,
+    color: theme.palette.custom.filenameError,
     textDecoration: 'line-through',
   },
   filenameStylesComplete: {
     cursor: 'pointer',
+    color: theme.palette.custom.filenameComplete
   },
   linkButtonStylesDefault: {
     backgroundColor: 'transparent',
