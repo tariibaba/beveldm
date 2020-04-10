@@ -228,12 +228,12 @@ function Download({
                 canceled: 'Canceled',
                 error: error
                   ? when(error.code)({
-                      EFILECHANGED: 'File changed',
-                      ECONNREFUSED: 'Network error',
-                      ENOTFOUND: 'Network error',
-                      ECONNRESET: 'Network error',
-                      EFORBIDDEN: 'Forbidden',
-                      ETIMEDOUT: 'Network error',
+                      EFILECHANGED: 'Failed - File changed',
+                      ECONNREFUSED: 'Failed - Network error',
+                      ENOTFOUND: 'Failed - Network error',
+                      ECONNRESET: 'Failed - Network error',
+                      EFORBIDDEN: 'Failed - Forbidden',
+                      ETIMEDOUT: 'Failed - Network error',
                       else: null,
                     })
                   : null,
