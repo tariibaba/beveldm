@@ -60,7 +60,7 @@ export default function addNewDownloadThunk(url, dirname) {
         filename,
         await getAvailableFilename(dirname, filename, downloads),
         size,
-        res.statusCode === 206,
+        res.statusCode === 206 || res.headers['Accept-Ranges'] === 'bytes',
         settings.alwaysOpenDownloadsWhenDone,
         new Date().toISOString()
       )
