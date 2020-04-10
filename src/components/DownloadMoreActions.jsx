@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { toggleOpenWhenDone, openDialog } from '../actions';
+import { toggleOpenWhenDone, openDialog, notify } from '../actions';
 import { clipboard } from 'electron';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +42,7 @@ function DownloadMoreActions({
   onToggleOpenWhenDone,
   currentUrl,
   status,
+  onCopyUrl,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -66,6 +67,7 @@ function DownloadMoreActions({
   const handleCopyUrl = () => {
     handlePopoverClose();
     clipboard.writeText(currentUrl);
+    onCopyUrl();
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -151,5 +153,8 @@ export default connect(null, (dispatch) => ({
   },
   onToggleOpenWhenDone(id, openWhenDone) {
     dispatch(toggleOpenWhenDone(id, openWhenDone));
+  },
+  onCopyUrl() {
+    dispatch(notify('info', 'Copied URL to clipboard'));
   },
 }))(DownloadMoreActions);
