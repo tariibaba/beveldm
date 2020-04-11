@@ -9,7 +9,7 @@ export default async function cleanUp(state) {
 
 function cleanUpDownload(download) {
   if (download.status === 'progressing') {
-    download.res.destroy();
+    if (download.res) download.res.destroy();
     download.status = 'paused';
   }
 
