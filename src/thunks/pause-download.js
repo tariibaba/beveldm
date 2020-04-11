@@ -1,4 +1,4 @@
-import { pauseDownload } from '../actions';
+import { pauseDownload, changeDownloadSpeed } from '../actions';
 
 export default function pauseDownloadThunk(id) {
   return async (dispatch, getState) => {
@@ -7,5 +7,6 @@ export default function pauseDownloadThunk(id) {
       if (download.res) download.res.pause();
     }
     dispatch(pauseDownload(id));
+    dispatch(changeDownloadSpeed(id, 0));
   };
 }
