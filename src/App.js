@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { loadState, updateDownloadsProgressPeriodically } from './thunks';
@@ -27,7 +28,7 @@ function App({ page }) {
     });
 
     ipcRenderer.send('change-theme', theme);
-  }, [dispatch, theme]);
+  }, [theme]);
 
   useEffect(() => {
     ipcRenderer.removeAllListeners('before-close');
@@ -46,7 +47,7 @@ function App({ page }) {
         ipcRenderer.send('change-theme', state.settings.theme);
       });
     }
-  }, [loaded, dispatch]);
+  }, [loaded]);
 
   return loaded ? (
     <ThemeProvider theme={state.settings.darkMode ? darkTheme : lightTheme}>
