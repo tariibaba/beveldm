@@ -16,6 +16,24 @@
     ],
     "directories": {
       "buildResources": "assets"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "msi",
+          "arch": ["ia32", "x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["ia32", "x64"]
+        }
+      ]
+    },
+    "mac": {
+      "target": ["zip"]
+    },
+    "linux": {
+      "target": ["deb", "rpm", "tar.gz"]
     }
   },
   "dependencies": {
