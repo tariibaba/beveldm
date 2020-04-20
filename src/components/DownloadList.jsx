@@ -33,12 +33,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DownloadList({ downloads = [], test }) {
+function DownloadList({ downloads = [] }) {
   const classes = useStyles();
 
   const grouped = groupBy(downloads, (download) =>
-    moment(download.timestamp).startOf('day').toISOString()
+    moment(download.timestamp).startOf('day').toDate().getTime()
   );
+
+  console.log(`keys: ${JSON.stringify(Object.keys(grouped))}`);
 
   return (
     <div className={classes.main}>
@@ -51,7 +53,7 @@ function DownloadList({ downloads = [], test }) {
               (download) => download.status !== 'getting info' && download.show
             ) > 0 && (
               <Typography style={{ fontWeight: 500, fontSize: 14 }}>
-                {moment(day).format('MMMM D, YYYY')}
+                {moment(Number.parseInt(day)).format('MMMM D, YYYY')}
               </Typography>
             )}
             {grouped[day].map((download) => (
