@@ -11,14 +11,18 @@ export default function makeRequest(id, url) {
 
       protocol
         .get(url, options)
-        .on('response', res => {
+        .on('response', (res) => {
           if (res.statusCode === 403) {
             dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
-            reject('Forbidden request');
+            reject('EFORBIDDEN');
+          }
+          if (res.statusCode === 416) {
+            dispatch(showDownloadError(id, { code: 'ERANGENOTSATISFIABLE' }));
+            reject('ERANGENOTSATISFIABLE');
           }
           resolve(res);
         })
-        .on('error', err => {
+        .on('error', (err) => {
           dispatch(showDownloadError(id, { code: err.code }));
         });
     });
@@ -31,16 +35,14 @@ export function makeYouTubeRequest(id, url) {
 
     return new Promise((resolve, reject) => {
       ytdl(url, { format: download.format })
-        .on('response', res => {
+        .on('response', (res) => {
           if (res.statusCode === 403) {
             dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
-            reject('Forbidden request');
           }
           resolve(res);
         })
-        .on('error', err => {
+        .on('error', (err) => {
           dispatch(showDownloadError(id, { code: err.code }));
-          reject('Error with request');
         });
     });
   };

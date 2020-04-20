@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   filenameStylesComplete: {
     cursor: 'pointer',
-    color: theme.palette.custom.filenameComplete
+    color: theme.palette.custom.filenameComplete,
   },
   linkButtonStylesDefault: {
     backgroundColor: 'transparent',
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    textAlign: 'left'
+    textAlign: 'left',
   },
   showInFolderButtonStyles: {
     marginTop: '30px',
@@ -234,6 +234,7 @@ function Download({
                       ECONNRESET: 'Failed - Network error',
                       EFORBIDDEN: 'Failed - Forbidden',
                       ETIMEDOUT: 'Failed - Network error',
+                      ERANGENOTSATISFIABLE: 'Failed - Range not satisfiable',
                       else: null,
                     })
                   : null,

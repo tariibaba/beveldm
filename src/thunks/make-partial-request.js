@@ -9,23 +9,26 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
     const options = {
       headers: {
         Connection: 'keep-alive',
-        Range: `bytes=${rangeStart}-${rangeEnd || ''}`
-      }
+        Range: `bytes=${rangeStart}-${rangeEnd || ''}`,
+      },
     };
 
     return new Promise((resolve, reject) => {
       protocol
         .get(url, options)
-        .on('response', res => {
+        .on('response', (res) => {
           if (res.statusCode === 403) {
             dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
-            reject('Forbidden request');
+            reject('EFORBIDDEN');
+          }
+          if (res.statusCode === 416) {
+            dispatch(showDownloadError(id, { code: 'ERANGENOTSATISFIABLE' }));
+            reject('ERANGENOTSATISFIABLE');
           }
           resolve(res);
         })
-        .on('error', err => {
+        .on('error', (err) => {
           dispatch(showDownloadError(id, { code: err.code }));
-          reject('Error with request');
         });
     });
   };
@@ -37,18 +40,17 @@ export function makePartialYouTubeRequest(id, url, rangeStart, rangeEnd) {
     return new Promise((resolve, reject) => {
       ytdl(url, {
         range: { start: rangeStart, end: rangeEnd },
-        format: download.format
+        format: download.format,
       })
-        .on('response', res => {
+        .on('response', (res) => {
           if (res.statusCode === 403) {
             dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
-            reject('Forbidden request');
+            reject('EFORBIDDEN');
           }
           resolve(res);
         })
-        .on('error', err => {
+        .on('error', (err) => {
           dispatch(showDownloadError(id, { code: err.code }));
-          reject('Error with request');
         });
     });
   };
