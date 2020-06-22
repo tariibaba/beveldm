@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "private": true,
   "main": "public/electron.js",
+  "description": "Cross-platform download manager",
   "homepage": ".",
   "build": {
     "appId": "com.tariibaba.beveldm",
