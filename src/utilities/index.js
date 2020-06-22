@@ -1,4 +1,3 @@
-export { default as replaceFileExt } from './replace-file-ext';
 export { default as getFilename } from './get-filename';
 export { default as getFileSize } from './get-file-size';
 export { default as getAvailableFilename } from './get-available-filename';
