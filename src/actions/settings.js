@@ -3,40 +3,48 @@ import {
   TOGGLE_DARK_MODE,
   CHANGE_THEME,
   TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
-  TOGGLE_START_DOWNLOADS_AUTOMATICALLY
+  TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
+  TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE,
 } from './constants';
 
 export function toggleSaveData(value) {
   return {
     type: TOGGLE_SAVE_DATA,
-    value
+    value,
   };
 }
 
 export function toggleDarkMode(value) {
   return {
     type: TOGGLE_DARK_MODE,
-    value
+    value,
   };
 }
 
 export function changeTheme(value) {
   return {
     type: CHANGE_THEME,
-    value
+    value,
   };
 }
 
 export function toggleAlwaysOpenDownloadsWhenDone(value) {
   return {
     type: TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
-    value
+    value,
   };
 }
 
 export function toggleStartDownloadsAutomatically(value) {
   return {
     type: TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
-    value
-  }
+    value,
+  };
+}
+
+export function toggleMinimizeAppOnWindowClose(value) {
+  return {
+    type: TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE,
+    value,
+  };
 }

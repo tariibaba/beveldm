@@ -9,7 +9,7 @@ import {
   IconButton,
   MuiThemeProvider,
   createMuiTheme,
-  Switch
+  Switch,
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { connect } from 'react-redux';
@@ -17,93 +17,100 @@ import {
   changePage,
   changeTheme,
   toggleAlwaysOpenDownloadsWhenDone,
-  toggleStartDownloadsAutomatically
+  toggleStartDownloadsAutomatically,
+  toggleMinimizeAppOnWindowClose,
 } from '../actions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column',
-    height: '100%'
+    height: '100%',
   },
   body: {
     flex: 1,
     backgroundColor: theme.palette.background.default,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   settings: {
     width: 500,
     marginTop: theme.spacing(2),
     [theme.breakpoints.down(640)]: {
-      width: '80%'
-    }
+      width: '80%',
+    },
   },
   setting: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   arrowBack: {
-    color: '#fff'
-  }
+    color: '#fff',
+  },
 }));
 
-const muiInnerTheme = outerTheme =>
+const muiInnerTheme = (outerTheme) =>
   createMuiTheme({
     ...outerTheme,
     typography: {
       ...outerTheme.typography,
       body1: {
-        fontSize: 15
-      }
-    }
+        fontSize: 15,
+      },
+    },
   });
 
-const muiDarkInnerTheme = outerTheme => createMuiTheme({
-  ...muiInnerTheme(outerTheme),
-  palette: {
-    ...muiInnerTheme(outerTheme).palette,
-    text: {
-      primary: '#fff'
-    }
-  },
-  typography: {
-    ...muiInnerTheme(outerTheme).typography,
-    allVariants: {
-      color: '#fff'
-    }
-  }
-});
+const muiDarkInnerTheme = (outerTheme) =>
+  createMuiTheme({
+    ...muiInnerTheme(outerTheme),
+    palette: {
+      ...muiInnerTheme(outerTheme).palette,
+      text: {
+        primary: '#fff',
+      },
+    },
+    typography: {
+      ...muiInnerTheme(outerTheme).typography,
+      allVariants: {
+        color: '#fff',
+      },
+    },
+  });
 
 function SettingsPage({
   dispatch,
   theme,
   alwaysOpenDownloadsWhenDone,
-  startDownloadsAutomatically
+  startDownloadsAutomatically,
+  minimizeAppOnWindowClose,
 }) {
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
   };
 
-  const handleThemeChange = event => {
+  const handleThemeChange = (event) => {
     dispatch(changeTheme(event.target.value));
   };
 
-  const handleToggleAlwaysOpenDownloadsWhenDone = event => {
+  const handleToggleAlwaysOpenDownloadsWhenDone = (event) => {
     dispatch(toggleAlwaysOpenDownloadsWhenDone(event.target.checked));
   };
 
-  const handleToggleStartDownloadsAutomatically = event => {
+  const handleToggleStartDownloadsAutomatically = (event) => {
     dispatch(toggleStartDownloadsAutomatically(event.target.checked));
+  };
+
+  const handleToggleMinimizedAppOnWindowClose = (event) => {
+    dispatch(toggleMinimizeAppOnWindowClose(event.target.checked));
   };
 
   const classes = useStyles();
 
   return (
     <MuiThemeProvider
-      theme={outerTheme =>
+      theme={(outerTheme) =>
         outerTheme.palette.type === 'dark'
           ? muiDarkInnerTheme(outerTheme)
           : muiInnerTheme(outerTheme)
@@ -135,7 +142,7 @@ function SettingsPage({
                 color="primary"
                 checked={alwaysOpenDownloadsWhenDone}
                 onChange={handleToggleAlwaysOpenDownloadsWhenDone}
-              ></Switch>
+              />
             </div>
             <div className={classes.setting}>
               <Typography>Start downloads automatically</Typography>
@@ -143,7 +150,15 @@ function SettingsPage({
                 color="primary"
                 checked={startDownloadsAutomatically}
                 onChange={handleToggleStartDownloadsAutomatically}
-              ></Switch>
+              />
+            </div>
+            <div className={classes.setting}>
+              <Typography>Minimize app when window is closed</Typography>
+              <Switch
+                color="primary"
+                checked={minimizeAppOnWindowClose}
+                onChange={handleToggleMinimizedAppOnWindowClose}
+              />
             </div>
           </div>
         </div>
@@ -155,5 +170,6 @@ function SettingsPage({
 export default connect(({ settings }) => ({
   theme: settings.theme,
   alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone,
-  startDownloadsAutomatically: settings.startDownloadsAutomatically
+  startDownloadsAutomatically: settings.startDownloadsAutomatically,
+  minimizeAppOnWindowClose: settings.minimizeAppOnWindowClose,
 }))(SettingsPage);

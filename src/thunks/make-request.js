@@ -33,7 +33,7 @@ export function makeYouTubeRequest(id, url) {
   return (dispatch, getState) => {
     const download = getState().downloads.byId[id];
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       ytdl(url, { format: download.format })
         .on('response', (res) => {
           if (res.statusCode === 403) {
