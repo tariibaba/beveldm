@@ -40,8 +40,6 @@ function DownloadList({ downloads = [] }) {
     moment(download.timestamp).startOf('day').toDate().getTime()
   );
 
-  console.log(`keys: ${JSON.stringify(Object.keys(grouped))}`);
-
   return (
     <div className={classes.main}>
       {Object.keys(grouped)
