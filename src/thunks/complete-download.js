@@ -3,6 +3,7 @@ import pify from 'pify';
 import fs from 'fs';
 import { completeDownload } from '../actions';
 import open from 'open';
+import { ipcRenderer } from 'electron';
 
 export default function completeDownloadThunk(id) {
   return async (dispatch, getState) => {
@@ -11,6 +12,11 @@ export default function completeDownloadThunk(id) {
     const pathWhenCompleted = getDownloadPath(download);
     await rename(getPartialDownloadPath(download), pathWhenCompleted);
     dispatch(completeDownload(id));
+    console.log('Notifying');
+    ipcRenderer.send('notify-completion', {
+      filePath: getDownloadPath(download)
+    });
+    console.log('Notified');
 
     if (download.openWhenDone) open(pathWhenCompleted);
   };

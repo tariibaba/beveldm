@@ -2,7 +2,6 @@ import {
   changeDownloadInfo,
   setDownloadRes,
   downloadProgressing,
-  showDownloadError,
 } from '../actions';
 import {
   getAvailableFilename,
@@ -16,6 +15,7 @@ import makePartialRequest, {
   makePartialYouTubeRequest,
 } from './make-partial-request';
 import updateBytesDownloadedThunk from './update-bytes-downloaded';
+import downloadErrorThunk from './download-error';
 
 export default function resumeDownload(id) {
   return async (dispatch, getState) => {
@@ -49,7 +49,7 @@ export default function resumeDownload(id) {
         ? download.bytesDownloaded + contentLength
         : contentLength;
       if (download.defaultFilename !== filename || download.size !== size) {
-        dispatch(showDownloadError(id, { code: 'EFILECHANGED' }));
+        dispatch(downloadErrorThunk(id, { code: 'EFILECHANGED' }));
       } else {
         if (!download.resumable) dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(downloadFile(id, res));

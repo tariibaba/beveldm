@@ -1,11 +1,8 @@
-import {
-  setDownloadRes,
-  downloadProgressing,
-  showDownloadError
-} from '../actions';
+import { setDownloadRes, downloadProgressing } from '../actions';
 import { getFilename, getFileSize } from '../utilities';
 import downloadFile from './download-file';
 import makeRequest, { makeYouTubeRequest } from './make-request';
+import downloadErrorThunk from './download-error';
 
 export default function startDownload(id) {
   return async (dispatch, getState) => {
@@ -26,7 +23,7 @@ export default function startDownload(id) {
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         if (download.defaultFilename !== filename || download.size !== size) {
-          dispatch(showDownloadError(id, { code: 'EFILECHANGED' }));
+          dispatch(downloadErrorThunk(id, { code: 'EFILECHANGED' }));
         } else dispatch(downloadFile(id, res));
         break;
       case 'youtube':

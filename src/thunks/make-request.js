@@ -1,7 +1,7 @@
 import http from 'http';
 import https from 'https';
-import { showDownloadError } from '../actions';
 import ytdl from 'ytdl-core';
+import downloadErrorThunk from './download-error';
 
 export default function makeRequest(id, url) {
   return (dispatch, _getState) => {
@@ -13,17 +13,17 @@ export default function makeRequest(id, url) {
         .get(url, options)
         .on('response', (res) => {
           if (res.statusCode === 403) {
-            dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
+            dispatch(downloadErrorThunk(id, { code: 'EFORBIDDEN' }));
             reject('EFORBIDDEN');
           }
           if (res.statusCode === 416) {
-            dispatch(showDownloadError(id, { code: 'ERANGENOTSATISFIABLE' }));
+            dispatch(downloadErrorThunk(id, { code: 'ERANGENOTSATISFIABLE' }));
             reject('ERANGENOTSATISFIABLE');
           }
           resolve(res);
         })
         .on('error', (err) => {
-          dispatch(showDownloadError(id, { code: err.code }));
+          dispatch(downloadErrorThunk(id, { code: err.code }));
         });
     });
   };
@@ -37,12 +37,12 @@ export function makeYouTubeRequest(id, url) {
       ytdl(url, { format: download.format })
         .on('response', (res) => {
           if (res.statusCode === 403) {
-            dispatch(showDownloadError(id, { code: 'EFORBIDDEN' }));
+            dispatch(downloadErrorThunk(id, { code: 'EFORBIDDEN' }));
           }
           resolve(res);
         })
         .on('error', (err) => {
-          dispatch(showDownloadError(id, { code: err.code }));
+          dispatch(downloadErrorThunk(id, { code: err.code }));
         });
     });
   };

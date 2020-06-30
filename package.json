@@ -22,19 +22,31 @@
       "target": [
         {
           "target": "msi",
-          "arch": ["ia32", "x64"]
+          "arch": [
+            "ia32",
+            "x64"
+          ]
         },
         {
           "target": "zip",
-          "arch": ["ia32", "x64"]
+          "arch": [
+            "ia32",
+            "x64"
+          ]
         }
       ]
     },
     "mac": {
-      "target": ["zip"]
+      "target": [
+        "zip"
+      ]
     },
     "linux": {
-      "target": ["deb", "rpm", "tar.gz"]
+      "target": [
+        "deb",
+        "rpm",
+        "tar.gz"
+      ]
     }
   },
   "dependencies": {
@@ -52,6 +64,7 @@
     "is-online": "^8.2.1",
     "lodash.groupby": "^4.6.0",
     "moment": "^2.24.0",
+    "node-notifier": "^7.0.1",
     "open": "^7.0.1",
     "path-exists": "^4.0.0",
     "pify": "^4.0.1",
@@ -99,6 +112,7 @@
   "devDependencies": {
     "@rescripts/cli": "^0.0.11",
     "@rescripts/rescript-env": "^0.0.10",
+    "@types/node-notifier": "^6.0.1",
     "electron": "^8.1.1",
     "electron-builder": "^22.4.1",
     "file-loader": "^5.0.2"
