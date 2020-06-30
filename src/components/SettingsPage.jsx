@@ -19,6 +19,7 @@ import {
   toggleAlwaysOpenDownloadsWhenDone,
   toggleStartDownloadsAutomatically,
 } from '../actions';
+import { toggleLaunchAtStartup } from '../thunks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,6 +84,7 @@ function SettingsPage({
   theme,
   alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically,
+  launchAtStartup,
 }) {
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
@@ -98,6 +100,10 @@ function SettingsPage({
 
   const handleToggleStartDownloadsAutomatically = (event) => {
     dispatch(toggleStartDownloadsAutomatically(event.target.checked));
+  };
+
+  const handleToggleLaunchAtStartup = (event) => {
+    dispatch(toggleLaunchAtStartup(event.target.checked));
   };
 
   const classes = useStyles();
@@ -146,6 +152,14 @@ function SettingsPage({
                 onChange={handleToggleStartDownloadsAutomatically}
               />
             </div>
+            <div className={classes.setting}>
+              <Typography>Launch at startup (minimized)</Typography>
+              <Switch
+                color="primary"
+                checked={launchAtStartup}
+                onChange={handleToggleLaunchAtStartup}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -157,4 +171,5 @@ export default connect(({ settings }) => ({
   theme: settings.theme,
   alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically: settings.startDownloadsAutomatically,
+  launchAtStartup: settings.launchAtStartup,
 }))(SettingsPage);

@@ -28,6 +28,8 @@ let isAppQuiting = false;
 
 const appId = 'com.tariibaba.beveldm';
 
+toggleLaunchAtStartup(true);
+
 app.on('ready', createWindow);
 
 app.on('before-quit', () => {
@@ -82,6 +84,10 @@ ipcMain.on('change-theme', (_event, args) => {
   nativeTheme.themeSource = args;
 });
 
+ipcMain.on('toggle-launch-at-startup', (_event, args) => {
+  toggleLaunchAtStartup(args);
+});
+
 ipcMain.on('saved', () => {
   mainWindow.destroy();
 });
@@ -134,6 +140,10 @@ nativeTheme.on('updated', () => {
     nativeTheme.shouldUseDarkColors
   );
 });
+
+function toggleLaunchAtStartup(value) {
+  app.setLoginItemSettings({ openAsHidden: true, openAtLogin: value });
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({

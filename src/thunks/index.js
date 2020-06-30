@@ -12,3 +12,4 @@ export { default as makePartialRequest } from './make-partial-request';
 export { default as updateDownloadsProgressPeriodically } from './update-downloads-progress-periodically';
 export { default as choosenYouTubeFormatThunk } from './choosen-youtube-format';
 export { default as downloadErrorThunk } from './download-error';
+export { default as toggleLaunchAtStartup } from './toggle-launch-at-startup';
