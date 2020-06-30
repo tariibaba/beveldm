@@ -4,7 +4,6 @@ import {
   CHANGE_THEME,
   TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
   TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
-  TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE,
 } from '../actions';
 import { updateObject, createReducer } from './utilities';
 
@@ -14,7 +13,6 @@ const defaultSettings = {
   theme: 'system',
   alwaysOpenDownloadsWhenDone: false,
   startDownloadsAutomatically: true,
-  minimizeAppOnWindowClose: true
 };
 
 export default createReducer(defaultSettings, {
@@ -23,7 +21,6 @@ export default createReducer(defaultSettings, {
   [CHANGE_THEME]: changeTheme,
   [TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE]: toggleAlwaysOpenDownloadsWhenDone,
   [TOGGLE_START_DOWNLOADS_AUTOMATICALLY]: toggleStartDownloadsAutomatically,
-  [TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE]: toggleMinimizeAppOnWindowClose,
 });
 
 function toggleSaveData(state, action) {
@@ -44,8 +41,4 @@ function toggleAlwaysOpenDownloadsWhenDone(state, action) {
 
 function toggleStartDownloadsAutomatically(state, action) {
   return updateObject(state, { startDownloadsAutomatically: action.value });
-}
-
-function toggleMinimizeAppOnWindowClose(state, action) {
-  return updateObject(state, { minimizeAppOnWindowClose: action.value });
 }

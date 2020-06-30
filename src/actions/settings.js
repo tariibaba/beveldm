@@ -4,7 +4,6 @@ import {
   CHANGE_THEME,
   TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
   TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
-  TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE,
 } from './constants';
 
 export function toggleSaveData(value) {
@@ -38,13 +37,6 @@ export function toggleAlwaysOpenDownloadsWhenDone(value) {
 export function toggleStartDownloadsAutomatically(value) {
   return {
     type: TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
-    value,
-  };
-}
-
-export function toggleMinimizeAppOnWindowClose(value) {
-  return {
-    type: TOGGLE_MINIMIZE_APP_ON_WINDOW_CLOSE,
     value,
   };
 }

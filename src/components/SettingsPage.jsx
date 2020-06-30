@@ -18,7 +18,6 @@ import {
   changeTheme,
   toggleAlwaysOpenDownloadsWhenDone,
   toggleStartDownloadsAutomatically,
-  toggleMinimizeAppOnWindowClose,
 } from '../actions';
 
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +83,6 @@ function SettingsPage({
   theme,
   alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically,
-  minimizeAppOnWindowClose,
 }) {
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
@@ -100,10 +98,6 @@ function SettingsPage({
 
   const handleToggleStartDownloadsAutomatically = (event) => {
     dispatch(toggleStartDownloadsAutomatically(event.target.checked));
-  };
-
-  const handleToggleMinimizedAppOnWindowClose = (event) => {
-    dispatch(toggleMinimizeAppOnWindowClose(event.target.checked));
   };
 
   const classes = useStyles();
@@ -152,14 +146,6 @@ function SettingsPage({
                 onChange={handleToggleStartDownloadsAutomatically}
               />
             </div>
-            <div className={classes.setting}>
-              <Typography>Minimize app when window is closed</Typography>
-              <Switch
-                color="primary"
-                checked={minimizeAppOnWindowClose}
-                onChange={handleToggleMinimizedAppOnWindowClose}
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -171,5 +157,4 @@ export default connect(({ settings }) => ({
   theme: settings.theme,
   alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically: settings.startDownloadsAutomatically,
-  minimizeAppOnWindowClose: settings.minimizeAppOnWindowClose,
 }))(SettingsPage);

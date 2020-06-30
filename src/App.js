@@ -17,7 +17,6 @@ function App({ page }) {
   const [loaded, setLoaded] = useState(false);
   const state = useSelector((state) => state);
   const theme = state.settings.theme;
-  const minimizeAppOnWindowClose = state.settings.minimizeAppOnWindowClose;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,10 +29,6 @@ function App({ page }) {
 
     ipcRenderer.send('change-theme', theme);
   }, [theme]);
-
-  useEffect(() => {
-    ipcRenderer.send('minimize-on-close-attempt', minimizeAppOnWindowClose);
-  }, [minimizeAppOnWindowClose]);
 
   useEffect(() => {
     ipcRenderer.removeAllListeners('before-close');

@@ -86,10 +86,6 @@ ipcMain.on('saved', () => {
   mainWindow.destroy();
 });
 
-ipcMain.on('minimize-on-close-attempt', (_event, args) => {
-  isAppQuiting = !args;
-});
-
 ipcMain.on('notify-completion', (_event, args) => {
   if (mainWindow.isVisible()) return;
 
