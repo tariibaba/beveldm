@@ -26,10 +26,6 @@ let tray;
 let reactHasLoaded = false;
 let isAppQuiting = false;
 
-const appId = 'com.tariibaba.beveldm';
-
-toggleLaunchAtStartup(true);
-
 app.on('ready', createWindow);
 
 app.on('before-quit', () => {
@@ -94,6 +90,8 @@ ipcMain.on('toggle-launch-at-startup', (_event, args) => {
 ipcMain.on('saved', () => {
   mainWindow.destroy();
 });
+
+const appId = 'com.tariibaba.beveldm';
 
 ipcMain.on('notify-completion', (_event, args) => {
   if (mainWindow.isVisible()) return;

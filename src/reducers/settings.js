@@ -14,7 +14,7 @@ const defaultSettings = {
   theme: 'system',
   alwaysOpenDownloadsWhenDone: false,
   startDownloadsAutomatically: true,
-  launchAtStartup: true,
+  launchAtStartup: false,
 };
 
 export default createReducer(defaultSettings, {
