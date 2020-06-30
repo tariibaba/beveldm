@@ -61,6 +61,7 @@
     "electron-store": "^5.0.0",
     "filename-reserved-regex": "^2.0.0",
     "hex-to-rgba": "^2.0.1",
+    "humanize-duration": "^3.23.1",
     "is-online": "^8.2.1",
     "lodash.groupby": "^4.6.0",
     "moment": "^2.24.0",

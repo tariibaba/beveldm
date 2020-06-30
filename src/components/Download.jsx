@@ -20,6 +20,24 @@ import DownloadMoreActions from './DownloadMoreActions';
 import pathExists from 'path-exists';
 import clsx from 'clsx';
 import { downloadFileRemoved } from '../actions';
+import humanizeDuration from 'humanize-duration';
+
+const humanizer = humanizeDuration.humanizer({
+  largest: 2,
+  units: ['w', 'd', 'h', 'm', 's'],
+  languages: {
+    shortEn: {
+      w: () => 'weeks',
+      d: () => 'days',
+      h: () => 'hours',
+      m: () => 'mins',
+      s: () => 'secs',
+    },
+  },
+  maxDecimalPoints: 0,
+  delimiter: ' and ',
+});
+const humanizerPluralFilterRegex = /(^1 [(week)(day)(hour)(min)(sec)]+)s/g;
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -135,6 +153,10 @@ function Download({
   openWhenDone,
 }) {
   const fullPath = path.join(dirname, availableFilename);
+  const secondsLeft = ((size - bytesDownloadedShown) / speed) * 1000;
+  const humanizedDuration = humanizer(secondsLeft, {
+    language: 'shortEn',
+  }).replace(humanizerPluralFilterRegex, '$1');
 
   const openFolder = async () => {
     if (!(await pathExists(fullPath))) {
@@ -269,7 +291,10 @@ function Download({
               <Typography className={classes.typography}>
                 {status === 'progressing' && prettyBytes(speed) + '/s - '}
                 {prettyBytes(bytesDownloadedShown)} of {prettyBytes(size)}
-                {status === 'paused' ? ', Paused' : null}
+                {status === 'paused' && ', Paused'}
+                {status === 'progressing' &&
+                  speed > 0 &&
+                  `, ${humanizedDuration} left`}
               </Typography>
             </div>
           )}
