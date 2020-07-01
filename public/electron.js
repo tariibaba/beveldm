@@ -156,7 +156,9 @@ function createWindow() {
     backgroundColor: '#fff',
   });
 
-  const indexHtmlUrl = url.pathToFileURL(path.resolve('./index.html')).href;
+  const indexHtmlUrl = url.pathToFileURL(
+    path.resolve(__dirname, './index.html')
+  ).href;
   mainWindow.loadURL(electronIsDev ? 'http://localhost:3000' : indexHtmlUrl);
 
   if (!electronIsDev) setupForProduction();
