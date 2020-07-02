@@ -26,7 +26,17 @@ let tray;
 let reactHasLoaded = false;
 let isAppQuiting = false;
 
-app.on('ready', createWindow);
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (gotTheLock) {
+  app.on('second-instance', () => {
+    if (mainWindow) mainWindow.show();
+  });
+  app.whenReady().then(createWindow);
+} else {
+  isAppQuiting = true;
+  app.quit();
+}
 
 app.on('before-quit', () => {
   isAppQuiting = true;
