@@ -215,7 +215,12 @@ function initTray() {
   tray = new Tray(path.join(__dirname, './app-icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Close',
+      label: 'Open Bevel Download Manager',
+      type: 'normal',
+      click: () => mainWindow.show(),
+    },
+    {
+      label: 'Quit Bevel Download Manager',
       type: 'normal',
       click() {
         isAppQuiting = true;
