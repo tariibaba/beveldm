@@ -107,7 +107,7 @@ function DownloadMoreActions({
           </ListItemText>
         </MenuItem>
         {showExtraItems && (
-          <>
+          <span>
             <MenuItem
               button
               className={classes.menuListItem}
@@ -140,7 +140,7 @@ function DownloadMoreActions({
                 Open when done
               </ListItemText>
             </MenuItem>
-          </>
+          </span>
         )}
       </Menu>
     </>
