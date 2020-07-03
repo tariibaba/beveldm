@@ -2,14 +2,16 @@ import { removeDownload, notify, showDownload, hideDownload } from '../actions';
 import { getPartialDownloadPath, deleteFile } from '../utilities';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
 import pathExists from 'path-exists';
+import Timeout from 'await-timeout';
 
 export default function removeDownloadThunk(id) {
   return async (dispatch, getState) => {
     dispatch(hideDownload(id));
 
-    let download = getState().downloads.byId[id];
+    const download = getState().downloads.byId[id];
 
-    const timeout = setTimeout(async () => {
+    const timeout = new Timeout();
+    timeout.set(NOTIFICATION_SHOW_DURATION).then(async () => {
       if (download.status === 'canceled') {
         dispatch(removeDownload(id));
         const partialDownloadPath = getPartialDownloadPath(download);
@@ -17,7 +19,7 @@ export default function removeDownloadThunk(id) {
           await deleteFile(partialDownloadPath);
         }
       }
-    }, NOTIFICATION_SHOW_DURATION);
+    });
 
     dispatch(
       notify(
@@ -26,7 +28,7 @@ export default function removeDownloadThunk(id) {
         'Undo',
         () => {
           dispatch(showDownload(id));
-          clearTimeout(timeout);
+          timeout.clear();
         }
       )
     );
