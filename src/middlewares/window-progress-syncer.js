@@ -19,10 +19,12 @@ export default function windowProgressSyncer(store) {
       COMPLETE_DOWNLOAD
     ];
 
+    const result = next(action);
+
     if (watchedActionTypes.includes(action.type)) {
       setTaskbarProgress(store.getState().downloads);
     }
 
-    return next(action);
+    return result;
   };
 }
