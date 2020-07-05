@@ -11,6 +11,7 @@ import {
   List,
   ListItemText,
   makeStyles,
+  Divider,
 } from '@material-ui/core';
 import {
   MoreVert,
@@ -95,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'inline',
     },
   },
+  drawerMenuIconButton: {
+    color: theme.palette.text.primary,
+  },
   selectedDownloadGroup: {
     color: `${theme.palette.primary.main}`,
     fontWeight: 'bold',
@@ -114,12 +118,21 @@ const useStyles = makeStyles((theme) => ({
   drawerAppBar: {
     display: 'none',
     position: 'relative',
+    boxShadow: 'none',
+    background: 'none',
+    color: theme.palette.text.primary,
     [theme.breakpoints.down('md')]: {
       display: 'block',
     },
   },
   menuListIcon: {
     minWidth: 40,
+  },
+  divider: {
+    visibility: 'hidden',
+    [theme.breakpoints.down('md')]: {
+      visibility: 'visible',
+    },
   },
 }));
 
@@ -216,11 +229,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
         >
           <AppBar className={classes.drawerAppBar} position="fixed">
             <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuIconButton}
-                onClick={handleCloseDrawer}
-              >
+              <IconButton edge="start" onClick={handleCloseDrawer}>
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" style={{ flexGrow: 1 }}>
@@ -228,6 +237,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
               </Typography>
             </Toolbar>
           </AppBar>
+          <Divider className={classes.divider} />
           <List>
             <ListItem
               button
