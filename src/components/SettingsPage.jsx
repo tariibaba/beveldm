@@ -57,27 +57,32 @@ const muiInnerTheme = (outerTheme) =>
     typography: {
       ...outerTheme.typography,
       body1: {
+        ...outerTheme.typography.body1,
         fontSize: 15,
       },
     },
   });
 
-const muiDarkInnerTheme = (outerTheme) =>
-  createMuiTheme({
-    ...muiInnerTheme(outerTheme),
+const muiDarkInnerTheme = (outerTheme) => {
+  const innerTheme = muiInnerTheme(outerTheme);
+  return createMuiTheme({
+    ...innerTheme,
     palette: {
-      ...muiInnerTheme(outerTheme).palette,
+      ...innerTheme.palette,
       text: {
+        ...innerTheme.palette.text,
         primary: '#fff',
       },
     },
     typography: {
-      ...muiInnerTheme(outerTheme).typography,
+      ...innerTheme.typography,
       allVariants: {
+        ...innerTheme.typography.allVariants,
         color: '#fff',
       },
     },
   });
+};
 
 function SettingsPage({
   dispatch,
