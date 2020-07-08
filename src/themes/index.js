@@ -1,6 +1,7 @@
 import { createMuiTheme } from '@material-ui/core';
 import { blue, grey } from '@material-ui/core/colors';
 import hexToRgba from 'hex-to-rgba';
+import '../font-faces/nutino-sans.css'
 
 export const lightTheme = createMuiTheme({
   palette: {
@@ -25,6 +26,11 @@ export const lightTheme = createMuiTheme({
       downloadStatusText: '#999ea4',
       downloadGroupSelected: '#8ab4f8',
       drawer: '#fff'
+    }
+  },
+  typography: {
+    allVariants: {
+      fontFamily: 'Nutino Sans'
     }
   },
   overrides: {
@@ -87,6 +93,11 @@ export const darkTheme = createMuiTheme({
       downloadStatusText: hexToRgba('#999ea4', 0.9),
       downloadGroupSelected: '#8ab4f8',
       drawer: '#202124'
+    }
+  },
+  typography: {
+    allVariants: {
+      fontFamily: 'Nutino Sans'
     }
   },
   overrides: {

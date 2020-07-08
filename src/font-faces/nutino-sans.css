@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Nutino Sans';
+  src: url(Nutino_Sans/NunitoSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Nutino Sans';
+  src: url(Nutino_Sans/NunitoSans-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Nutino Sans';
+  src: url(Nutino_Sans/NunitoSans-SemiBold.ttf);
+  font-weight: 500;
+}
