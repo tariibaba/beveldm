@@ -17,6 +17,9 @@ export default function downloadFile(id, res) {
     const timeout = new Timeout();
     let buffer;
     let hasResEnded = false;
+    let firstTimeoutRunning = false;
+    let firstTimeoutElapsed = false;
+    const firstSaveDataTimeout = new Timeout();
 
     res.on('data', async (chunk) => {
       res.pause();
@@ -28,8 +31,11 @@ export default function downloadFile(id, res) {
       buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
 
       if (saveData) {
+        let shouldSkipSecondTimeout = false;
+
         const writeSlicedBuffer = async () => {
-          await timeout.set(500);
+          if (shouldSkipSecondTimeout) shouldSkipSecondTimeout = false;
+          else await timeout.set(500);
 
           state = getState();
           download = state.downloads.byId[id];
@@ -58,7 +64,29 @@ export default function downloadFile(id, res) {
             } else res.resume();
           }
         };
-        await writeSlicedBuffer();
+
+        // Keep adding more data to buffer until length is more than half of
+        // SAVE_DATA_LIMIT or timeout has elapsed.
+        if (!firstTimeoutRunning) {
+          firstTimeoutElapsed = false;
+          firstTimeoutRunning = true;
+          firstSaveDataTimeout.set(500).then(async () => {
+            firstTimeoutElapsed = true;
+            firstTimeoutRunning = false;
+            shouldSkipSecondTimeout = true;
+            res.pause();
+            await writeSlicedBuffer();
+          });
+        }
+        if (!firstTimeoutElapsed) {
+          if (buffer.length < SAVE_DATA_LIMIT / 2) res.resume();
+          else {
+            firstTimeoutRunning = false;
+            firstSaveDataTimeout.clear();
+            res.pause();
+            await writeSlicedBuffer();
+          }
+        }
       } else {
         await writeStreamWritePromise(fileStream, buffer);
         await dispatch(
