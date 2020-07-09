@@ -33,15 +33,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function DownloadList({ downloads = [] }) {
+function DownloadList({ downloads = [], onScroll = () => {} }) {
   const classes = useStyles();
 
   const grouped = groupBy(downloads, (download) =>
     moment(download.timestamp).startOf('day').toDate().getTime()
   );
 
+  const handleScroll = (e) => onScroll(e.target.scrollTop);
+
   return (
-    <div className={classes.main}>
+    <div className={classes.main} onScroll={handleScroll}>
       {Object.keys(grouped)
         .sort()
         .reverse()

@@ -91,13 +91,10 @@ const useStyles = makeStyles((theme) => ({
   },
   menuIconButton: {
     display: 'none',
-    color: '#fff',
+    color: theme.overrides.MuiAppBar.colorPrimary.color,
     [theme.breakpoints.down('md')]: {
       display: 'inline',
     },
-  },
-  drawerMenuIconButton: {
-    color: theme.palette.text.primary,
   },
   selectedDownloadGroup: {
     color: `${theme.palette.primary.main}`,
@@ -134,9 +131,12 @@ const useStyles = makeStyles((theme) => ({
       visibility: 'visible',
     },
   },
+  drawerMenuIcon: {
+    color: theme.overrides.MuiAppBar.colorPrimary.color,
+  },
 }));
 
-function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
+function DownloadAppBar({ dispatch, saveData, downloadGroup, raised }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
@@ -175,7 +175,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" elevation={raised ? 4 : 0}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -230,7 +230,7 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup }) {
           <AppBar className={classes.drawerAppBar} position="fixed">
             <Toolbar>
               <IconButton edge="start" onClick={handleCloseDrawer}>
-                <MenuIcon />
+                <MenuIcon className={classes.drawerMenuIcon} />
               </IconButton>
               <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Downloads

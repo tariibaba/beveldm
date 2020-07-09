@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   arrowBack: {
-    color: '#fff',
+    color: theme.overrides.MuiAppBar.colorPrimary.color,
   },
 }));
 
@@ -91,6 +91,9 @@ function SettingsPage({
   startDownloadsAutomatically,
   launchAtStartup,
 }) {
+  const [appBarRaised, setAppBarRaised] = useState(false);
+  const classes = useStyles();
+
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
   };
@@ -111,7 +114,7 @@ function SettingsPage({
     dispatch(toggleLaunchAtStartup(event.target.checked));
   };
 
-  const classes = useStyles();
+  const handleScroll = (event) => setAppBarRaised(event.target.scrollTop > 0);
 
   return (
     <MuiThemeProvider
@@ -122,7 +125,7 @@ function SettingsPage({
       }
     >
       <div className={classes.root}>
-        <AppBar position="fixed">
+        <AppBar position="fixed" elevation={appBarRaised ? 4 : 0}>
           <Toolbar>
             <IconButton edge="start" onClick={handleGoBack}>
               <ArrowBack className={classes.arrowBack} />
@@ -131,7 +134,7 @@ function SettingsPage({
           </Toolbar>
         </AppBar>
         <Toolbar />
-        <div className={classes.body}>
+        <div className={classes.body} onScroll={handleScroll}>
           <div className={classes.settings}>
             <div className={classes.setting}>
               <Typography>Theme</Typography>

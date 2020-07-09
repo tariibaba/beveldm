@@ -1,16 +1,16 @@
 import { createMuiTheme } from '@material-ui/core';
 import { blue, grey } from '@material-ui/core/colors';
 import hexToRgba from 'hex-to-rgba';
-import '../font-faces/nutino-sans.css'
+import '../font-faces/nutino-sans.css';
 
 export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: blue[700]
+      main: blue[700],
     },
     background: {
-      default: grey[100]
+      default: grey[100],
     },
     custom: {
       cardDefault: '#fff',
@@ -25,13 +25,13 @@ export const lightTheme = createMuiTheme({
       showInFolder: blue[700],
       downloadStatusText: '#999ea4',
       downloadGroupSelected: '#8ab4f8',
-      drawer: '#fff'
-    }
+      drawer: '#fff',
+    },
   },
   typography: {
     allVariants: {
-      fontFamily: 'Nutino Sans'
-    }
+      fontFamily: 'Nutino Sans',
+    },
   },
   overrides: {
     MuiButton: {
@@ -39,7 +39,7 @@ export const lightTheme = createMuiTheme({
         textTransform: 'none',
         boxSizing: 'content-box',
         minWidth: 'auto',
-        padding: '5px 16px !important'
+        padding: '5px 16px !important',
       },
       containedSecondary: {
         backgroundColor: 'transparent',
@@ -47,37 +47,38 @@ export const lightTheme = createMuiTheme({
         border: `0.5px solid ${hexToRgba('#999ea4', 0.6)}`,
         color: blue[700],
         '&:hover': {
-          backgroundColor: hexToRgba('#8ab4f8', 0.1)
-        }
-      }
+          backgroundColor: hexToRgba('#8ab4f8', 0.1),
+        },
+      },
     },
     MuiLinearProgress: {
       colorPrimary: {
-        backgroundColor: grey[300]
-      }
+        backgroundColor: grey[300],
+      },
     },
     MuiAppBar: {
       colorPrimary: {
-        color: '#fff'
-      }
-    }
-  }
+        color: '#000',
+        backgroundColor: grey[100],
+      },
+    },
+  },
 });
 
 export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#8ab4f8'
+      main: '#8ab4f8',
     },
     secondary: {
-      main: '#202124'
+      main: '#202124',
     },
     background: {
-      default: '#202124'
+      default: '#202124',
     },
     text: {
-      primary: '#999ea4'
+      primary: '#999ea4',
     },
     custom: {
       cardDefault: '#202124',
@@ -92,13 +93,17 @@ export const darkTheme = createMuiTheme({
       showInFolder: '#8ab4f8',
       downloadStatusText: hexToRgba('#999ea4', 0.9),
       downloadGroupSelected: '#8ab4f8',
-      drawer: '#202124'
-    }
+      drawer: '#202124',
+    },
   },
   typography: {
     allVariants: {
-      fontFamily: 'Nutino Sans'
-    }
+      fontFamily: 'Nutino Sans',
+      color: '#999ea4',
+    },
+    h6: {
+      color: '#fff',
+    },
   },
   overrides: {
     MuiButton: {
@@ -106,11 +111,11 @@ export const darkTheme = createMuiTheme({
         textTransform: 'none',
         boxSizing: 'content-box',
         minWidth: 'auto',
-        padding: '5px 16px !important'
+        padding: '5px 16px !important',
       },
       containedPrimary: {
         backgroundColor: '#8ab4f8',
-        color: '#202124'
+        color: '#202124',
       },
       containedSecondary: {
         backgroundColor: 'transparent',
@@ -118,52 +123,44 @@ export const darkTheme = createMuiTheme({
         border: `0.5px solid ${hexToRgba('#999ea4', 0.6)}`,
         color: '#8ab4f8',
         '&:hover': {
-          backgroundColor: hexToRgba('#8ab4f8', 0.1)
-        }
-      }
+          backgroundColor: hexToRgba('#8ab4f8', 0.1),
+        },
+      },
     },
     MuiLinearProgress: {
       barColorPrimary: {
-        backgroundColor: '#8ab4f8'
+        backgroundColor: '#8ab4f8',
       },
       colorPrimary: {
-        backgroundColor: hexToRgba('#8ab4f8', 0.1)
-      }
+        backgroundColor: hexToRgba('#8ab4f8', 0.1),
+      },
     },
     MuiListItem: {
       root: {
-        color: '#999ea4'
-      }
+        color: '#999ea4',
+      },
     },
     MuiListItemIcon: {
       root: {
-        color: '#999ea4'
-      }
+        color: '#999ea4',
+      },
     },
     MuiSnackbarContent: {
       root: {
         backgroundColor: '#424242',
-        color: '#fff'
-      }
+        color: '#fff',
+      },
     },
     MuiSvgIcon: {
       fontSizeSmall: {
-        color: '#999ea4'
-      }
+        color: '#999ea4',
+      },
     },
     MuiAppBar: {
       colorPrimary: {
         backgroundColor: '#202124',
-        color: '#999ea4'
-      }
-    },
-    MuiTypography: {
-      root: {
-        color: '#999ea4'
+        color: '#fff',
       },
-      h6: {
-        color: '#fff'
-      }
-    }
-  }
+    },
+  },
 });
