@@ -12,12 +12,9 @@ export default function completeDownloadThunk(id) {
     const pathWhenCompleted = getDownloadPath(download);
     await rename(getPartialDownloadPath(download), pathWhenCompleted);
     dispatch(completeDownload(id));
-    console.log('Notifying');
     ipcRenderer.send('notify-completion', {
       filePath: getDownloadPath(download)
     });
-    console.log('Notified');
-
     if (download.openWhenDone) open(pathWhenCompleted);
   };
 }
