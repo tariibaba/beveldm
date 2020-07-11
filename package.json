@@ -21,7 +21,7 @@
     "win": {
       "target": [
         {
-          "target": "msi",
+          "target": "exe",
           "arch": [
             "ia32",
             "x64"
