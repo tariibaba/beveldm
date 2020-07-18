@@ -75,7 +75,8 @@ export default function downloadFile(id, res) {
             firstTimeoutRunning = false;
             shouldSkipSecondTimeout = true;
             res.pause();
-            await writeSlicedBuffer();
+            saveData = state.settings.saveData;
+            if (saveData) await writeSlicedBuffer();
           });
         }
         if (!firstTimeoutElapsed) {
