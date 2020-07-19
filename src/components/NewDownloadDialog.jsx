@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,12 +6,9 @@ import {
   TextField,
   DialogActions,
   Button,
-  IconButton,
 } from '@material-ui/core';
-import { FolderOpen } from '@material-ui/icons';
-import { clipboard, ipcRenderer } from 'electron';
+import { clipboard } from 'electron';
 import validUrl from 'valid-url';
-import pathExists from 'path-exists';
 import when from 'when-expression';
 import { connect } from 'react-redux';
 import { addNewDownloadThunk } from '../thunks';
@@ -21,24 +18,8 @@ import youtubeUrl from 'youtube-url';
 
 function NewDownloadDialog({ type, open, onAdd, onClose }) {
   const [url, setUrl] = useState('');
-  const [dirname, setDirname] = useState('');
   let [urlHelperText, setUrlHelperText] = useState(null);
-  let [dirnameHelperText, setDirnameHelperText] = useState(null);
-  const dirnameRef = useRef();
-  const formSubmittable =
-    url && dirname && !urlHelperText && !dirnameHelperText;
-
-  useEffect(() => {
-    const listener = (_event, args) => {
-      if (args) setDirname(args);
-      dirnameRef.current.focus();
-    };
-    ipcRenderer.on('choosen-file', listener);
-
-    return () => {
-      ipcRenderer.removeListener('choosen-file', listener);
-    };
-  }, []);
+  const formSubmittable = url && !urlHelperText;
 
   useEffect(() => {
     if (open) {
@@ -46,14 +27,6 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
       setUrl((validUrl.isWebUri(clipboardText) && clipboardText) || '');
     }
   }, [open]);
-
-  useEffect(() => {
-    (async () => {
-      if (dirname && !(await pathExists(dirname))) {
-        setDirnameHelperText("This folder doesn't exist");
-      } else setDirnameHelperText(null);
-    })();
-  }, [dirname]);
 
   useEffect(() => {
     if (url && !validUrl.isWebUri(url)) {
@@ -67,20 +40,11 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
     setUrl(event.target.value);
   };
 
-  const handleDirnameChange = (event) => {
-    setDirname(event.target.value);
-  };
-
-  const handleChooseDir = () => {
-    ipcRenderer.send('choose-file');
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     onClose();
-    onAdd(type, url, dirname);
+    onAdd(type, url);
     setUrl('');
-    setDirname('');
   };
 
   const handleCancel = onClose;
@@ -111,21 +75,6 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
 
           <br />
 
-          <TextField
-            name="dirname"
-            type="text"
-            label="Save Folder"
-            inputRef={dirnameRef}
-            error={dirnameHelperText !== null}
-            helperText={dirnameHelperText}
-            onChange={handleDirnameChange}
-            value={dirname}
-          />
-
-          <IconButton onClick={handleChooseDir}>
-            <FolderOpen />
-          </IconButton>
-
           <DialogActions>
             <Button type="submit" disabled={!formSubmittable}>
               Add
@@ -147,11 +96,11 @@ export default connect(
       (dialog.type === 'addtoall' || dialog.type === 'addyoutube'),
   }),
   (dispatch) => ({
-    onAdd(type, url, dirname) {
+    onAdd(type, url) {
       if (type === 'addtoall') {
-        dispatch(addNewDownloadThunk(url, dirname));
+        dispatch(addNewDownloadThunk(url));
       } else {
-        dispatch(addNewYoutubeDownloadThunk(url, dirname));
+        dispatch(addNewYoutubeDownloadThunk(url));
       }
     },
     onClose() {

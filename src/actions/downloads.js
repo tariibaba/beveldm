@@ -16,24 +16,23 @@ import {
   TOGGLE_OPEN_WHEN_DONE,
   CHANGE_DOWNLOAD_SPEED,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
-  CHOSEN_YOUTUBE_FORMAT
+  CHOSEN_YOUTUBE_FORMAT,
 } from './constants';
 
-export function addNewDownload(id, dtype, url, dirname) {
+export function addNewDownload(id, dtype, url) {
   return {
     type: ADD_NEW_DOWNLOAD,
     dtype,
     id,
     url,
-    dirname,
-    status: 'gettinginfo'
+    status: 'gettinginfo',
   };
 }
 
 export function removeDownload(id) {
   return {
     type: REMOVE_DOWNLOAD,
-    id
+    id,
   };
 }
 
@@ -42,7 +41,7 @@ export function changeDownloadUrl(id, url) {
     type: CHANGE_DOWNLOAD_URL,
     id,
     url,
-    res: undefined
+    res: undefined,
   };
 }
 
@@ -59,7 +58,7 @@ export function changeDownloadInfo(
     defaultFilename,
     availableFilename,
     size,
-    resumable
+    resumable,
   };
 }
 
@@ -67,7 +66,7 @@ export function showDownload(id) {
   return {
     type: SHOW_DOWNLOAD,
     id,
-    show: true
+    show: true,
   };
 }
 
@@ -75,7 +74,7 @@ export function hideDownload(id) {
   return {
     type: HIDE_DOWNLOAD,
     id,
-    show: false
+    show: false,
   };
 }
 
@@ -83,12 +82,13 @@ export function setDownloadRes(id, res) {
   return {
     type: SET_DOWNLOAD_RES,
     id,
-    res
+    res,
   };
 }
 
 export function gotDownloadInfo(
   id,
+  dirname,
   defaultFilename,
   availableFilename,
   size,
@@ -99,6 +99,7 @@ export function gotDownloadInfo(
   return {
     type: GOT_DOWNLOAD_INFO,
     id,
+    dirname,
     defaultFilename,
     availableFilename,
     speed: 0,
@@ -109,7 +110,7 @@ export function gotDownloadInfo(
     status: 'notstarted',
     show: true,
     timestamp,
-    openWhenDone
+    openWhenDone,
   };
 }
 
@@ -117,7 +118,7 @@ export function downloadProgressing(id) {
   return {
     type: DOWNLOAD_PROGRESSING,
     id,
-    status: 'progressing'
+    status: 'progressing',
   };
 }
 
@@ -125,7 +126,7 @@ export function pauseDownload(id) {
   return {
     type: PAUSE_DOWNLOAD,
     id,
-    status: 'paused'
+    status: 'paused',
   };
 }
 
@@ -134,7 +135,7 @@ export function cancelDownload(id) {
     type: CANCEL_DOWNLOAD,
     id,
     res: undefined,
-    status: 'canceled'
+    status: 'canceled',
   };
 }
 
@@ -142,7 +143,7 @@ export function downloadFileRemoved(id) {
   return {
     type: DOWNLOAD_FILE_REMOVED,
     id,
-    status: 'removed'
+    status: 'removed',
   };
 }
 
@@ -150,7 +151,7 @@ export function completeDownload(id) {
   return {
     type: COMPLETE_DOWNLOAD,
     id,
-    status: 'complete'
+    status: 'complete',
   };
 }
 
@@ -160,7 +161,7 @@ export function showDownloadError(id, error) {
     id,
     res: undefined,
     status: 'error',
-    error
+    error,
   };
 }
 
@@ -168,7 +169,7 @@ export function toggleOpenWhenDone(id, value) {
   return {
     type: TOGGLE_OPEN_WHEN_DONE,
     id,
-    value
+    value,
   };
 }
 
@@ -176,7 +177,7 @@ export function changeDownloadSpeed(id, speed) {
   return {
     type: CHANGE_DOWNLOAD_SPEED,
     id,
-    speed
+    speed,
   };
 }
 
@@ -184,12 +185,13 @@ export function updateBytesDownloadedShown(id, bytesDownloadedShown) {
   return {
     type: UPDATE_BYTES_DOWNLOADED_SHOWN,
     id,
-    bytesDownloadedShown
+    bytesDownloadedShown,
   };
 }
 
 export function chosenYouTubeFormat(
   id,
+  dirname,
   defaultFilename,
   availableFilename,
   size,
@@ -200,6 +202,7 @@ export function chosenYouTubeFormat(
   return {
     type: CHOSEN_YOUTUBE_FORMAT,
     id,
+    dirname,
     defaultFilename,
     availableFilename,
     size,
@@ -211,6 +214,6 @@ export function chosenYouTubeFormat(
     show: true,
     resumable: true,
     timestamp,
-    openWhenDone
+    openWhenDone,
   };
 }

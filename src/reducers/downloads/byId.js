@@ -45,13 +45,12 @@ export default createReducer(
 );
 
 function addNewDownload(state, action) {
-  const { id, dtype, url, dirname, status } = action;
+  const { id, dtype, url, status } = action;
   return {
     [id]: {
       id,
       type: dtype,
       url,
-      dirname,
       status,
     },
     ...state,
@@ -113,6 +112,7 @@ function gotDownloadInfo(state, action) {
   return updateObject(state, {
     [action.id]: updateObject(state[action.id], {
       status: action.status,
+      dirname: action.dirname,
       defaultFilename: action.defaultFilename,
       availableFilename: action.availableFilename,
       speed: action.speed,
@@ -178,6 +178,7 @@ function updateBytesDownloadedShown(state, action) {
 function chosenYouTubeFormat(state, action) {
   return updateObject(state, {
     [action.id]: updateObject(state[action.id], {
+      dirname: action.dirname,
       defaultFilename: action.defaultFilename,
       availableFilename: action.availableFilename,
       size: action.size,

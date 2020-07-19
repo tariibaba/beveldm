@@ -5,6 +5,7 @@ import {
   TOGGLE_ALWAYS_OPEN_DOWNLOADS_WHEN_DONE,
   TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
   TOGGLE_LAUNCH_AT_STARTUP,
+  TOGGLE_USE_CUSTOM_SAVE_FOLDER,
 } from './constants';
 
 export function toggleSaveData(value) {
@@ -45,6 +46,13 @@ export function toggleStartDownloadsAutomatically(value) {
 export function toggleLaunchAtStartup(value) {
   return {
     type: TOGGLE_LAUNCH_AT_STARTUP,
+    value,
+  };
+}
+
+export function toggleUseCustomSaveFolder(value) {
+  return {
+    type: TOGGLE_USE_CUSTOM_SAVE_FOLDER,
     value,
   };
 }

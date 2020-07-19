@@ -18,6 +18,7 @@ import {
   changeTheme,
   toggleAlwaysOpenDownloadsWhenDone,
   toggleStartDownloadsAutomatically,
+  toggleUseCustomSaveFolder,
 } from '../actions';
 import { toggleLaunchAtStartup } from '../thunks';
 
@@ -90,6 +91,7 @@ function SettingsPage({
   alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically,
   launchAtStartup,
+  useCustomSaveFolder,
 }) {
   const [appBarRaised, setAppBarRaised] = useState(false);
   const classes = useStyles();
@@ -112,6 +114,10 @@ function SettingsPage({
 
   const handleToggleLaunchAtStartup = (event) => {
     dispatch(toggleLaunchAtStartup(event.target.checked));
+  };
+
+  const handleToggleUseCustomFolder = (event) => {
+    dispatch(toggleUseCustomSaveFolder(event.target.checked));
   };
 
   const handleScroll = (event) => setAppBarRaised(event.target.scrollTop > 0);
@@ -168,6 +174,16 @@ function SettingsPage({
                 onChange={handleToggleLaunchAtStartup}
               />
             </div>
+            <div className={classes.setting}>
+              <Typography>
+                Ask where to save each file before downloading
+              </Typography>
+              <Switch
+                color="primary"
+                checked={useCustomSaveFolder}
+                onChange={handleToggleUseCustomFolder}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -180,4 +196,5 @@ export default connect(({ settings }) => ({
   alwaysOpenDownloadsWhenDone: settings.alwaysOpenDownloadsWhenDone,
   startDownloadsAutomatically: settings.startDownloadsAutomatically,
   launchAtStartup: settings.launchAtStartup,
+  useCustomSaveFolder: settings.useCustomSaveFolder,
 }))(SettingsPage);

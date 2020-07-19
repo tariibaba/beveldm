@@ -5,7 +5,12 @@ import {
   notify,
   openDialog,
 } from '../actions';
-import { getFilename, getFileSize, getAvailableFilename } from '../utilities';
+import {
+  getFilename,
+  getFileSize,
+  getAvailableFilename,
+  chooseFile,
+} from '../utilities';
 import { v4 } from 'uuid';
 import ytdl from 'ytdl-core';
 import filenameReservedRegex from 'filename-reserved-regex';
@@ -15,15 +20,16 @@ import isOnline from 'is-online';
 import http from 'http';
 import https from 'https';
 import startDownload from './start-download';
+import { remote } from 'electron';
 
-export default function addNewDownloadThunk(url, dirname) {
+export default function addNewDownloadThunk(url) {
   return async (dispatch, getState) => {
     if (youtubeUrl.valid(url)) {
-      return dispatch(addNewYoutubeDownloadThunk(url, dirname));
+      return dispatch(addNewYoutubeDownloadThunk(url));
     }
 
     const id = v4();
-    dispatch(addNewDownload(id, 'file', url, dirname));
+    dispatch(addNewDownload(id, 'file', url));
 
     const protocol = new URL(url).protocol === 'http:' ? http : https;
 
@@ -35,7 +41,7 @@ export default function addNewDownloadThunk(url, dirname) {
           dispatch(removeDownload(id));
           dispatch(
             notify('error', 'Network error', 'Retry', () =>
-              dispatch(addNewDownloadThunk(url, dirname))
+              dispatch(addNewDownloadThunk(url))
             )
           );
         })
@@ -53,10 +59,19 @@ export default function addNewDownloadThunk(url, dirname) {
     const size = getFileSize(res.headers);
 
     const { downloads, settings } = getState();
+    const dirname = settings.useCustomSaveFolder
+      ? await chooseFile()
+      : remote.app.getPath('downloads');
+
+    if (!dirname) {
+      dispatch(removeDownload(id));
+      return;
+    }
 
     dispatch(
       gotDownloadInfo(
         id,
+        dirname,
         filename,
         await getAvailableFilename(dirname, filename, downloads),
         size,
@@ -72,16 +87,16 @@ export default function addNewDownloadThunk(url, dirname) {
   };
 }
 
-export function addNewYoutubeDownloadThunk(url, dirname) {
+export function addNewYoutubeDownloadThunk(url) {
   return async (dispatch) => {
     const id = v4();
-    dispatch(addNewDownload(id, 'youtube', url, dirname));
+    dispatch(addNewDownload(id, 'youtube', url));
 
     if (!(await isOnline())) {
       dispatch(removeDownload(id));
       dispatch(
         notify('error', 'Network error', 'Retry', () =>
-          dispatch(addNewYoutubeDownloadThunk(url, dirname))
+          dispatch(addNewYoutubeDownloadThunk(url))
         )
       );
       return;
