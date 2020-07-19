@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerClose: {
     [theme.breakpoints.down('md')]: {
-      left: -drawerWidth - 10,
+      left: -drawerWidth - 20,
       transition: theme.transitions.create('left', {
         duration: theme.transitions.duration.leavingScreen,
         easing: theme.transitions.easing.sharp,
