@@ -80,10 +80,6 @@ ipcMain.on('set-progress', (_event, args) => {
   mainWindow.setProgressBar(args);
 });
 
-ipcMain.on('clear-progress', () => {
-  mainWindow.setProgressBar(0, { mode: 'none' });
-});
-
 ipcMain.on('react-loaded', (event) => {
   reactHasLoaded = true;
   event.reply('system-theme-changed', nativeTheme.shouldUseDarkColors);

@@ -25,7 +25,4 @@ export default function setTaskbarProgress(downloads) {
   if (downloadsIsOnlyGettingInfo) {
     ipcRenderer.send('set-progress-indeterminate');
   } else ipcRenderer.send('set-progress', activeDownloadsProgress);
-
-  // If there's just one active download and it's complete
-  if (activeDownloadsProgress === 1) ipcRenderer.send('clear-progress');
 }
