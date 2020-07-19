@@ -5,18 +5,22 @@ import {
   SHOW_DOWNLOAD_ERROR,
   DOWNLOAD_PROGRESSING,
   COMPLETE_DOWNLOAD,
-  UPDATE_BYTES_DOWNLOADED_SHOWN
+  UPDATE_BYTES_DOWNLOADED_SHOWN,
+  GOT_DOWNLOAD_INFO,
+  REMOVE_DOWNLOAD,
 } from '../actions';
 
 export default function windowProgressSyncer(store) {
-  return next => action => {
+  return (next) => (action) => {
     const watchedActionTypes = [
       UPDATE_BYTES_DOWNLOADED_SHOWN,
       CANCEL_DOWNLOAD,
       ADD_NEW_DOWNLOAD,
       SHOW_DOWNLOAD_ERROR,
       DOWNLOAD_PROGRESSING,
-      COMPLETE_DOWNLOAD
+      COMPLETE_DOWNLOAD,
+      GOT_DOWNLOAD_INFO,
+      REMOVE_DOWNLOAD,
     ];
 
     const result = next(action);
