@@ -155,13 +155,13 @@ export function completeDownload(id) {
   };
 }
 
-export function showDownloadError(id, error) {
+export function showDownloadError(id, errorCode) {
   return {
     type: SHOW_DOWNLOAD_ERROR,
     id,
     res: undefined,
     status: 'error',
-    error,
+    error: { code: errorCode },
   };
 }
 

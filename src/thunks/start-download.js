@@ -23,7 +23,7 @@ export default function startDownload(id) {
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         if (download.defaultFilename !== filename || download.size !== size) {
-          dispatch(downloadErrorThunk(id, { code: 'EFILECHANGED' }));
+          dispatch(downloadErrorThunk(id, 'EFILECHANGED'));
         } else dispatch(downloadFile(id, res));
         break;
       case 'youtube':

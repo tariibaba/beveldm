@@ -18,17 +18,17 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
         .get(url, options)
         .on('response', (res) => {
           if (res.statusCode === 403) {
-            dispatch(downloadErrorThunk(id, { code: 'EFORBIDDEN' }));
+            dispatch(downloadErrorThunk(id, 'EFORBIDDEN'));
             reject('EFORBIDDEN');
           }
           if (res.statusCode === 416) {
-            dispatch(downloadErrorThunk(id, { code: 'ERANGENOTSATISFIABLE' }));
+            dispatch(downloadErrorThunk(id, 'ERANGENOTSATISFIABLE'));
             reject('ERANGENOTSATISFIABLE');
           }
           resolve(res);
         })
         .on('error', (err) => {
-          dispatch(downloadErrorThunk(id, { code: err.code }));
+          dispatch(downloadErrorThunk(id, err.code));
         });
     });
   };
@@ -44,13 +44,13 @@ export function makePartialYouTubeRequest(id, url, rangeStart, rangeEnd) {
       })
         .on('response', (res) => {
           if (res.statusCode === 403) {
-            dispatch(downloadErrorThunk(id, { code: 'EFORBIDDEN' }));
+            dispatch(downloadErrorThunk(id, 'EFORBIDDEN'));
             reject('EFORBIDDEN');
           }
           resolve(res);
         })
         .on('error', (err) => {
-          dispatch(downloadErrorThunk(id, { code: err.code }));
+          dispatch(downloadErrorThunk(id, err.code));
         });
     });
   };

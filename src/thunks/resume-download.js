@@ -49,7 +49,7 @@ export default function resumeDownload(id) {
         ? download.bytesDownloaded + contentLength
         : contentLength;
       if (download.defaultFilename !== filename || download.size !== size) {
-        dispatch(downloadErrorThunk(id, { code: 'EFILECHANGED' }));
+        dispatch(downloadErrorThunk(id, 'EFILECHANGED'));
       } else {
         if (!download.resumable) dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(downloadFile(id, res));
