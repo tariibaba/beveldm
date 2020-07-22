@@ -15,7 +15,9 @@ export default function (id, errorCode) {
         filePath: getDownloadPath(download),
       });
     } else {
-      download.error = { code: errorCode }; // Mutate object to prevent UI change
+      // Mutate object to prevent UI change
+      download.status = 'error';
+      download.error = { code: errorCode };
       download.res = null;
       dispatch(resumeDownload(id));
     }
