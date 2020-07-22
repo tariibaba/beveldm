@@ -1,7 +1,6 @@
 import { showDownloadError } from '../actions';
 import { ipcRenderer } from 'electron';
 import { getDownloadPath } from '../utilities';
-import Timeout from 'await-timeout';
 import resumeDownload from './resume-download';
 
 export default function (id, error) {
@@ -17,10 +16,7 @@ export default function (id, error) {
     } else {
       download.error = error; // Mutate object to prevent UI change
       download.res = null;
-      const secondsToWait = 60000; // One minute
-      await new Timeout().set(secondsToWait);
-      download = getState().downloads.byId[id];
-      if (download.status === 'error') dispatch(resumeDownload(id));
+      dispatch(resumeDownload(id));
     }
   };
 }
