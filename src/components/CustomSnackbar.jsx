@@ -3,15 +3,16 @@ import { Slide, Snackbar, Button, SnackbarContent } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { NOTIFICATION_SHOW_DURATION } from '../constants';
+import { useRef } from 'react';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   actionButton: {
     textTransform: 'none',
-    color: '#fff'
+    color: '#fff',
   },
   error: {
-    backgroundColor: theme.palette.error.dark
-  }
+    backgroundColor: theme.palette.error.dark,
+  },
 }));
 
 function TransitionUp(props) {
@@ -23,21 +24,42 @@ function CustomSnackbar({
   message,
   actionName,
   action,
-  notification
+  notification,
 }) {
   const [open, setOpen] = useState(false);
+  const [derivedState, setDerivedState] = useState({
+    message,
+    actionName,
+    action,
+    variant,
+  });
+  const timeout = useRef();
 
   useEffect(() => {
-    if (message) setOpen(true);
-  }, [notification, message]);
+    if (message) {
+      if (open) {
+        clearTimeout(timeout.current);
+        setOpen(false);
+        timeout.current = setTimeout(() => {
+          setDerivedState({ message, actionName, action, variant });
+          setOpen(true);
+        }, 400);
+      } else {
+        setDerivedState({ message, actionName, action, variant });
+        setOpen(true);
+      }
+    }
 
-  const handleClose = (event, reason) => {
+    return () => clearTimeout(timeout.current);
+  }, [notification]);
+
+  const handleClose = (_event, reason) => {
     if (reason === 'clickaway') return;
     setOpen(false);
   };
 
   const handleAction = () => {
-    action();
+    derivedState.action();
     setOpen(false);
   };
 
@@ -52,18 +74,18 @@ function CustomSnackbar({
       onClose={handleClose}
     >
       <SnackbarContent
-        className={classes[variant]}
-        message={<span>{message}</span>}
+        className={classes[derivedState.variant]}
+        message={<span>{derivedState.message}</span>}
         action={[
-          actionName && (
+          derivedState.actionName && (
             <Button
               key={0}
               className={classes.actionButton}
               onClick={handleAction}
             >
-              {actionName}
+              {derivedState.actionName}
             </Button>
-          )
+          ),
         ]}
       />
     </Snackbar>
@@ -76,5 +98,5 @@ export default connect(({ currentNotification }) => ({
   actionName: currentNotification.actionName,
   action: currentNotification.action,
   // Also passing the full object to detect when it has changed even with the same props
-  notification: currentNotification
+  notification: currentNotification,
 }))(CustomSnackbar);
