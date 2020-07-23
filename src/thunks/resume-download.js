@@ -79,11 +79,14 @@ function resumeFromError(id, code) {
         dispatch(setDownloadRes(id, res));
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
-        const availableFilename = await getAvailableFilename(
-          download.dirname,
-          filename,
-          state.downloads
-        );
+        const availableFilename =
+          download.filename === filename
+            ? download.availableFilename
+            : await getAvailableFilename(
+                download.dirname,
+                filename,
+                state.downloads
+              );
         const resumable = res.statusCode === 206;
 
         dispatch(
