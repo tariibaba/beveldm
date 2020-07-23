@@ -136,6 +136,9 @@ const useStyles = makeStyles((theme) => ({
   typography: {
     fontSize: 13,
   },
+  linerProgressBar: {
+    transition: 'none',
+  },
 }));
 
 function Download({
@@ -324,6 +327,9 @@ function Download({
               value={(bytesDownloadedShown / size) * 100}
               variant="determinate"
               className={classes.colorLinearProgress}
+              classes={{
+                bar: bytesDownloadedShown === 0 && classes.linerProgressBar,
+              }}
             />
           )}
 

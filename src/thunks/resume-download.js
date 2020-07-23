@@ -2,6 +2,7 @@ import {
   changeDownloadInfo,
   setDownloadRes,
   downloadProgressing,
+  updateBytesDownloadedShown,
 } from '../actions';
 import {
   getAvailableFilename,
@@ -94,6 +95,7 @@ function resumeFromError(id, code) {
           changeDownloadInfo(id, filename, availableFilename, size, resumable)
         );
         dispatch(updateBytesDownloadedThunk(id, 0));
+        dispatch(updateBytesDownloadedShown(id, 0));
         dispatch(downloadFile(id, res));
         break;
       case 'ECONNRESET':
