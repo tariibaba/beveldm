@@ -67,6 +67,7 @@ function resumeFromError(id, code) {
 
     switch (code) {
       case 'EFILECHANGED':
+      case 'HPE_INVALID_CONTENT_LENGTH':
         const fullpath = getPartialDownloadPath(download);
         deleteFile(fullpath);
 

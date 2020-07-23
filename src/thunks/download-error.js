@@ -7,7 +7,12 @@ export default function (id, errorCode) {
   return async (dispatch, getState) => {
     let download = getState().downloads.byId[id];
     if (
-      ['EFILECHANGED', 'EFORBIDDEN', 'ERANGENOTSATISFIABLE'].includes(errorCode)
+      [
+        'EFILECHANGED',
+        'EFORBIDDEN',
+        'ERANGENOTSATISFIABLE',
+        'HPE_INVALID_CONTENT_LENGTH',
+      ].includes(errorCode)
     ) {
       dispatch(showDownloadError(id, errorCode));
       ipcRenderer.send('notify-fail', {

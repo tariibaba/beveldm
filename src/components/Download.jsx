@@ -257,6 +257,7 @@ function Download({
                       EFORBIDDEN: 'Failed - Forbidden',
                       ETIMEDOUT: 'Failed - Network error',
                       ERANGENOTSATISFIABLE: 'Failed - Range not satisfiable',
+                      HPE_INVALID_CONTENT_LENGTH: 'Failed - File changed',
                       else: null,
                     })
                   : null,

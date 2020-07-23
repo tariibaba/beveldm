@@ -29,6 +29,7 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
         })
         .on('error', (err) => {
           dispatch(downloadErrorThunk(id, err.code));
+          reject(err.code);
         });
     });
   };
@@ -51,6 +52,7 @@ export function makePartialYouTubeRequest(id, url, rangeStart, rangeEnd) {
         })
         .on('error', (err) => {
           dispatch(downloadErrorThunk(id, err.code));
+          reject(err.code);
         });
     });
   };
