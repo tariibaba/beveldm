@@ -82,7 +82,7 @@ function resumeFromError(id, code) {
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         const availableFilename =
-          download.filename === filename
+          download.defaultFilename === filename
             ? download.availableFilename
             : await getAvailableFilename(
                 download.dirname,
