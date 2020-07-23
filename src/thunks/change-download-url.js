@@ -1,12 +1,18 @@
 import pauseDownload from './pause-download';
-import { changeDownloadUrl } from '../actions';
+import { changeDownloadUrl, notify } from '../actions';
 
 export default function changeDownloadUrlThunk(id, newUrl) {
-  return async (dispatch, getState) => {
-    const download = getState().downloads.byId[id];
-    if (['progressing', 'error'].includes(download.status)) {
-      dispatch(pauseDownload(id));
-    }
-    dispatch(changeDownloadUrl(id, newUrl));
+  return (dispatch, getState) => {
+    let download;
+    const changeUrl = (url) => {
+      download = getState().downloads.byId[id];
+      if (['progressing', 'error'].includes(download.status)) {
+        dispatch(pauseDownload(id));
+      }
+      dispatch(changeDownloadUrl(id, url));
+    };
+    changeUrl(newUrl);
+    const formerUrl = download.url;
+    dispatch(notify('info', 'Changed URL', 'Undo', () => changeUrl(formerUrl)));
   };
 }
