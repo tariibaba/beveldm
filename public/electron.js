@@ -176,6 +176,9 @@ function createWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
   mainWindow.on('close', windowClose);
+  mainWindow.on('show', () =>
+    mainWindow.webContents.send('set-window-progress')
+  );
 
   initTray();
 }

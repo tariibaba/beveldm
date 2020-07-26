@@ -8,7 +8,7 @@ import { lightTheme, darkTheme } from './themes';
 import { toggleDarkMode } from './actions';
 import SettingsPage from './components/SettingsPage';
 import { connect } from 'react-redux';
-import { cleanUp } from './utilities';
+import { cleanUp, setTaskbarProgress } from './utilities';
 import CustomSnackbar from './components/CustomSnackbar';
 import { withStyles } from '@material-ui/core';
 
@@ -45,6 +45,9 @@ class App extends Component {
     });
     ipcRenderer.on('system-theme-changed', this.changeDarkMode.bind(this));
     ipcRenderer.on('before-close', this.saveState.bind(this));
+    ipcRenderer.on('set-window-progress', () =>
+      setTaskbarProgress(this.props.reduxState.downloads)
+    );
   }
 
   componentDidUpdate(prevProps) {
