@@ -4,6 +4,7 @@ import {
   removeDownload,
   notify,
   openDialog,
+  changeDownloadUrl,
 } from '../actions';
 import {
   getFilename,
@@ -31,59 +32,69 @@ export default function addNewDownloadThunk(url) {
     const id = v4();
     dispatch(addNewDownload(id, 'file', url));
 
-    const protocol = new URL(url).protocol === 'http:' ? http : https;
+    const getDownloadInfo = async (downloadUrl) => {
+      const protocol = new URL(downloadUrl).protocol === 'http:' ? http : https;
+      const res = await new Promise((resolve) =>
+        protocol
+          .get(downloadUrl, { headers: { Range: 'bytes=0-' } })
+          .on('response', (res) => resolve(res))
+          .on('error', () => {
+            dispatch(removeDownload(id));
+            dispatch(
+              notify('error', 'Network error', 'Retry', () =>
+                dispatch(addNewDownloadThunk(url))
+              )
+            );
+          })
+      );
+      res.destroy();
 
-    const res = await new Promise(async (resolve) =>
-      protocol
-        .get(url, { headers: { Range: 'bytes=0-' } })
-        .on('response', (res) => resolve(res))
-        .on('error', () => {
-          dispatch(removeDownload(id));
-          dispatch(
-            notify('error', 'Network error', 'Retry', () =>
-              dispatch(addNewDownloadThunk(url))
-            )
-          );
-        })
-    );
-    res.destroy();
+      if (res.statusCode === 403) {
+        dispatch(removeDownload(id));
+        dispatch(notify('error', 'Forbidden request'));
+        return;
+      } else if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
+        const location = res.headers['Location'] || res.headers['location'];
+        if (location) {
+          const newUrl = new URL(location, new URL(url).origin).href;
+          dispatch(changeDownloadUrl(id, newUrl));
+          getDownloadInfo(newUrl);
+          return;
+        }
+      }
 
-    if (res.statusCode === 403) {
-      dispatch(removeDownload(id));
-      dispatch(notify('error', 'Forbidden request'));
-      return;
-    }
+      // Get info from the request.
+      const filename = getFilename(downloadUrl, res.headers);
+      const size = getFileSize(res.headers);
 
-    // Get info from the request.
-    const filename = getFilename(url, res.headers);
-    const size = getFileSize(res.headers);
+      const { downloads, settings } = getState();
+      const dirname = settings.useCustomSaveFolder
+        ? await chooseFile()
+        : remote.app.getPath('downloads');
 
-    const { downloads, settings } = getState();
-    const dirname = settings.useCustomSaveFolder
-      ? await chooseFile()
-      : remote.app.getPath('downloads');
+      if (!dirname) {
+        dispatch(removeDownload(id));
+        return;
+      }
 
-    if (!dirname) {
-      dispatch(removeDownload(id));
-      return;
-    }
+      dispatch(
+        gotDownloadInfo(
+          id,
+          dirname,
+          filename,
+          await getAvailableFilename(dirname, filename, downloads),
+          size,
+          res.statusCode === 206 || res.headers['Accept-Ranges'] === 'bytes',
+          settings.alwaysOpenDownloadsWhenDone,
+          Date.now()
+        )
+      );
 
-    dispatch(
-      gotDownloadInfo(
-        id,
-        dirname,
-        filename,
-        await getAvailableFilename(dirname, filename, downloads),
-        size,
-        res.statusCode === 206 || res.headers['Accept-Ranges'] === 'bytes',
-        settings.alwaysOpenDownloadsWhenDone,
-        Date.now()
-      )
-    );
-
-    if (settings.startDownloadsAutomatically) {
-      dispatch(startDownload(id));
-    }
+      if (settings.startDownloadsAutomatically) {
+        dispatch(startDownload(id));
+      }
+    };
+    await getDownloadInfo(url);
   };
 }
 
