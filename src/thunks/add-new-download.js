@@ -51,7 +51,7 @@ export default function addNewDownloadThunk(url) {
 
       if (res.statusCode === 403) {
         dispatch(removeDownload(id));
-        dispatch(notify('error', 'Forbidden request'));
+        dispatch(notify('error', 'Forbidden'));
         return;
       } else if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
         const location = res.headers['Location'] || res.headers['location'];
