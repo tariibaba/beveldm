@@ -35,9 +35,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.theme = this.props.reduxState.settings.theme;
-    ipcRenderer.send('change-theme', this.theme);
     this.props.dispatch(loadState()).then(() => {
+      this.theme = this.props.reduxState.settings.theme;
+      ipcRenderer.send('change-theme', this.theme);
       this.setState({ loaded: true });
       this.page = this.props.reduxState.page;
       this.props.dispatch(updateDownloadsProgressPeriodically());
