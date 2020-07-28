@@ -1,8 +1,9 @@
 import { setDownloadRes, downloadProgressing } from '../actions';
 import { getFilename, getFileSize } from '../utilities';
 import downloadFile from './download-file';
-import makeRequest, { makeYouTubeRequest } from './make-request';
 import downloadErrorThunk from './download-error';
+import makeYouTubeRequest from './make-youtube-request';
+import makePartialRequest from './make-partial-request';
 
 export default function startDownload(id) {
   return async (dispatch, getState) => {
@@ -13,7 +14,7 @@ export default function startDownload(id) {
     let res;
     switch (download.type) {
       case 'file':
-        res = await dispatch(makeRequest(id, download.url));
+        res = await dispatch(makePartialRequest(id, download.url));
 
         // The download status might have changed since making the request.
         download = getState().downloads.byId[id];
