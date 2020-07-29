@@ -100,7 +100,7 @@ ipcMain.on('saved', () => {
 const appId = 'com.tariibaba.beveldm';
 
 ipcMain.on('notify-completion', (_event, args) => {
-  if (mainWindow.isVisible()) return;
+  if (mainWindow.isVisible() && mainWindow.isFocused()) return;
 
   notifier.notify(
     {
@@ -120,7 +120,7 @@ ipcMain.on('notify-completion', (_event, args) => {
 });
 
 ipcMain.on('notify-fail', (_event, args) => {
-  if (mainWindow.isVisible()) return;
+  if (mainWindow.isVisible() && mainWindow.isFocused()) return;
 
   const title = when(args.code)({
     EFILECHANGED: 'Failed - File changed',
