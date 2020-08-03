@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Slide, Snackbar, Button, SnackbarContent } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { NOTIFICATION_SHOW_DURATION } from '../constants';
 import { useRef } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,14 +21,14 @@ function TransitionUp(props) {
 function CustomSnackbar({
   variant,
   message,
-  actionName,
+  responseCallback = () => {},
   action,
   notification,
 }) {
   const [open, setOpen] = useState(false);
   const [derivedState, setDerivedState] = useState({
     message,
-    actionName,
+    responseCallback,
     action,
     variant,
   });
@@ -41,25 +40,28 @@ function CustomSnackbar({
         clearTimeout(timeout.current);
         setOpen(false);
         timeout.current = setTimeout(() => {
-          setDerivedState({ message, actionName, action, variant });
+          setDerivedState({ message, action, responseCallback, variant });
           setOpen(true);
         }, 400);
       } else {
-        setDerivedState({ message, actionName, action, variant });
+        setDerivedState({ message, action, responseCallback, variant });
         setOpen(true);
       }
     }
 
     return () => clearTimeout(timeout.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notification]);
 
   const handleClose = (_event, reason) => {
-    if (reason === 'clickaway') return;
-    setOpen(false);
+    if (reason !== 'clickaway') {
+      responseCallback('timeout');
+      setOpen(false);
+    }
   };
 
   const handleAction = () => {
-    derivedState.action();
+    responseCallback(action.toLowerCase());
     setOpen(false);
   };
 
@@ -70,20 +72,20 @@ function CustomSnackbar({
       open={open}
       TransitionComponent={TransitionUp}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      autoHideDuration={NOTIFICATION_SHOW_DURATION}
+      autoHideDuration={10000}
       onClose={handleClose}
     >
       <SnackbarContent
         className={classes[derivedState.variant]}
         message={<span>{derivedState.message}</span>}
         action={[
-          derivedState.actionName && (
+          derivedState.action && (
             <Button
               key={0}
               className={classes.actionButton}
               onClick={handleAction}
             >
-              {derivedState.actionName}
+              {derivedState.action}
             </Button>
           ),
         ]}
@@ -95,7 +97,7 @@ function CustomSnackbar({
 export default connect(({ currentNotification }) => ({
   variant: currentNotification.variant,
   message: currentNotification.message,
-  actionName: currentNotification.actionName,
+  responseCallback: currentNotification.responseCallback,
   action: currentNotification.action,
   // Also passing the full object to detect when it has changed even with the same props
   notification: currentNotification,

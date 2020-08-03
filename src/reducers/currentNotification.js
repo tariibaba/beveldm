@@ -12,7 +12,7 @@ function notify(state, action) {
   return updateObject(state, {
     variant: action.variant,
     message: action.message,
-    actionName: action.actionName,
+    responseCallback: action.responseCallback,
     action: action.action
   });
 }

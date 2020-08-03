@@ -41,9 +41,11 @@ export default function addNewDownloadThunk(url) {
           .on('error', () => {
             dispatch(removeDownload(id));
             dispatch(
-              notify('error', 'Network error', 'Retry', () =>
-                dispatch(addNewDownloadThunk(url))
-              )
+              notify('error', 'Network error', 'Retry', (responseType) => {
+                if (responseType === 'retry') {
+                  dispatch(addNewDownloadThunk(url));
+                }
+              })
             );
           })
       );
@@ -106,9 +108,11 @@ export function addNewYoutubeDownloadThunk(url) {
     if (!(await isOnline())) {
       dispatch(removeDownload(id));
       dispatch(
-        notify('error', 'Network error', 'Retry', () =>
-          dispatch(addNewYoutubeDownloadThunk(url))
-        )
+        notify('error', 'Network error', 'Retry', (responseType) => {
+          if (responseType === 'retry') {
+            dispatch(addNewYoutubeDownloadThunk(url));
+          }
+        })
       );
       return;
     }

@@ -1,11 +1,11 @@
 import { NOTIFY } from './constants';
 
-export function notify(variant, message, actionName, action) {
+export function notify(variant, message, action, responseCallback) {
   return {
     type: NOTIFY,
     variant,
     message,
-    actionName,
-    action
+    action,
+    responseCallback,
   };
 }
