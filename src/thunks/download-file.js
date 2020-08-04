@@ -3,6 +3,7 @@ import fs from 'fs';
 import { getPartialDownloadPath } from '../utilities';
 import { SAVE_DATA_LIMIT } from '../constants';
 import Timeout from 'await-timeout';
+import { setDownloadFileStream } from '../actions/downloads';
 
 export default function downloadFile(id, res) {
   return async (dispatch, getState) => {
@@ -14,6 +15,8 @@ export default function downloadFile(id, res) {
       partialDownloadPath,
       download.bytesDownloaded > 0 ? { flags: 'a' } : undefined
     );
+    dispatch(setDownloadFileStream(id, fileStream));
+
     const timeout = new Timeout();
     let buffer;
     let hasResEnded = false;
@@ -46,6 +49,9 @@ export default function downloadFile(id, res) {
 
           const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
           buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
+
+          if (fileStream.destroyed) return;
+
           await writeStreamWritePromise(fileStream, chunkToWrite);
           await dispatch(
             updateBytesDownloadedThunk(
@@ -89,7 +95,8 @@ export default function downloadFile(id, res) {
           }
         }
       } else {
-        await writeStreamWritePromise(fileStream, buffer);
+        if (fileStream.destroyed) return;
+
         await dispatch(
           updateBytesDownloadedThunk(
             id,
@@ -100,12 +107,6 @@ export default function downloadFile(id, res) {
 
         if (download.status !== 'paused') res.resume();
       }
-
-      if (hasResEnded) fileStream.close();
-    });
-
-    res.on('end', () => {
-      hasResEnded = true;
     });
   };
 }

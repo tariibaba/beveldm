@@ -18,6 +18,7 @@ import {
   CHANGE_DOWNLOAD_SPEED,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
+  SET_DOWNLOAD_FILE_STREAM,
 } from '../../actions';
 
 export default createReducer(
@@ -27,6 +28,7 @@ export default createReducer(
     [REMOVE_DOWNLOAD]: removeDownload,
     [CHANGE_DOWNLOAD_URL]: changeDownloadUrl,
     [SET_DOWNLOAD_RES]: setDownloadRes,
+    [SET_DOWNLOAD_FILE_STREAM]: setDownloadFileStream,
     [SHOW_DOWNLOAD]: setDownloadShow,
     [HIDE_DOWNLOAD]: setDownloadShow,
     [DOWNLOAD_PROGRESSING]: changeDownloadStatus,
@@ -73,11 +75,12 @@ function removeDownload(state, action) {
 }
 
 function changeDownloadUrl(state, action) {
-  const { id, url, res } = action;
+  const { id, url, res, fileStream } = action;
   return updateObject(state, {
     [id]: updateObject(state[id], {
       url,
       res,
+      fileStream,
     }),
   });
 }
@@ -98,6 +101,13 @@ function setDownloadRes(state, action) {
   const { id, res } = action;
   return updateObject(state, {
     [id]: updateObject(state[id], { res }),
+  });
+}
+
+function setDownloadFileStream(state, action) {
+  const { id, fileStream } = action;
+  return updateObject(state, {
+    [id]: updateObject(state[id], { fileStream }),
   });
 }
 
@@ -128,22 +138,24 @@ function gotDownloadInfo(state, action) {
 }
 
 function cancelDownload(state, action) {
-  const { id, status, res } = action;
+  const { id, status, res, fileStream } = action;
   return updateObject(state, {
     [id]: updateObject(state[id], {
       status,
       res,
+      fileStream,
     }),
   });
 }
 
 function showDownloadError(state, action) {
-  const { id, status, error, res } = action;
+  const { id, status, error, res, fileStream } = action;
   return updateObject(state, {
     [id]: updateObject(state[id], {
       status,
       error,
       res,
+      fileStream,
     }),
   });
 }

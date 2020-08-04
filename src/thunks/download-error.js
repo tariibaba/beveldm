@@ -6,6 +6,7 @@ import resumeDownload from './resume-download';
 export default function (id, errorCode) {
   return async (dispatch, getState) => {
     let download = getState().downloads.byId[id];
+    download.fileStream.close();
     if (
       [
         'EFILECHANGED',
@@ -24,6 +25,7 @@ export default function (id, errorCode) {
       download.status = 'error';
       download.error = { code: errorCode };
       download.res = null;
+      download.fileStream = null;
       dispatch(resumeDownload(id));
     }
   };

@@ -17,6 +17,7 @@ import {
   CHANGE_DOWNLOAD_SPEED,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
+  SET_DOWNLOAD_FILE_STREAM,
 } from './constants';
 
 export function addNewDownload(id, dtype, url) {
@@ -42,6 +43,7 @@ export function changeDownloadUrl(id, url) {
     id,
     url,
     res: undefined,
+    fileStream: undefined
   };
 }
 
@@ -84,6 +86,14 @@ export function setDownloadRes(id, res) {
     id,
     res,
   };
+}
+
+export function setDownloadFileStream(id, fileStream) {
+  return {
+    type: SET_DOWNLOAD_FILE_STREAM,
+    id,
+    fileStream
+  }
 }
 
 export function gotDownloadInfo({
@@ -135,6 +145,7 @@ export function cancelDownload(id) {
     type: CANCEL_DOWNLOAD,
     id,
     res: undefined,
+    fileStream: undefined,
     status: 'canceled',
   };
 }
@@ -160,6 +171,7 @@ export function showDownloadError(id, errorCode) {
     type: SHOW_DOWNLOAD_ERROR,
     id,
     res: undefined,
+    fileStream: undefined,
     status: 'error',
     error: { code: errorCode },
   };
