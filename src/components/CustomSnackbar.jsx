@@ -38,6 +38,7 @@ function CustomSnackbar({
     if (message) {
       if (open) {
         clearTimeout(timeout.current);
+        derivedState.responseCallback('timeout');
         setOpen(false);
         timeout.current = setTimeout(() => {
           setDerivedState({ message, action, responseCallback, variant });
@@ -55,13 +56,13 @@ function CustomSnackbar({
 
   const handleClose = (_event, reason) => {
     if (reason !== 'clickaway') {
-      responseCallback('timeout');
+      derivedState.responseCallback('timeout');
       setOpen(false);
     }
   };
 
   const handleAction = () => {
-    responseCallback(action.toLowerCase());
+    derivedState.responseCallback(action.toLowerCase());
     setOpen(false);
   };
 
