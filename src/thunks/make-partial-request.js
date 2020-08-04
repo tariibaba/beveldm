@@ -4,7 +4,7 @@ import downloadErrorThunk from './download-error';
 import ytdl from 'ytdl-core';
 import { changeDownloadUrl } from '../actions';
 
-export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
+export default function makePartialRequest({ id, url, rangeStart, rangeEnd }) {
   return async (dispatch, _getState) => {
     const protocol = new URL(url).protocol === 'http:' ? http : https;
     const options = {
@@ -44,7 +44,7 @@ export default function makePartialRequest(id, url, rangeStart, rangeEnd) {
   };
 }
 
-export function makePartialYouTubeRequest(id, url, rangeStart, rangeEnd) {
+export function makePartialYouTubeRequest({ id, url, rangeStart, rangeEnd }) {
   return async (dispatch, getState) => {
     const download = getState().downloads.byId[id];
     return new Promise((resolve, reject) => {

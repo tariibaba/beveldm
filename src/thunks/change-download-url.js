@@ -14,8 +14,13 @@ export default function changeDownloadUrlThunk(id, newUrl) {
     changeUrl(newUrl);
     const formerUrl = download.url;
     dispatch(
-      notify('info', 'Changed URL', 'Undo', (responseType) => {
-        if (responseType === 'undo') changeUrl(formerUrl);
+      notify({
+        type: 'info',
+        message: 'Changed URL',
+        action: 'Undo',
+        responseCallback: (responseType) => {
+          if (responseType === 'undo') changeUrl(formerUrl);
+        },
       })
     );
   };

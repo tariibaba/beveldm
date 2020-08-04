@@ -14,7 +14,7 @@ export default function startDownload(id) {
     let res;
     switch (download.type) {
       case 'file':
-        res = await dispatch(makePartialRequest(id, download.url));
+        res = await dispatch(makePartialRequest({ id, url: download.url }));
 
         // The download status might have changed since making the request.
         download = getState().downloads.byId[id];

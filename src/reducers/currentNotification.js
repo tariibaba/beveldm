@@ -10,7 +10,7 @@ export default createReducer(
 
 function notify(state, action) {
   return updateObject(state, {
-    variant: action.variant,
+    type: action.ntype,
     message: action.message,
     responseCallback: action.responseCallback,
     action: action.action

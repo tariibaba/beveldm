@@ -32,11 +32,19 @@ export default function resumeDownload(id) {
       let res;
       if (download.type === 'file') {
         res = await dispatch(
-          makePartialRequest(id, download.url, download.bytesDownloaded)
+          makePartialRequest({
+            id,
+            url: download.url,
+            rangeStart: download.bytesDownloaded,
+          })
         );
       } else if (download.type === 'youtube') {
         res = await dispatch(
-          makePartialYouTubeRequest(id, download.url, download.bytesDownloaded)
+          makePartialYouTubeRequest({
+            id,
+            url: download.url,
+            rangeStart: download.bytesDownloaded,
+          })
         );
       }
 
@@ -90,9 +98,14 @@ function resumeFromError(id, code) {
                 state.downloads
               );
         const resumable = res.statusCode === 206;
-
         dispatch(
-          changeDownloadInfo(id, filename, availableFilename, size, resumable)
+          changeDownloadInfo({
+            id,
+            filename,
+            availableFilename,
+            size,
+            resumable,
+          })
         );
         dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(updateBytesDownloadedShown(id, 0));

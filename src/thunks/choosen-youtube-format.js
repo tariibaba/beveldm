@@ -23,16 +23,16 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
       downloads
     );
     dispatch(
-      chosenYouTubeFormat(
+      chosenYouTubeFormat({
         id,
         dirname,
-        filename,
+        defaultFilename: filename,
         availableFilename,
-        format.contentLength,
+        size: format.contentLength,
         format,
-        settings.alwaysOpenDownloadsWhenDone,
-        new Date().toISOString()
-      )
+        openWhenDone: settings.alwaysOpenDownloadsWhenDone,
+        timestamp: new Date().toISOString(),
+      })
     );
 
     if (settings.startDownloadsAutomatically) dispatch(startDownload(id));

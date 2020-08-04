@@ -9,11 +9,11 @@ export default function removeDownloadThunk(id) {
     const download = getState().downloads.byId[id];
 
     dispatch(
-      notify(
-        'info',
-        `Removed '${download.availableFilename}' from list`,
-        'Undo',
-        async (responseType) => {
+      notify({
+        type: 'info',
+        message: `Removed '${download.availableFilename}' from list`,
+        action: 'Undo',
+        async responseCallback(responseType) {
           if (responseType === 'undo') {
             dispatch(showDownload(id));
           } else if (responseType === 'timeout') {
@@ -25,8 +25,8 @@ export default function removeDownloadThunk(id) {
               }
             }
           }
-        }
-      )
+        },
+      })
     );
   };
 }

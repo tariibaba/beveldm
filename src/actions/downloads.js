@@ -45,13 +45,13 @@ export function changeDownloadUrl(id, url) {
   };
 }
 
-export function changeDownloadInfo(
+export function changeDownloadInfo({
   id,
   defaultFilename,
   availableFilename,
   size,
   resumable
-) {
+}) {
   return {
     type: CHANGE_DOWNLOAD_INFO,
     id,
@@ -86,7 +86,7 @@ export function setDownloadRes(id, res) {
   };
 }
 
-export function gotDownloadInfo(
+export function gotDownloadInfo({
   id,
   dirname,
   defaultFilename,
@@ -95,7 +95,7 @@ export function gotDownloadInfo(
   resumable,
   openWhenDone,
   timestamp
-) {
+}) {
   return {
     type: GOT_DOWNLOAD_INFO,
     id,
@@ -189,7 +189,7 @@ export function updateBytesDownloadedShown(id, bytesDownloadedShown) {
   };
 }
 
-export function chosenYouTubeFormat(
+export function chosenYouTubeFormat({
   id,
   dirname,
   defaultFilename,
@@ -198,7 +198,7 @@ export function chosenYouTubeFormat(
   format,
   openWhenDone,
   timestamp
-) {
+}) {
   return {
     type: CHOSEN_YOUTUBE_FORMAT,
     id,

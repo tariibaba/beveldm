@@ -155,6 +155,6 @@ export default connect(null, (dispatch) => ({
     dispatch(toggleOpenWhenDone(id, openWhenDone));
   },
   onCopyUrl() {
-    dispatch(notify('info', 'Copied URL to clipboard'));
+    dispatch(notify({ type: 'info', message: 'Copied URL to clipboard' }));
   },
 }))(DownloadMoreActions);

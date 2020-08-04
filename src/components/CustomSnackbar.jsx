@@ -95,7 +95,7 @@ function CustomSnackbar({
 }
 
 export default connect(({ currentNotification }) => ({
-  variant: currentNotification.variant,
+  variant: currentNotification.type,
   message: currentNotification.message,
   responseCallback: currentNotification.responseCallback,
   action: currentNotification.action,

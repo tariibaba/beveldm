@@ -41,10 +41,15 @@ export default function addNewDownloadThunk(url) {
           .on('error', () => {
             dispatch(removeDownload(id));
             dispatch(
-              notify('error', 'Network error', 'Retry', (responseType) => {
-                if (responseType === 'retry') {
-                  dispatch(addNewDownloadThunk(url));
-                }
+              notify({
+                type: 'error',
+                message: 'Network error',
+                action: 'Retry',
+                responseCallback: (responseType) => {
+                  if (responseType === 'retry') {
+                    dispatch(addNewDownloadThunk(url));
+                  }
+                },
               })
             );
           })
@@ -53,7 +58,7 @@ export default function addNewDownloadThunk(url) {
 
       if (res.statusCode === 403) {
         dispatch(removeDownload(id));
-        dispatch(notify('error', 'Forbidden'));
+        dispatch(notify({ type: 'error', message: 'Forbidden' }));
         return;
       } else if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
         const location = res.headers['Location'] || res.headers['location'];
@@ -79,17 +84,24 @@ export default function addNewDownloadThunk(url) {
         return;
       }
 
+      const availableFilename = await getAvailableFilename(
+        dirname,
+        filename,
+        downloads
+      );
+      const resumable =
+        res.statusCode === 206 || res.headers['Accept-Ranges'] === 'bytes';
       dispatch(
-        gotDownloadInfo(
+        gotDownloadInfo({
           id,
           dirname,
-          filename,
-          await getAvailableFilename(dirname, filename, downloads),
+          defaultFilename: filename,
+          availableFilename,
           size,
-          res.statusCode === 206 || res.headers['Accept-Ranges'] === 'bytes',
-          settings.alwaysOpenDownloadsWhenDone,
-          Date.now()
-        )
+          resumable,
+          openWhenDone: settings.alwaysOpenDownloadsWhenDone,
+          timestamp: Date.now(),
+        })
       );
 
       if (settings.startDownloadsAutomatically) {
@@ -108,10 +120,15 @@ export function addNewYoutubeDownloadThunk(url) {
     if (!(await isOnline())) {
       dispatch(removeDownload(id));
       dispatch(
-        notify('error', 'Network error', 'Retry', (responseType) => {
-          if (responseType === 'retry') {
-            dispatch(addNewYoutubeDownloadThunk(url));
-          }
+        notify({
+          type: 'error',
+          message: 'Network error',
+          action: 'Retry',
+          responseCallback: (responseType) => {
+            if (responseType === 'retry') {
+              dispatch(addNewYoutubeDownloadThunk(url));
+            }
+          },
         })
       );
       return;
@@ -120,7 +137,7 @@ export function addNewYoutubeDownloadThunk(url) {
     ytdl.getInfo(url, async (err, info) => {
       if ((err && err.code === 'ENOTFOUND') || !info) {
         dispatch(removeDownload(id));
-        dispatch(notify('error', 'YouTube video not found'));
+        dispatch(notify({ type: 'error', message: 'YouTube video not found' }));
         return;
       }
 

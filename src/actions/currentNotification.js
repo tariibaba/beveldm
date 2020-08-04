@@ -1,9 +1,9 @@
 import { NOTIFY } from './constants';
 
-export function notify(variant, message, action, responseCallback) {
+export function notify({ type, message, action, responseCallback }) {
   return {
     type: NOTIFY,
-    variant,
+    ntype: type,
     message,
     action,
     responseCallback,
