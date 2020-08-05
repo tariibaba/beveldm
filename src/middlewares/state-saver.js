@@ -65,6 +65,7 @@ function saveStore(state) {
 function processDownloadForSaving(download) {
   const {
     res,
+    fileStream,
     speed,
     bytesDownloadedShown,
     show,
