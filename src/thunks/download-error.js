@@ -6,7 +6,7 @@ import resumeDownload from './resume-download';
 export default function (id, errorCode) {
   return async (dispatch, getState) => {
     let download = getState().downloads.byId[id];
-    download.fileStream.close();
+    if (download.fileStream) download.fileStream.close();
     if (
       [
         'EFILECHANGED',
