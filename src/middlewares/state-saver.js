@@ -8,6 +8,8 @@ import {
   SET_DOWNLOAD_RES,
   CHANGE_DOWNLOAD_GROUP,
   ADD_NEW_DOWNLOAD,
+  CHANGE_DOWNLOAD_SPEED,
+  SET_DOWNLOAD_FILE_STREAM,
 } from '../actions';
 import Store from 'electron-store';
 import electronIsDev from 'electron-is-dev';
@@ -24,6 +26,8 @@ export default function stateSaver(store) {
       SET_DOWNLOAD_RES,
       CHANGE_DOWNLOAD_GROUP,
       ADD_NEW_DOWNLOAD,
+      CHANGE_DOWNLOAD_SPEED,
+      SET_DOWNLOAD_FILE_STREAM
     ];
 
     const result = next(action);
