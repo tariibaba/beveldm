@@ -97,6 +97,7 @@ export default function downloadFile(id, res) {
       } else {
         if (fileStream.destroyed) return;
 
+        await writeStreamWritePromise(fileStream, buffer);
         await dispatch(
           updateBytesDownloadedThunk(
             id,
