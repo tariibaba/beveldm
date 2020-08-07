@@ -47,13 +47,14 @@ export default createReducer(
 );
 
 function addNewDownload(state, action) {
-  const { id, dtype, url, status } = action;
+  const { id, dtype, url, status, show } = action;
   return {
     [id]: {
       id,
       type: dtype,
       url,
       status,
+      show,
     },
     ...state,
   };

@@ -26,6 +26,7 @@ export const lightTheme = createMuiTheme({
       downloadStatusText: '#999ea4',
       downloadGroupSelected: '#8ab4f8',
       drawer: '#fff',
+      noDownloads: grey[600],
     },
   },
   typography: {

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import when from 'when-expression';
 import moment from 'moment';
 import groupBy from 'lodash.groupby';
+import { GetApp } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -31,6 +32,15 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
     textAlign: 'center',
   },
+  noDownloads: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexFlow: 'column',
+    color: theme.palette.custom.noDownloads
+  },
 }));
 
 function DownloadList({ downloads = [], onScroll = () => {} }) {
@@ -44,6 +54,16 @@ function DownloadList({ downloads = [], onScroll = () => {} }) {
 
   return (
     <div className={classes.main} onScroll={handleScroll}>
+      {downloads.filter((download) => download.show).length === 0 && (
+        <div className={classes.noDownloads}>
+          <Typography>
+            <GetApp style={{ fontSize: 120 }} />
+          </Typography>
+          <Typography style={{ fontWeight: 500 }}>
+            Your downloads appear here
+          </Typography>
+        </div>
+      )}
       {Object.keys(grouped)
         .sort()
         .reverse()

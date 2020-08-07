@@ -27,6 +27,7 @@ export function addNewDownload(id, dtype, url) {
     id,
     url,
     status: 'gettinginfo',
+    show: true
   };
 }
 
