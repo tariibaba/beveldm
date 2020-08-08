@@ -19,32 +19,35 @@ import youtubeUrl from 'youtube-url';
 function NewDownloadDialog({ type, open, onAdd, onClose }) {
   const [url, setUrl] = useState('');
   let [urlHelperText, setUrlHelperText] = useState(null);
-  const formSubmittable = url && !urlHelperText;
 
   useEffect(() => {
     if (open) {
+      setUrlHelperText(null);
       const clipboardText = clipboard.readText();
       setUrl((validUrl.isWebUri(clipboardText) && clipboardText) || '');
     }
   }, [open]);
 
-  useEffect(() => {
-    if (url && !validUrl.isWebUri(url)) {
-      setUrlHelperText('This URL is invalid');
-    } else if (url && type === 'youtube' && !youtubeUrl.valid(url)) {
-      setUrlHelperText('Invalid YouTube URL');
-    } else setUrlHelperText(null);
-  }, [url, type]);
-
   const handleUrlChange = (event) => {
     setUrl(event.target.value);
+    setUrlHelperText(null);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onClose();
-    onAdd(type, url);
-    setUrl('');
+    setUrlHelperText(null);
+    if (!url) {
+      setUrlHelperText('Enter a URL');
+    } else if (url && !validUrl.isWebUri(url)) {
+      setUrlHelperText('This URL is invalid');
+    } else if (url && type === 'youtube' && !youtubeUrl.valid(url)) {
+      setUrlHelperText('Invalid YouTube URL');
+    } else {
+      setUrlHelperText(null);
+      onClose();
+      onAdd(type, url);
+      setUrl('');
+    }
   };
 
   const handleCancel = onClose;
@@ -76,9 +79,7 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
           <br />
 
           <DialogActions>
-            <Button type="submit" disabled={!formSubmittable}>
-              Add
-            </Button>
+            <Button type="submit">Add</Button>
 
             <Button onClick={handleCancel}>Cancel</Button>
           </DialogActions>

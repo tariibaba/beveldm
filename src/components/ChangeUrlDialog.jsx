@@ -15,25 +15,29 @@ import { closeDialog } from '../actions';
 function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
   const [newUrl, setNewUrl] = useState(currentUrl);
   const [urlHelperText, setUrlHelperText] = useState(null);
-  const formSubmittable = newUrl && newUrl !== currentUrl && !urlHelperText;
 
   useEffect(() => {
-    if (open) setNewUrl(currentUrl);
-  }, [open, currentUrl]);
-
-  useEffect(() => {
-    if (newUrl && !isWebUri(newUrl)) setUrlHelperText('This url is invalid');
-    else setUrlHelperText(null);
-  }, [newUrl]);
+    if (open) {
+      setUrlHelperText(null);
+      setNewUrl(currentUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const handleChangeUrl = (event) => {
     event.preventDefault();
-    onClose();
-    onChange(id, newUrl);
+    if (!newUrl) setUrlHelperText('Enter a URL');
+    else if (newUrl && !isWebUri(newUrl)) {
+      setUrlHelperText('This url is invalid');
+    } else {
+      onClose();
+      onChange(id, newUrl);
+    }
   };
 
   const handleDialogUrlChange = (event) => {
     setNewUrl(event.target.value);
+    setUrlHelperText(null);
   };
 
   return (
@@ -56,7 +60,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
           <br />
 
           <DialogActions>
-            <Button type="submit" disabled={!formSubmittable}>
+            <Button type="submit" disabled={currentUrl === newUrl}>
               Change
             </Button>
 
@@ -71,9 +75,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
 export default connect(
   ({ downloads, dialog: { data }, dialog }) => ({
     id: data && data.downloadId,
-    currentUrl:
-      data &&
-      downloads.byId[data.downloadId].url,
+    currentUrl: data && downloads.byId[data.downloadId].url,
     open: dialog.open && dialog.type === 'changeurl',
   }),
   (dispatch) => ({
