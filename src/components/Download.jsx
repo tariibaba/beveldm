@@ -292,7 +292,9 @@ function Download({
           {/* Speed, bytes downloaded and size */}
           {!(status === 'complete' || inactive) && (
             <div className={classes.progressText}>
-              <Typography className={classes.typography}>
+              <Typography
+                className={clsx(classes.progressText, classes.typography)}
+              >
                 {status === 'progressing' && prettyBytes(speed) + '/s - '}
                 {prettyBytes(bytesDownloadedShown)} of {prettyBytes(size)}
                 {status === 'paused' && ', Paused'}

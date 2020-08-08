@@ -75,13 +75,6 @@ const muiDarkInnerTheme = (outerTheme) => {
         primary: '#fff',
       },
     },
-    typography: {
-      ...innerTheme.typography,
-      allVariants: {
-        ...innerTheme.typography.allVariants,
-        color: '#fff',
-      },
-    },
   });
 };
 

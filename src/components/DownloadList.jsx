@@ -39,7 +39,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexFlow: 'column',
-    color: theme.palette.custom.noDownloads
+    color: theme.palette.custom.noDownloads,
+  },
+  groupedDownloadsDate: {
+    fontWeight: 500,
+    fontSize: 14,
+    color: theme.palette.custom.groupedDownloadsDate,
   },
 }));
 
@@ -56,10 +61,10 @@ function DownloadList({ downloads = [], onScroll = () => {} }) {
     <div className={classes.main} onScroll={handleScroll}>
       {downloads.filter((download) => download.show).length === 0 && (
         <div className={classes.noDownloads}>
-          <Typography>
+          <Typography style={{ color: 'inherit' }}>
             <GetApp style={{ fontSize: 120 }} />
           </Typography>
-          <Typography style={{ fontWeight: 500 }}>
+          <Typography style={{ fontWeight: 500, color: 'inherit' }}>
             Your downloads appear here
           </Typography>
         </div>
@@ -72,7 +77,7 @@ function DownloadList({ downloads = [], onScroll = () => {} }) {
             {grouped[day].some(
               (download) => download.status !== 'getting info' && download.show
             ) > 0 && (
-              <Typography style={{ fontWeight: 500, fontSize: 14 }}>
+              <Typography className={classes.groupedDownloadsDate}>
                 {moment(Number.parseInt(day)).format('MMMM D, YYYY')}
               </Typography>
             )}

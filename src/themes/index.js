@@ -79,7 +79,7 @@ export const darkTheme = createMuiTheme({
       default: '#202124',
     },
     text: {
-      primary: '#999ea4',
+      primary: grey[300],
     },
     custom: {
       cardDefault: '#202124',
@@ -95,12 +95,14 @@ export const darkTheme = createMuiTheme({
       downloadStatusText: hexToRgba('#999ea4', 0.9),
       downloadGroupSelected: '#8ab4f8',
       drawer: '#202124',
+      groupedDownloadsDate: '#999ea4',
+      noDownloads: '#999ea4',
     },
   },
   typography: {
     allVariants: {
       fontFamily: 'Nutino Sans',
-      color: '#999ea4',
+      color: grey[300],
     },
     h6: {
       color: '#fff',
