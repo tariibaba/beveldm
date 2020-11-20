@@ -114,7 +114,7 @@
     "@rescripts/cli": "^0.0.11",
     "@rescripts/rescript-env": "^0.0.10",
     "@types/node-notifier": "^6.0.1",
-    "electron": "^8.1.1",
+    "electron": "^8.5.2",
     "electron-builder": "^22.4.1",
     "file-loader": "^5.0.2"
   }
