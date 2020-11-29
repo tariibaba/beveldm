@@ -194,6 +194,10 @@ function Download({
   const classes = useStyles();
   const inactive =
     status === 'canceled' || status === 'error' || status === 'removed';
+  const prettyBytesStringFormat = (bytes) => {
+    const userFriendlyBytes = prettyBytes(bytes);
+    return `${userFriendlyBytes.size} ${userFriendlyBytes.unit}`;
+  };
 
   return show ? (
     <Card
@@ -295,8 +299,10 @@ function Download({
               <Typography
                 className={clsx(classes.progressText, classes.typography)}
               >
-                {status === 'progressing' && prettyBytes(speed) + '/s - '}
-                {prettyBytes(bytesDownloadedShown)} of {prettyBytes(size)}
+                {status === 'progressing' &&
+                  prettyBytesStringFormat(speed) + '/s - '}
+                {prettyBytesStringFormat(bytesDownloadedShown)} of{' '}
+                {prettyBytesStringFormat(size)}
                 {status === 'paused' && ', Paused'}
                 {status === 'progressing' &&
                   speed > 0 &&
