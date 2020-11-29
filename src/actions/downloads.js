@@ -18,6 +18,7 @@ import {
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
   SET_DOWNLOAD_FILE_STREAM,
+  TOGGLE_LIMIT_SPEED,
 } from './constants';
 
 export function addNewDownload(id, dtype, url) {
@@ -27,7 +28,8 @@ export function addNewDownload(id, dtype, url) {
     id,
     url,
     status: 'gettinginfo',
-    show: true
+    show: true,
+    limitSpeed: false
   };
 }
 
@@ -44,7 +46,7 @@ export function changeDownloadUrl(id, url) {
     id,
     url,
     res: undefined,
-    fileStream: undefined
+    fileStream: undefined,
   };
 }
 
@@ -53,7 +55,7 @@ export function changeDownloadInfo({
   defaultFilename,
   availableFilename,
   size,
-  resumable
+  resumable,
 }) {
   return {
     type: CHANGE_DOWNLOAD_INFO,
@@ -93,8 +95,8 @@ export function setDownloadFileStream(id, fileStream) {
   return {
     type: SET_DOWNLOAD_FILE_STREAM,
     id,
-    fileStream
-  }
+    fileStream,
+  };
 }
 
 export function gotDownloadInfo({
@@ -105,7 +107,7 @@ export function gotDownloadInfo({
   size,
   resumable,
   openWhenDone,
-  timestamp
+  timestamp,
 }) {
   return {
     type: GOT_DOWNLOAD_INFO,
@@ -186,6 +188,14 @@ export function toggleOpenWhenDone(id, value) {
   };
 }
 
+export function toggleLimitSpeed(id, value) {
+  return {
+    type: TOGGLE_LIMIT_SPEED,
+    id,
+    value,
+  };
+}
+
 export function changeDownloadSpeed(id, speed) {
   return {
     type: CHANGE_DOWNLOAD_SPEED,
@@ -210,7 +220,7 @@ export function chosenYouTubeFormat({
   size,
   format,
   openWhenDone,
-  timestamp
+  timestamp,
 }) {
   return {
     type: CHOSEN_YOUTUBE_FORMAT,

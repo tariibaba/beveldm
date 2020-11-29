@@ -10,10 +10,12 @@ import {
   MuiThemeProvider,
   createMuiTheme,
   Switch,
+  TextField,
 } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import {
+  changeDownloadSpeedLimit,
   changePage,
   changeTheme,
   toggleAlwaysOpenDownloadsWhenDone,
@@ -21,6 +23,10 @@ import {
   toggleUseCustomSaveFolder,
 } from '../actions';
 import { toggleLaunchAtStartup } from '../thunks';
+import { prettyBytes, getBytes } from './utilities';
+import { DOWNLOAD_SPEED_LIMIT_LIMIT } from '../constants';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,9 +91,23 @@ function SettingsPage({
   startDownloadsAutomatically,
   launchAtStartup,
   useCustomSaveFolder,
+  downloadSpeedLimit,
 }) {
   const [appBarRaised, setAppBarRaised] = useState(false);
   const classes = useStyles();
+  const userFriendlySpeedLimit = prettyBytes(downloadSpeedLimit);
+  const speedLimitUnitSize = Number(userFriendlySpeedLimit.size);
+  const speedLimitUnit = userFriendlySpeedLimit.unit.toLowerCase();
+  const speedLimitInputRef = useRef();
+  const [
+    speedLimitUnitSizeTextFieldValue,
+    setSpeedLimitUnitSizeTextFieldValue,
+  ] = useState(userFriendlySpeedLimit.size);
+
+  useEffect(() => {
+    speedLimitInputRef.current.onchange = handleChangeSpeedLimitUnitSize;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [speedLimitUnit]);
 
   const handleGoBack = () => {
     dispatch(changePage('downloads'));
@@ -111,6 +131,38 @@ function SettingsPage({
 
   const handleToggleUseCustomFolder = (event) => {
     dispatch(toggleUseCustomSaveFolder(event.target.checked));
+  };
+
+  const handleInputSpeedLimitUnitSize = (event) => {
+    setSpeedLimitUnitSizeTextFieldValue(event.target.value);
+  };
+
+  const handleChangeSpeedLimitUnitSize = (event) => {
+    const value = Number(event.target.value);
+    if (value && value > 0) {
+      onDownloadSpeedLimitChanged(value, speedLimitUnit);
+    } else {
+      changeSpeedLimitUnitSizeTextFieldValue(downloadSpeedLimit);
+    }
+  };
+
+  const handleChangeSpeedLimitUnit = (event) => {
+    onDownloadSpeedLimitChanged(speedLimitUnitSize, event.target.value);
+  };
+
+  const onDownloadSpeedLimitChanged = (limitUnitSize, limitUnit) => {
+    const speedLimitBytes = getBytes(limitUnitSize, limitUnit.toUpperCase());
+    if (speedLimitBytes > DOWNLOAD_SPEED_LIMIT_LIMIT) {
+      dispatch(changeDownloadSpeedLimit(DOWNLOAD_SPEED_LIMIT_LIMIT));
+      changeSpeedLimitUnitSizeTextFieldValue(DOWNLOAD_SPEED_LIMIT_LIMIT);
+    } else {
+      dispatch(changeDownloadSpeedLimit(speedLimitBytes));
+      changeSpeedLimitUnitSizeTextFieldValue(speedLimitBytes);
+    }
+  };
+
+  const changeSpeedLimitUnitSizeTextFieldValue = (limitBytes) => {
+    setSpeedLimitUnitSizeTextFieldValue(prettyBytes(limitBytes).size);
   };
 
   const handleScroll = (event) => setAppBarRaised(event.target.scrollTop > 0);
@@ -177,6 +229,28 @@ function SettingsPage({
                 onChange={handleToggleUseCustomFolder}
               />
             </div>
+            <div className={classes.setting}>
+              <Typography>Download speed limit</Typography>
+              <div style={{ display: 'flex' }}>
+                <TextField
+                  style={{ width: 50 }}
+                  inputProps={{ style: { textAlign: 'right' } }}
+                  value={speedLimitUnitSizeTextFieldValue}
+                  inputRef={speedLimitInputRef}
+                  onChange={handleInputSpeedLimitUnitSize}
+                  type="number"
+                />
+                <Select
+                  value={speedLimitUnit}
+                  onChange={handleChangeSpeedLimitUnit}
+                >
+                  <MenuItem value="b">B/s</MenuItem>
+                  <MenuItem value="kb">KB/s</MenuItem>
+                  <MenuItem value="mb">MB/s</MenuItem>
+                  <MenuItem value="gb">GB/s</MenuItem>
+                </Select>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -190,4 +264,5 @@ export default connect(({ settings }) => ({
   startDownloadsAutomatically: settings.startDownloadsAutomatically,
   launchAtStartup: settings.launchAtStartup,
   useCustomSaveFolder: settings.useCustomSaveFolder,
+  downloadSpeedLimit: settings.downloadSpeedLimit,
 }))(SettingsPage);

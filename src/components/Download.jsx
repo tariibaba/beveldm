@@ -154,6 +154,7 @@ function Download({
   error,
   show,
   openWhenDone,
+  limitSpeed
 }) {
   const fullPath = path.join(dirname, availableFilename);
   const secondsLeft = ((size - bytesDownloadedShown) / speed) * 1000;
@@ -222,6 +223,7 @@ function Download({
               currentUrl={url}
               openWhenDone={openWhenDone}
               status={status}
+              limitSpeed={limitSpeed}
             />
           </div>
 

@@ -19,6 +19,7 @@ import {
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
   SET_DOWNLOAD_FILE_STREAM,
+  TOGGLE_LIMIT_SPEED,
 } from '../../actions';
 
 export default createReducer(
@@ -40,6 +41,7 @@ export default createReducer(
     [GOT_DOWNLOAD_INFO]: gotDownloadInfo,
     [SHOW_DOWNLOAD_ERROR]: showDownloadError,
     [TOGGLE_OPEN_WHEN_DONE]: toggleOpenWhenDone,
+    [TOGGLE_LIMIT_SPEED]: toggleLimitSpeed,
     [CHANGE_DOWNLOAD_SPEED]: changeDownloadSpeed,
     [UPDATE_BYTES_DOWNLOADED_SHOWN]: updateBytesDownloadedShown,
     [CHOSEN_YOUTUBE_FORMAT]: chosenYouTubeFormat,
@@ -47,7 +49,7 @@ export default createReducer(
 );
 
 function addNewDownload(state, action) {
-  const { id, dtype, url, status, show } = action;
+  const { id, dtype, url, status, show, limitSpeed } = action;
   return {
     [id]: {
       id,
@@ -55,6 +57,7 @@ function addNewDownload(state, action) {
       url,
       status,
       show,
+      limitSpeed,
     },
     ...state,
   };
@@ -167,6 +170,13 @@ function toggleOpenWhenDone(state, action) {
     [id]: updateObject(state[id], {
       openWhenDone: value,
     }),
+  });
+}
+
+function toggleLimitSpeed(state, action) {
+  const { id, value } = action;
+  return updateObject(state, {
+    [id]: updateObject(state[id], { limitSpeed: value }),
   });
 }
 

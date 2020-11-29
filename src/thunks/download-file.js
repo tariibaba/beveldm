@@ -29,11 +29,14 @@ export default function downloadFile(id, res) {
 
       state = getState();
       download = state.downloads.byId[id];
-      let saveData = state.settings.saveData;
+      const getSpeedLimit = () =>
+        (state.settings.saveData && SAVE_DATA_LIMIT) ||
+        (download.limitSpeed && state.settings.downloadSpeedLimit);
+      let speedLimit = getSpeedLimit();
 
       buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
 
-      if (saveData) {
+      if (speedLimit) {
         let shouldSkipSecondTimeout = false;
 
         const writeSlicedBuffer = async () => {
@@ -47,8 +50,8 @@ export default function downloadFile(id, res) {
             return;
           }
 
-          const chunkToWrite = buffer.slice(0, SAVE_DATA_LIMIT / 2);
-          buffer = buffer.slice(SAVE_DATA_LIMIT / 2);
+          const chunkToWrite = buffer.slice(0, speedLimit / 2);
+          buffer = buffer.slice(speedLimit / 2);
 
           if (fileStream.destroyed) return;
 
@@ -62,10 +65,10 @@ export default function downloadFile(id, res) {
 
           state = getState();
           download = state.downloads.byId[id];
-          saveData = state.settings.saveData;
+          speedLimit = getSpeedLimit();
 
           if (download.status !== 'paused' && download.status !== 'canceled') {
-            if ((buffer.length > SAVE_DATA_LIMIT && saveData) || hasResEnded) {
+            if ((buffer.length > speedLimit && speedLimit) || hasResEnded) {
               await writeSlicedBuffer();
             } else res.resume();
           }
@@ -81,12 +84,12 @@ export default function downloadFile(id, res) {
             firstTimeoutRunning = false;
             shouldSkipSecondTimeout = true;
             res.pause();
-            saveData = state.settings.saveData;
-            if (saveData) await writeSlicedBuffer();
+            speedLimit = getSpeedLimit();
+            if (speedLimit) await writeSlicedBuffer();
           });
         }
         if (!firstTimeoutElapsed) {
-          if (buffer.length < SAVE_DATA_LIMIT / 2) res.resume();
+          if (buffer.length < speedLimit / 2) res.resume();
           else {
             firstTimeoutRunning = false;
             firstSaveDataTimeout.clear();

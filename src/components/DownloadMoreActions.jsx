@@ -9,7 +9,12 @@ import {
 } from '@material-ui/core';
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { toggleOpenWhenDone, openDialog, notify } from '../actions';
+import {
+  toggleOpenWhenDone,
+  openDialog,
+  notify,
+  toggleLimitSpeed,
+} from '../actions';
 import { clipboard } from 'electron';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +48,8 @@ function DownloadMoreActions({
   currentUrl,
   status,
   onCopyUrl,
+  limitSpeed,
+  onToggleLimitSpeed,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -68,6 +75,11 @@ function DownloadMoreActions({
     handlePopoverClose();
     clipboard.writeText(currentUrl);
     onCopyUrl();
+  };
+
+  const handleToggleLimitSpeed = () => {
+    handlePopoverClose();
+    onToggleLimitSpeed(id, !limitSpeed);
   };
 
   const popoverOpen = Boolean(anchorEl);
@@ -140,6 +152,26 @@ function DownloadMoreActions({
                 Open when done
               </ListItemText>
             </MenuItem>
+            <MenuItem
+              button
+              className={classes.menuListItem}
+              onClick={handleToggleLimitSpeed}
+            >
+              <ListItemIcon className={classes.menuListItemIcon}>
+                <Check
+                  className={classes.openWhenDoneCheck}
+                  style={{
+                    visibility: limitSpeed ? 'visible' : 'hidden',
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                className={classes.menuListItemText}
+                classes={{ primary: classes.menuListItemText }}
+              >
+                Limit speed
+              </ListItemText>
+            </MenuItem>
           </span>
         )}
       </Menu>
@@ -156,5 +188,8 @@ export default connect(null, (dispatch) => ({
   },
   onCopyUrl() {
     dispatch(notify({ type: 'info', message: 'Copied URL to clipboard' }));
+  },
+  onToggleLimitSpeed(id, limitSpeed) {
+    dispatch(toggleLimitSpeed(id, limitSpeed));
   },
 }))(DownloadMoreActions);

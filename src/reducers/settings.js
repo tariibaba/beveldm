@@ -6,6 +6,7 @@ import {
   TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
   TOGGLE_LAUNCH_AT_STARTUP,
   TOGGLE_USE_CUSTOM_SAVE_FOLDER,
+  CHANGE_DOWNLOAD_SPEED_LIMIT,
 } from '../actions';
 import { updateObject, createReducer } from './utilities';
 
@@ -17,6 +18,7 @@ const defaultSettings = {
   startDownloadsAutomatically: true,
   launchAtStartup: false,
   useCustomSaveFolder: false,
+  downloadSpeedLimit: 20 * 1024
 };
 
 export default createReducer(defaultSettings, {
@@ -27,6 +29,7 @@ export default createReducer(defaultSettings, {
   [TOGGLE_START_DOWNLOADS_AUTOMATICALLY]: toggleStartDownloadsAutomatically,
   [TOGGLE_LAUNCH_AT_STARTUP]: toggleLaunchAtStartup,
   [TOGGLE_USE_CUSTOM_SAVE_FOLDER]: toggleUseCustomSaveFolder,
+  [CHANGE_DOWNLOAD_SPEED_LIMIT]: changeDownloadSpeedLimit
 });
 
 function toggleSaveData(state, action) {
@@ -55,4 +58,8 @@ function toggleLaunchAtStartup(state, action) {
 
 function toggleUseCustomSaveFolder(state, action) {
   return updateObject(state, { useCustomSaveFolder: action.value });
+}
+
+function changeDownloadSpeedLimit(state, action) {
+  return updateObject(state, { downloadSpeedLimit: action.value });
 }

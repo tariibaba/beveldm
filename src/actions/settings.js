@@ -6,6 +6,7 @@ import {
   TOGGLE_START_DOWNLOADS_AUTOMATICALLY,
   TOGGLE_LAUNCH_AT_STARTUP,
   TOGGLE_USE_CUSTOM_SAVE_FOLDER,
+  CHANGE_DOWNLOAD_SPEED_LIMIT,
 } from './constants';
 
 export function toggleSaveData(value) {
@@ -53,6 +54,13 @@ export function toggleLaunchAtStartup(value) {
 export function toggleUseCustomSaveFolder(value) {
   return {
     type: TOGGLE_USE_CUSTOM_SAVE_FOLDER,
+    value,
+  };
+}
+
+export function changeDownloadSpeedLimit(value) {
+  return {
+    type: CHANGE_DOWNLOAD_SPEED_LIMIT,
     value,
   };
 }
