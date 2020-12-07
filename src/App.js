@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { cleanUp, setTaskbarProgress } from './utilities';
 import CustomSnackbar from './components/CustomSnackbar';
 import { withStyles } from '@material-ui/core';
+import { hot } from 'react-hot-loader';
 
 const styles = () => ({
   downloadPage: {

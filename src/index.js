@@ -10,7 +10,7 @@ import {
   settingsReducer,
   downloadGroupReducer,
   dialogReducer,
-  pageReducer
+  pageReducer,
 } from './reducers';
 import reduxThunk from 'redux-thunk';
 import 'typeface-roboto';
@@ -31,9 +31,19 @@ const store = createStore(
   )
 );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-);
+const render = () => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+};
+
+render();
+
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    render();
+  });
+}
