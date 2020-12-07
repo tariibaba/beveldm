@@ -20,10 +20,12 @@ import {
   ClearAll,
   Check,
   Settings,
+  Feedback,
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import { toggleSaveData, changeDownloadGroup, changePage } from '../actions';
 import { connect } from 'react-redux';
+import { shell } from 'electron';
 
 const drawerWidth = 240;
 
@@ -123,7 +125,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   menuListIcon: {
-    minWidth: 40,
+    minWidth: 24,
+    marginRight: 10,
   },
   divider: {
     visibility: 'hidden',
@@ -134,7 +137,13 @@ const useStyles = makeStyles((theme) => ({
   drawerMenuIcon: {
     color: theme.overrides.MuiAppBar.colorPrimary.color,
   },
+  menuItem: {
+    display: 'flex',
+    clear: 'right',
+  },
 }));
+
+const newIssueUrl = 'https://github.com/tariibaba/beveldm/issues/new';
 
 function DownloadAppBar({ dispatch, saveData, downloadGroup, raised }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -171,6 +180,11 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup, raised }) {
     dispatch(changePage('settings'));
   };
 
+  const handleSendFeedback = () => {
+    handlePopoverClose();
+    shell.openExternal(newIssueUrl);
+  };
+
   const popoverOpen = Boolean(anchorEl);
 
   return (
@@ -201,13 +215,27 @@ function DownloadAppBar({ dispatch, saveData, downloadGroup, raised }) {
             getContentAnchorEl={null}
             onClose={handlePopoverClose}
           >
-            <MenuItem button onClick={handleToggleSaveData}>
+            <MenuItem
+              button
+              onClick={handleToggleSaveData}
+              className={classes.menuItem}
+            >
               <ListItemIcon className={classes.menuListIcon}>
                 <Check
                   style={{ visibility: saveData ? 'visible' : 'hidden' }}
                 />
               </ListItemIcon>
               <Typography>Save data</Typography>
+            </MenuItem>
+            <MenuItem
+              button
+              className={classes.menuItem}
+              onClick={handleSendFeedback}
+            >
+              <ListItemIcon className={classes.menuListIcon}>
+                <Feedback />
+              </ListItemIcon>
+              <Typography>Send feedback</Typography>
             </MenuItem>
           </Menu>
         </Toolbar>
