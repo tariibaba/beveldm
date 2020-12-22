@@ -65,7 +65,7 @@
     "is-online": "^8.2.1",
     "lodash.groupby": "^4.6.0",
     "moment": "^2.24.0",
-    "node-notifier": "^7.0.1",
+    "node-notifier": "^8.0.1",
     "open": "^7.0.1",
     "path-exists": "^4.0.0",
     "pify": "^4.0.1",
