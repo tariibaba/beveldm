@@ -8,7 +8,7 @@
     "type": "node",
     "name": "vscode-jest-tests",
     "request": "launch",
-    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/rescripts",
+    "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/react-app-rewired.cmd",
     "args": [
       "test",
       "--env=jsdom",
