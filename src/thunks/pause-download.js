@@ -1,4 +1,5 @@
 import { pauseDownload, changeDownloadSpeed } from '../actions';
+import { clearAutoretryTimeout } from './utils';
 
 export default function pauseDownloadThunk(id) {
   return async (dispatch, getState) => {
@@ -6,6 +7,7 @@ export default function pauseDownloadThunk(id) {
     if (download.type === 'file' || download.type === 'youtube') {
       if (download.res) download.res.pause();
     }
+    clearAutoretryTimeout(download);
     dispatch(pauseDownload(id));
     dispatch(changeDownloadSpeed(id, 0));
   };
