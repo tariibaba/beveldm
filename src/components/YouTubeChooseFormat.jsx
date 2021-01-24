@@ -11,37 +11,37 @@ import {
   TableCell,
   TableBody,
   TableHead,
-  Table
+  Table,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { closeDialog, removeDownload } from '../actions';
 import { prettyBytes } from './utilities';
 import { choosenYouTubeFormatThunk } from '../thunks';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   header: {
-    display: 'table-header-group'
+    display: 'table-header-group',
   },
   tableWrapper: {
     height: 204,
     overflowY: 'auto',
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     '&:hover::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(100, 100, 100, 0.7)'
-    }
+      backgroundColor: 'rgba(100, 100, 100, 0.7)',
+    },
   },
   tableHeadCell: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   tableRowCell: {
     textAlign: 'center',
-    padding: 3
+    padding: 3,
   },
   dialogTitle: {
-    width: 321
-  }
+    width: 321,
+  },
 }));
 
 function YouTubeChooseFormat({
@@ -51,7 +51,7 @@ function YouTubeChooseFormat({
   formats = [],
   onChooseFormat,
   onClose,
-  onCancel
+  onCancel,
 }) {
   const [formatIndex, setFormatIndex] = useState(0);
   const orderedFormats = formats.sort(
@@ -65,7 +65,7 @@ function YouTubeChooseFormat({
     setFormatIndex(0);
   }, [open]);
 
-  const handleChooseFormat = event => {
+  const handleChooseFormat = (event) => {
     event.preventDefault();
     onClose();
     const choosenFormat = orderedFormats[formatIndex];
@@ -77,7 +77,7 @@ function YouTubeChooseFormat({
     onCancel(downloadId);
   };
 
-  const handleFormatChange = event => {
+  const handleFormatChange = (event) => {
     setFormatIndex(event.target.value);
   };
 
@@ -111,13 +111,14 @@ function YouTubeChooseFormat({
                       {format.container.toUpperCase()}
                     </TableCell>
                     <TableCell className={classes.tableRowCell}>
-                      {prettyBytes(format.contentLength)}
+                      {`${prettyBytes(format.contentLength).size}
+                        ${prettyBytes(format.contentLength).unit}`}
                     </TableCell>
                     <TableCell className={classes.tableRowCell}>
                       <Radio
                         classes={{
                           colorSecondary: classes.radio,
-                          checked: classes.radio
+                          checked: classes.radio,
                         }}
                         className={classes.radio}
                         onChange={handleFormatChange}
@@ -146,9 +147,9 @@ export default connect(
     open: dialog.open && dialog.type === 'youtuberes',
     title: dialog.data && dialog.data.videoTitle,
     formats: (dialog.data && dialog.data.videoFormats) || [],
-    downloadId: dialog.data && dialog.data.downloadId
+    downloadId: dialog.data && dialog.data.downloadId,
   }),
-  dispatch => ({
+  (dispatch) => ({
     onChooseFormat(id, title, format) {
       dispatch(choosenYouTubeFormatThunk(id, title, format));
     },
@@ -157,6 +158,6 @@ export default connect(
     },
     onCancel(downloadId) {
       dispatch(removeDownload(downloadId));
-    }
+    },
   })
 )(YouTubeChooseFormat);
