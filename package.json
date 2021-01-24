@@ -83,7 +83,7 @@
     "valid-url": "^1.0.9",
     "when-expression": "^0.0.2",
     "youtube-url": "^0.5.0",
-    "ytdl-core": "^2.0.0"
+    "ytdl-core": "^4.4.4"
   },
   "scripts": {
     "start": "react-app-rewired start",

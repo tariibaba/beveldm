@@ -134,30 +134,31 @@ export function addNewYoutubeDownloadThunk(url) {
       return;
     }
 
-    ytdl.getInfo(url, async (err, info) => {
-      if ((err && err.code === 'ENOTFOUND') || !info) {
+    const info = await ytdl.getInfo(url).catch((err) => {
+      if (err && err.code === 'ENOTFOUND') {
         dispatch(removeDownload(id));
         dispatch(notify({ type: 'error', message: 'YouTube video not found' }));
-        return;
       }
-
-      dispatch(
-        openDialog('youtuberes', {
-          downloadId: id,
-          videoTitle: info.title.replace(filenameReservedRegex(), ' '),
-          videoFormats: await Promise.all(
-            info.formats
-              .filter((format) => format.qualityLabel && format.audioQuality)
-              .map(async (format) => ({
-                ...format,
-                contentLength: format.contentLength
-                  ? Number.parseInt(format.contentLength)
-                  : (await remoteFilename(format.url).catch((reason) => false))
-                      .fileSize,
-              }))
-          ),
-        })
-      );
     });
+
+    dispatch(
+      openDialog('youtuberes', {
+        downloadId: id,
+        videoTitle: info.videoDetails.title.replace(
+          filenameReservedRegex(),
+          ' '
+        ),
+        videoFormats: await Promise.all(
+          info.formats
+            .filter((format) => format.qualityLabel && format.audioQuality)
+            .map(async (format) => ({
+              ...format,
+              contentLength: format.contentLength
+                ? Number.parseInt(format.contentLength)
+                : (await remoteFilename(format.url)).fileSize,
+            }))
+        ),
+      })
+    );
   };
 }
