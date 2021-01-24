@@ -6,7 +6,6 @@ import { remote } from 'electron';
 export default function choosenYouTubeFormatThunk(id, title, format) {
   return async (dispatch, getState) => {
     const { downloads, settings } = getState();
-    const download = downloads.byId[id];
     const filename = `${title}.${format.container}`;
     const dirname = settings.useCustomSaveFolder
       ? await chooseFile()
@@ -18,7 +17,7 @@ export default function choosenYouTubeFormatThunk(id, title, format) {
     }
 
     const availableFilename = await getAvailableFilename(
-      download.dirname,
+      dirname,
       filename,
       downloads
     );
