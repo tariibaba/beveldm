@@ -259,14 +259,17 @@ function Download({
                 canceled: 'Canceled',
                 error: error
                   ? when(error.code)({
-                      EFILECHANGED: 'Failed - File changed',
-                      ECONNREFUSED: 'Failed - Network error',
-                      ENOTFOUND: 'Failed - Network error',
-                      ECONNRESET: 'Failed - Network error',
-                      EFORBIDDEN: 'Failed - Forbidden',
-                      ETIMEDOUT: 'Failed - Network error',
-                      ERANGENOTSATISFIABLE: 'Failed - Range not satisfiable',
-                      HPE_INVALID_CONTENT_LENGTH: 'Failed - File changed',
+                      EFILECHANGED: 'Failed - File changed at server',
+                      ECONNREFUSED: "Failed - Can't connect",
+                      ENOTFOUND: "Failed - Can't connect",
+                      ECONNRESET: "Failed - Can't connect",
+                      EFORBIDDEN:
+                        "Failed - Can't resume from this URL (HTTP 403)",
+                      ETIMEDOUT: "Failed - Can't connect",
+                      ERANGENOTSATISFIABLE:
+                        "Failed - Can't resume from this URL (HTTP 416)",
+                      HPE_INVALID_CONTENT_LENGTH:
+                        'Failed - File changed at server',
                       else: null,
                     })
                   : null,

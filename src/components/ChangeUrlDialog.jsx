@@ -28,7 +28,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
     event.preventDefault();
     if (!newUrl) setUrlHelperText('Enter a URL');
     else if (newUrl && !isWebUri(newUrl)) {
-      setUrlHelperText('This url is invalid');
+      setUrlHelperText('Enter a valid URL');
     } else {
       onClose();
       onChange(id, newUrl);

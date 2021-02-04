@@ -39,9 +39,9 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
     if (!url) {
       setUrlHelperText('Enter a URL');
     } else if (url && !validUrl.isWebUri(url)) {
-      setUrlHelperText('This URL is invalid');
+      setUrlHelperText('Enter a valid URL');
     } else if (url && type === 'youtube' && !youtubeUrl.valid(url)) {
-      setUrlHelperText('Invalid YouTube URL');
+      setUrlHelperText('Enter a valid YouTube URL');
     } else {
       setUrlHelperText(null);
       onClose();

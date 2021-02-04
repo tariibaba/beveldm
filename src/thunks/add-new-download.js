@@ -43,10 +43,10 @@ export default function addNewDownloadThunk(url) {
             dispatch(
               notify({
                 type: 'error',
-                message: 'Network error',
-                action: 'Retry',
+                message: "Can't connect",
+                action: 'Try again',
                 responseCallback: (responseType) => {
-                  if (responseType === 'retry') {
+                  if (responseType === 'try again') {
                     dispatch(addNewDownloadThunk(url));
                   }
                 },
@@ -58,7 +58,9 @@ export default function addNewDownloadThunk(url) {
 
       if (res.statusCode === 403) {
         dispatch(removeDownload(id));
-        dispatch(notify({ type: 'error', message: 'Forbidden' }));
+        dispatch(
+          notify({ type: 'error', message: "Can't download from this URL" })
+        );
         return;
       } else if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
         const location = res.headers['Location'] || res.headers['location'];
@@ -122,10 +124,10 @@ export function addNewYoutubeDownloadThunk(url) {
       dispatch(
         notify({
           type: 'error',
-          message: 'Network error',
-          action: 'Retry',
+          message: "Can't connect",
+          action: 'Try again',
           responseCallback: (responseType) => {
-            if (responseType === 'retry') {
+            if (responseType === 'try again') {
               dispatch(addNewYoutubeDownloadThunk(url));
             }
           },
@@ -137,7 +139,10 @@ export function addNewYoutubeDownloadThunk(url) {
     const info = await ytdl.getInfo(url).catch((err) => {
       if (err && err.code === 'ENOTFOUND') {
         dispatch(removeDownload(id));
-        dispatch(notify({ type: 'error', message: 'YouTube video not found' }));
+        dispatch(
+          notify({ type: 'error', message: "Can't find YouTube video" })
+        );
+        return;
       }
     });
 
