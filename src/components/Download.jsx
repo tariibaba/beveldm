@@ -13,7 +13,7 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { Close, FolderOpen } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import when from 'when-expression';
 import DownloadMoreActions from './DownloadMoreActions';
@@ -96,10 +96,13 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     textAlign: 'left',
   },
-  showInFolderButtonStyles: {
-    marginTop: '30px',
-    marginBottom: '20px',
-    cursor: 'pointer',
+  showInFolder: {
+    marginTop: 10,
+    marginBottom: 5,
+    position: 'relative',
+    '--padding': '12px',
+    padding: 'var(--padding)',
+    right: 'var(--padding)',
     color: theme.palette.custom.showInFolder,
   },
   cardStylesDefault: {
@@ -318,20 +321,9 @@ function Download({
 
           {/* Button to open download folder */}
           {status === 'complete' && (
-            <button
-              onClick={openFolder}
-              className={clsx(
-                classes.linkButtonStylesDefault,
-                classes.showInFolderButtonStyles
-              )}
-            >
-              <Typography
-                className={classes.typography}
-                style={{ color: 'inherit' }}
-              >
-                Show in folder
-              </Typography>
-            </button>
+            <IconButton onClick={openFolder} className={classes.showInFolder}>
+              <FolderOpen />
+            </IconButton>
           )}
 
           {/* Progress bar */}

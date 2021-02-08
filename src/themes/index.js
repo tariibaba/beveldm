@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core';
 import { blue, grey } from '@material-ui/core/colors';
+import { NaturePeopleOutlined } from '@material-ui/icons';
 import hexToRgba from 'hex-to-rgba';
 import '../font-faces/nutino-sans.css';
 
@@ -22,7 +23,7 @@ export const lightTheme = createMuiTheme({
       filenameDefault: blue[700],
       filenameError: hexToRgba('#999ea4', 0.7),
       filenameComplete: blue[700],
-      showInFolder: blue[700],
+      showInFolder: null,
       downloadStatusText: '#999ea4',
       downloadGroupSelected: '#8ab4f8',
       drawer: '#fff',
@@ -91,7 +92,7 @@ export const darkTheme = createMuiTheme({
       filenameDefault: '#999ea4',
       filenameError: hexToRgba('#999ea4', 0.7),
       filenameComplete: '#8ab4f8',
-      showInFolder: '#8ab4f8',
+      showInFolder: '#999ea4',
       downloadStatusText: hexToRgba('#999ea4', 0.9),
       downloadGroupSelected: '#8ab4f8',
       drawer: '#202124',
