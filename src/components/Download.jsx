@@ -21,6 +21,7 @@ import pathExists from 'path-exists';
 import clsx from 'clsx';
 import { downloadFileRemoved } from '../actions';
 import humanizeDuration from 'humanize-duration';
+import DownloadUrl from './DownloadUrl';
 
 const humanizer = humanizeDuration.humanizer({
   largest: 2,
@@ -79,25 +80,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 0,
   },
-  urlStylesDefault: {
-    display: 'inline-block',
-    marginTop: '10px',
-    color: theme.palette.custom.urlDefault,
-    cursor: 'pointer',
-    maxWidth: '90%',
-  },
-  urlStylesError: {
-    color: theme.palette.custom.urlError,
-  },
-  urlTypography: {
-    maxWidth: '100%',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    textAlign: 'left',
-  },
+
   showInFolder: {
-    marginTop: 10,
     marginBottom: 5,
     position: 'relative',
     '--padding': '12px',
@@ -122,7 +106,6 @@ const useStyles = makeStyles((theme) => ({
     clear: 'right',
   },
   progressText: {
-    marginTop: theme.spacing(2),
     color: theme.palette.custom.progressText,
   },
   cancelButton: {
@@ -157,7 +140,7 @@ function Download({
   error,
   show,
   openWhenDone,
-  limitSpeed
+  limitSpeed,
 }) {
   const fullPath = path.join(dirname, availableFilename);
   const secondsLeft = ((size - bytesDownloadedShown) / speed) * 1000;
@@ -181,10 +164,6 @@ function Download({
         shell.openItem(fullPath);
       }
     }
-  };
-
-  const openUrl = () => {
-    shell.openExternal(url);
   };
 
   const cancel = () => {
@@ -220,15 +199,17 @@ function Download({
           )}
 
           {/* More vert icon button */}
-          <div className={classes.moreVert}>
-            <DownloadMoreActions
-              id={id}
-              currentUrl={url}
-              openWhenDone={openWhenDone}
-              status={status}
-              limitSpeed={limitSpeed}
-            />
-          </div>
+          {status !== 'complete' && (
+            <div className={classes.moreVert}>
+              <DownloadMoreActions
+                id={id}
+                currentUrl={url}
+                openWhenDone={openWhenDone}
+                status={status}
+                limitSpeed={limitSpeed}
+              />
+            </div>
+          )}
 
           {/* Available file name */}
           <div>
@@ -283,23 +264,7 @@ function Download({
           </div>
 
           {/* URL */}
-          <div>
-            <button
-              onClick={openUrl}
-              className={clsx(
-                classes.linkButtonStylesDefault,
-                classes.urlStylesDefault,
-                inactive && classes.urlStylesError
-              )}
-            >
-              <Typography
-                className={clsx(classes.typography, classes.urlTypography)}
-                style={{ color: 'inherit' }}
-              >
-                {url}
-              </Typography>
-            </button>
-          </div>
+          <DownloadUrl id={id} url={url} inactive={inactive} status={status} />
 
           {/* Speed, bytes downloaded and size */}
           {!(status === 'complete' || inactive) && (

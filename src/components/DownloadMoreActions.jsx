@@ -9,13 +9,7 @@ import {
 } from '@material-ui/core';
 import { MoreVert, Check } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import {
-  toggleOpenWhenDone,
-  openDialog,
-  notify,
-  toggleLimitSpeed,
-} from '../actions';
-import { clipboard } from 'electron';
+import { toggleOpenWhenDone, toggleLimitSpeed } from '../actions';
 
 const useStyles = makeStyles((theme) => ({
   menuListItemText: {
@@ -43,11 +37,8 @@ const useStyles = makeStyles((theme) => ({
 function DownloadMoreActions({
   id,
   openWhenDone = false,
-  onChangeUrl,
   onToggleOpenWhenDone,
-  currentUrl,
   status,
-  onCopyUrl,
   limitSpeed,
   onToggleLimitSpeed,
 }) {
@@ -61,20 +52,9 @@ function DownloadMoreActions({
     setAnchorEl(null);
   };
 
-  const handleDialogOpen = () => {
-    onChangeUrl(id);
-    handlePopoverClose();
-  };
-
   const handleToggleOpenWhenDone = () => {
     handlePopoverClose();
     onToggleOpenWhenDone(id, !openWhenDone);
-  };
-
-  const handleCopyUrl = () => {
-    handlePopoverClose();
-    clipboard.writeText(currentUrl);
-    onCopyUrl();
   };
 
   const handleToggleLimitSpeed = () => {
@@ -101,42 +81,8 @@ function DownloadMoreActions({
         getContentAnchorEl={null}
         onClose={handlePopoverClose}
       >
-        <MenuItem
-          button
-          className={classes.menuListItem}
-          onClick={handleCopyUrl}
-        >
-          {showExtraItems && (
-            <ListItemIcon className={classes.menuListItemIcon}>
-              <span></span>
-            </ListItemIcon>
-          )}
-          <ListItemText
-            className={classes.menuListItemText}
-            classes={{ primary: classes.menuListItemText }}
-          >
-            Copy URL
-          </ListItemText>
-        </MenuItem>
         {showExtraItems && (
           <span>
-            <MenuItem
-              button
-              className={classes.menuListItem}
-              onClick={handleDialogOpen}
-            >
-              {showExtraItems && (
-                <ListItemIcon className={classes.menuListItemIcon}>
-                  <span></span>
-                </ListItemIcon>
-              )}
-              <ListItemText
-                className={classes.menuListItemText}
-                classes={{ primary: classes.menuListItemText }}
-              >
-                Change URL
-              </ListItemText>
-            </MenuItem>
             <MenuItem button className={classes.menuListItem}>
               <ListItemIcon className={classes.menuListItemIcon}>
                 <Check
@@ -180,14 +126,8 @@ function DownloadMoreActions({
 }
 
 export default connect(null, (dispatch) => ({
-  onChangeUrl(id) {
-    dispatch(openDialog('changeurl', { downloadId: id }));
-  },
   onToggleOpenWhenDone(id, openWhenDone) {
     dispatch(toggleOpenWhenDone(id, openWhenDone));
-  },
-  onCopyUrl() {
-    dispatch(notify({ type: 'info', message: 'Copied URL to clipboard' }));
   },
   onToggleLimitSpeed(id, limitSpeed) {
     dispatch(toggleLimitSpeed(id, limitSpeed));
