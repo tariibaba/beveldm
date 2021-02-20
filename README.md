@@ -9,6 +9,7 @@ Cross-platform download manager
 - Resume a download from a different URL
 - YouTube downloads
 - Data saving mode
+- Limit download speeds
 
 ## Built With
 
