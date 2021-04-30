@@ -1,7 +1,7 @@
 {
   "name": "beveldm",
   "productName": "Bevel Download Manager",
-  "author": "Tari Ibaba <tariibabadev@gmail.com>",
+  "author": "Ayibatari Ibaba <tariibabadev@gmail.com>",
   "version": "0.3.0",
   "private": true,
   "main": "public/electron.js",
