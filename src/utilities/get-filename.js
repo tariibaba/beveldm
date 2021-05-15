@@ -5,5 +5,5 @@ export default function getFilename(url, headers) {
   const cdFilename = contentDipositionFilename(headers['content-disposition']);
   const filename = cdFilename || path.basename(url);
 
-  return decodeURIComponent(filename);
+  return decodeURIComponent(filename).replace(/^"|"+$/g, '');
 }
