@@ -22,10 +22,7 @@ export default function resumeDownload(id) {
   return async (dispatch, getState) => {
     let download = getState().downloads.byId[id];
 
-    if (download.res) {
-      dispatch(downloadProgressing(id));
-      download.res.resume();
-    } else if (download.status === 'error') {
+    if (download.status === 'error') {
       dispatch(resumeFromError(id, download.error.code));
     } else {
       dispatch(downloadProgressing(id));
