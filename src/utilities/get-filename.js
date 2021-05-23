@@ -1,9 +1,12 @@
 import contentDipositionFilename from 'content-disposition-filename';
-import path from 'path';
 
 export default function getFilename(url, headers) {
   const cdFilename = contentDipositionFilename(headers['content-disposition']);
-  const filename = cdFilename || path.basename(url);
+  let filename = cdFilename;
+  if (!filename) {
+    const pathnames = new URL(url).pathname.split('/');
+    filename = pathnames[pathnames.length-1];
+  }
 
   return decodeURIComponent(filename).replace(/^"|"+$/g, '');
 }
