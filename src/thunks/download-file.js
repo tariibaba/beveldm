@@ -138,7 +138,7 @@ class FileDownloader {
   _isBufferAboveSpeedLimit() {
     const timeoutDuration = this.constructor.TIMEOUT_DURATION;
     const speedFactor = timeoutDuration / 1000;
-    const bufferLimit = this.speedLimit * speedFactor;
+    const bufferLimit = this._getSpeedLimit() * speedFactor;
     return this.buffer.length > bufferLimit;
   }
 
