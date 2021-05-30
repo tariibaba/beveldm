@@ -74,6 +74,7 @@ function NewDownloadDialog({ type, open, onAdd, onClose }) {
             helperText={urlHelperText}
             onChange={handleUrlChange}
             value={url}
+            spellCheck={false}
           />
 
           <br />

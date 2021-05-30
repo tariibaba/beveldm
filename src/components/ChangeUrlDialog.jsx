@@ -55,6 +55,7 @@ function ChangeUrlDialog({ id, currentUrl, open, onChange, onClose }) {
             error={urlHelperText !== null}
             onChange={handleDialogUrlChange}
             value={newUrl}
+            spellCheck={false}
           />
 
           <br />
