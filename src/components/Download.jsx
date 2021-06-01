@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px !important',
     color: theme.palette.custom.filenameDefault,
     fontSize: 13,
+    maxWidth: '90%'
   },
   filenameStylesError: {
     color: theme.palette.custom.filenameError,
@@ -125,6 +126,13 @@ const useStyles = makeStyles((theme) => ({
   linerProgressBar: {
     transition: 'none',
   },
+  filenameText: {
+    maxWidth: '100%',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    textAlign: 'left'
+  }
 }));
 
 function Download({
@@ -229,7 +237,7 @@ function Download({
             >
               <Typography
                 style={{ fontWeight: 500, color: 'inherit' }}
-                className={classes.typography}
+                className={clsx(classes.typography, classes.filenameText)}
               >
                 {availableFilename}
               </Typography>
