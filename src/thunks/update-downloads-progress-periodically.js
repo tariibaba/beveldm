@@ -11,7 +11,7 @@ export default function updateDownloadsProgressPeriodically() {
           dispatch(
             changeDownloadSpeed(
               download.id,
-              (bytesDownloaded - download.bytesDownloadedShown) * 2
+              (bytesDownloaded - download.bytesDownloadedShown)
             )
           );
 
@@ -23,6 +23,6 @@ export default function updateDownloadsProgressPeriodically() {
             dispatch(completeDownloadThunk(download.id));
           }
         });
-    }, 500);
+    }, 1000);
   };
 }
