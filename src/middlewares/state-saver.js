@@ -63,21 +63,19 @@ function saveStore(state) {
 }
 
 function processDownloadForSaving(download) {
-  const {
-    res,
-    fileStream,
-    speed,
-    bytesDownloadedShown,
-    show,
-    ...downloadToSave
-  } = download;
-
-  if (download.status === 'progressing' || download.status === 'paused') {
-    const { bytesDownloaded, ...downloadWithoutBytesDownloaded } =
-      downloadToSave;
-    return { ...downloadWithoutBytesDownloaded, status: 'paused' };
+  const downloadToSave = { ...download };
+  delete downloadToSave.res;
+  delete downloadToSave.fileStream;
+  delete downloadToSave.speed;
+  delete downloadToSave.bytesDownloadedShown;
+  delete downloadToSave.show;
+  if (
+    downloadToSave.status === 'progressing' ||
+    downloadToSave.status === 'paused'
+  ) {
+    delete downloadToSave.bytesDownloaded;
+    downloadToSave.status = 'paused';
   }
-
   return downloadToSave;
 }
 
