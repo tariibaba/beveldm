@@ -3,7 +3,6 @@ import fs from 'fs';
 import { getPartialDownloadPath } from '../utilities';
 import { SAVE_DATA_LIMIT } from '../constants';
 import Timeout from 'await-timeout';
-import { setDownloadFileStream } from '../actions/downloads';
 
 export default function downloadFile(id) {
   return new FileDownloader(id).download();
@@ -53,7 +52,7 @@ class FileDownloader {
     const { bytesDownloaded } = download;
     const options = bytesDownloaded > 0 ? { flags: 'a' } : undefined;
     this.fileStream = fs.createWriteStream(partialDownloadPath, options);
-    this.dispatch(setDownloadFileStream(this.downloadId, this.fileStream));
+    download.fileStream = this.fileStream;
   }
 
   _addDataToBuffer(data) {

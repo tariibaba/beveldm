@@ -18,7 +18,6 @@ import {
   CHANGE_DOWNLOAD_SPEED,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
-  SET_DOWNLOAD_FILE_STREAM,
   TOGGLE_LIMIT_SPEED,
 } from '../../actions';
 
@@ -28,8 +27,6 @@ export default createReducer(
     [ADD_NEW_DOWNLOAD]: addNewDownload,
     [REMOVE_DOWNLOAD]: removeDownload,
     [CHANGE_DOWNLOAD_URL]: changeDownloadUrl,
-    [SET_DOWNLOAD_RES]: setDownloadRes,
-    [SET_DOWNLOAD_FILE_STREAM]: setDownloadFileStream,
     [SHOW_DOWNLOAD]: setDownloadShow,
     [HIDE_DOWNLOAD]: setDownloadShow,
     [DOWNLOAD_PROGRESSING]: changeDownloadStatus,
@@ -98,20 +95,6 @@ function changeDownloadInfo(state, action) {
       size,
       resumable,
     }),
-  });
-}
-
-function setDownloadRes(state, action) {
-  const { id, res } = action;
-  return updateObject(state, {
-    [id]: updateObject(state[id], { res }),
-  });
-}
-
-function setDownloadFileStream(state, action) {
-  const { id, fileStream } = action;
-  return updateObject(state, {
-    [id]: updateObject(state[id], { fileStream }),
   });
 }
 

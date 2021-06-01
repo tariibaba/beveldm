@@ -3,7 +3,6 @@ import {
   REMOVE_DOWNLOAD,
   CHANGE_DOWNLOAD_INFO,
   CHANGE_DOWNLOAD_URL,
-  SET_DOWNLOAD_RES,
   SHOW_DOWNLOAD,
   HIDE_DOWNLOAD,
   GOT_DOWNLOAD_INFO,
@@ -17,7 +16,6 @@ import {
   CHANGE_DOWNLOAD_SPEED,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
   CHOSEN_YOUTUBE_FORMAT,
-  SET_DOWNLOAD_FILE_STREAM,
   TOGGLE_LIMIT_SPEED,
 } from './constants';
 
@@ -80,22 +78,6 @@ export function hideDownload(id) {
     type: HIDE_DOWNLOAD,
     id,
     show: false,
-  };
-}
-
-export function setDownloadRes(id, res) {
-  return {
-    type: SET_DOWNLOAD_RES,
-    id,
-    res,
-  };
-}
-
-export function setDownloadFileStream(id, fileStream) {
-  return {
-    type: SET_DOWNLOAD_FILE_STREAM,
-    id,
-    fileStream,
   };
 }
 

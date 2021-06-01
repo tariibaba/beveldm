@@ -5,11 +5,9 @@ import {
   CLOSE_DIALOG,
   CHANGE_PAGE,
   UPDATE_BYTES_DOWNLOADED_SHOWN,
-  SET_DOWNLOAD_RES,
   CHANGE_DOWNLOAD_GROUP,
   ADD_NEW_DOWNLOAD,
   CHANGE_DOWNLOAD_SPEED,
-  SET_DOWNLOAD_FILE_STREAM,
 } from '../actions';
 import Store from 'electron-store';
 import electronIsDev from 'electron-is-dev';
@@ -23,11 +21,9 @@ export default function stateSaver(store) {
       CHANGE_PAGE,
       DOWNLOAD_PROGRESSING,
       UPDATE_BYTES_DOWNLOADED_SHOWN,
-      SET_DOWNLOAD_RES,
       CHANGE_DOWNLOAD_GROUP,
       ADD_NEW_DOWNLOAD,
       CHANGE_DOWNLOAD_SPEED,
-      SET_DOWNLOAD_FILE_STREAM
     ];
 
     const result = next(action);
@@ -77,10 +73,8 @@ function processDownloadForSaving(download) {
   } = download;
 
   if (download.status === 'progressing' || download.status === 'paused') {
-    const {
-      bytesDownloaded,
-      ...downloadWithoutBytesDownloaded
-    } = downloadToSave;
+    const { bytesDownloaded, ...downloadWithoutBytesDownloaded } =
+      downloadToSave;
     return { ...downloadWithoutBytesDownloaded, status: 'paused' };
   }
 

@@ -1,4 +1,4 @@
-import { setDownloadRes, downloadProgressing } from '../actions';
+import { downloadProgressing } from '../actions';
 import { getFilename, getFileSize } from '../utilities';
 import downloadFile from './download-file';
 import downloadErrorThunk from './download-error';
@@ -20,7 +20,7 @@ export default function startDownload(id) {
         download = getState().downloads.byId[id];
         if (download.status !== 'progressing') return;
 
-        dispatch(setDownloadRes(id, res));
+        download.res = res;
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         if (download.defaultFilename !== filename || download.size !== size) {
@@ -29,7 +29,7 @@ export default function startDownload(id) {
         break;
       case 'youtube':
         res = await dispatch(makeYouTubeRequest(id, download.url));
-        dispatch(setDownloadRes(id, res));
+        download.res = res;
         dispatch(downloadFile(id, res));
         break;
       default:

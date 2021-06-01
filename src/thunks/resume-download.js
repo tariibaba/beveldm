@@ -1,6 +1,5 @@
 import {
   changeDownloadInfo,
-  setDownloadRes,
   downloadProgressing,
   updateBytesDownloadedShown,
 } from '../actions';
@@ -56,7 +55,7 @@ export default function resumeDownload(id) {
       if (download.defaultFilename !== filename || download.size !== size) {
         dispatch(downloadErrorThunk(id, 'EFILECHANGED'));
       } else {
-        dispatch(setDownloadRes(id, res));
+        download.res = res;
         if (!download.resumable) dispatch(updateBytesDownloadedThunk(id, 0));
         dispatch(downloadFile(id, res));
       }
@@ -83,7 +82,7 @@ function resumeFromError(id, code) {
         download = state.downloads.byId[id];
         if (download.status !== 'progressing') return;
 
-        dispatch(setDownloadRes(id, res));
+        download.res = res;
         const filename = getFilename(download.url, res.headers);
         const size = getFileSize(res.headers);
         const availableFilename =
