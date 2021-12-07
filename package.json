@@ -50,6 +50,7 @@
     }
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "@material-ui/core": "^4.5.1",
     "@material-ui/icons": "^4.5.1",
     "await-timeout": "^1.0.1",
@@ -57,7 +58,6 @@
     "compare-urls": "^2.0.0",
     "content-disposition-filename": "^0.0.1",
     "electron-devtools-installer": "^2.2.4",
-    "electron-is-dev": "^1.1.0",
     "electron-store": "^5.0.0",
     "filename-reserved-regex": "^2.0.0",
     "hex-to-rgba": "^2.0.1",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
 import { shell } from 'electron';
@@ -22,6 +22,8 @@ import clsx from 'clsx';
 import { downloadFileRemoved } from '../actions';
 import humanizeDuration from 'humanize-duration';
 import DownloadUrl from './DownloadUrl';
+import fs from 'fs';
+import os from 'os';
 
 const humanizer = humanizeDuration.humanizer({
   largest: 2,
@@ -181,6 +183,17 @@ function Download({
   const remove = () => {
     dispatch(removeDownloadThunk(id));
   };
+
+  const showExtIcon = async () => {
+    const filePath = path.join(os.tmpdir(), `for-ext${path.extname(availableFilename)}`);
+    await fs.open(filePath, 'w');
+  }
+
+  useEffect(() => {
+    if (status === 'notstarted') {
+      showExtIcon();
+    }
+  }, [status])
 
   const classes = useStyles();
   const inactive =

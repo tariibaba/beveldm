@@ -4,11 +4,11 @@ import { getDownloadPath, getPartialDownloadPath } from '../utilities';
 import pify from 'pify';
 import pathExists from 'path-exists';
 import setTaskbarProgress from '../utilities/set-taskbar-progress';
-import electronIsDev from 'electron-is-dev';
+import { app } from '@electron/remote'
 
 export default function loadState() {
   return async (_dispatch, getState) => {
-    const store = new Store({ name: electronIsDev ? 'dev_config' : 'config' });
+    const store = new Store({ name: app.isPackaged ? 'config' : 'dev_config' });
 
     const savedDownloads = store.get('downloads') || { byId: {}, allIds: [] };
 

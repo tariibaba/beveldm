@@ -10,7 +10,7 @@ import {
   CHANGE_DOWNLOAD_SPEED,
 } from '../actions';
 import Store from 'electron-store';
-import electronIsDev from 'electron-is-dev';
+import { app } from '@electron/remote'
 
 export default function stateSaver(store) {
   return (next) => (action) => {
@@ -37,7 +37,7 @@ export default function stateSaver(store) {
 }
 
 function saveStore(state) {
-  const store = new Store({ name: electronIsDev ? 'dev_config' : 'config' });
+  const store = new Store({ name: app.isPackaged ? 'config' : 'dev_config' });
   const { downloads, settings, downloadGroup } = state;
   const downloadsToSaveById = Object.values(downloads.byId)
     .filter(isDownloadToBeSaved)

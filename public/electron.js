@@ -9,7 +9,6 @@ const {
   Menu,
   shell,
 } = require('electron');
-const electronIsDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
 const {
@@ -19,6 +18,8 @@ const {
 } = require('electron-devtools-installer');
 const notifier = require('node-notifier');
 const when = require('when-expression');
+const remoteMain = require('@electron/remote/main');
+remoteMain.initialize();
 
 let mainWindow;
 let tray;
@@ -158,16 +159,18 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true
     },
     backgroundColor: '#fff',
   });
+  remoteMain.enable(mainWindow.webContents);
 
   const indexHtmlUrl = url.pathToFileURL(
     path.resolve(__dirname, './index.html')
   ).href;
-  mainWindow.loadURL(electronIsDev ? 'http://localhost:3000' : indexHtmlUrl);
+  mainWindow.loadURL(app.isPackaged ? indexHtmlUrl : 'http://localhost:3000');
 
-  if (!electronIsDev) setupForProduction();
+  if (app.isPackaged) setupForProduction();
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
