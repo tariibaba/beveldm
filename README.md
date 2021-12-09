@@ -1,6 +1,7 @@
 # Bevel Download Manager
 
-![A screenshot of Bevel Download Manager](images/screenshot.png)
+![Bevel DM](images/screenshot1.png)
+![Bevel DM in dark mode](images/screenshot2.png)
 
 Bevel Download Manager is a beautiful, fast, modern and cross-platform download manager.
 ## Features
