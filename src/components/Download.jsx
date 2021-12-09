@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import DownloadActionButton from './DownloadActionButton';
 import { shell } from 'electron';
@@ -22,8 +22,12 @@ import clsx from 'clsx';
 import { downloadFileRemoved } from '../actions';
 import humanizeDuration from 'humanize-duration';
 import DownloadUrl from './DownloadUrl';
-import fs from 'fs';
+import tmp from 'tmp';
+import { ipcRenderer } from 'electron';
+import uniqueFilename from 'unique-filename';
 import os from 'os';
+import { generateIcons } from 'windows-system-icon';
+import fs from 'fs';
 
 const humanizer = humanizeDuration.humanizer({
   largest: 2,
@@ -66,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px !important',
     color: theme.palette.custom.filenameDefault,
     fontSize: 13,
-    maxWidth: '90%'
+    maxWidth: '90%',
   },
   filenameStylesError: {
     color: theme.palette.custom.filenameError,
@@ -133,8 +137,8 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+  },
 }));
 
 function Download({
@@ -151,12 +155,14 @@ function Download({
   show,
   openWhenDone,
   limitSpeed,
+  type,
 }) {
   const fullPath = path.join(dirname, availableFilename);
   const secondsLeft = ((size - bytesDownloadedShown) / speed) * 1000;
   const humanizedDuration = humanizer(secondsLeft, {
     language: 'shortEn',
   }).replace(humanizerPluralFilterRegex, '$1');
+  const [iconDataString, setIconDataString] = useState(null);
 
   const openFolder = async () => {
     if (!(await pathExists(fullPath))) {
@@ -184,16 +190,55 @@ function Download({
     dispatch(removeDownloadThunk(id));
   };
 
-  const showExtIcon = async () => {
-    const filePath = path.join(os.tmpdir(), `for-ext${path.extname(availableFilename)}`);
-    await fs.open(filePath, 'w');
-  }
+  const showExtIcon = () => {
+    tmp.file(
+      { postfix: path.extname(availableFilename) },
+      async (err, path, fd, cleanup) => {
+        if (err) throw err;
+        const outputFilePath = uniqueFilename(os.tmpdir());
+        const icons = [
+          {
+            inputFilePath: path,
+            outputFilePath,
+            outputFormat: 'Png',
+          },
+        ];
+        await generateIcons(icons, false);
+        fs.readFile(outputFilePath, { encoding: 'base64' }, (err, data) => {
+          setIconDataString(data);
+        });
+      }
+    );
+  };
+
+  const showFileIcon = async () => {
+    const outputFilePath = uniqueFilename(os.tmpdir());
+    const icons = [
+      {
+        inputFilePath: fullPath,
+        outputFilePath,
+        outputFormat: 'Png',
+      },
+    ];
+    await generateIcons(icons, false);
+    fs.readFile(outputFilePath, { encoding: 'base64' }, (err, data) => {
+      setIconDataString(data);
+    });
+  };
 
   useEffect(() => {
-    if (status === 'notstarted') {
+    ipcRenderer.on('base64-string', (event, args) => {
+      console.log(`str: ${args.data}`);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (status === 'complete') {
+      showFileIcon();
+    } else {
       showExtIcon();
     }
-  }, [status])
+  }, [status]);
 
   const classes = useStyles();
   const inactive =
@@ -211,7 +256,7 @@ function Download({
       )}
     >
       <CardContent className={classes.cardContent}>
-        <div>
+        <div style={{ position: 'relative' }}>
           {/* Close icon button */}
           {(status === 'complete' || inactive) && (
             <IconButton className={classes.iconButton} onClick={remove}>
@@ -230,6 +275,21 @@ function Download({
                 limitSpeed={limitSpeed}
               />
             </div>
+          )}
+
+          {process.platform === 'win32' && type === 'file' && (
+            <img
+              src={`data:image/png;base64,${iconDataString}`}
+              style={{
+                position: 'absolute',
+                bottom: 16,
+                right: 16,
+                filter: ['canceled', 'error'].includes(status)
+                  ? 'grayscale(1)'
+                  : 'none',
+              }}
+              alt=""
+            />
           )}
 
           {/* Available file name */}

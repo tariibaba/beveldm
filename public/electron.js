@@ -19,6 +19,7 @@ const {
 const notifier = require('node-notifier');
 const when = require('when-expression');
 const remoteMain = require('@electron/remote/main');
+
 remoteMain.initialize();
 
 let mainWindow;
@@ -159,7 +160,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
     },
     backgroundColor: '#fff',
   });
