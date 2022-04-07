@@ -2,7 +2,7 @@
   "name": "beveldm",
   "productName": "Bevel Download Manager",
   "author": "Ayibatari Ibaba <tariibabadev@gmail.com>",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "main": "public/electron.js",
   "description": "Cross-platform download manager",
@@ -10,6 +10,7 @@
   "build": {
     "appId": "com.tariibaba.beveldm",
     "productName": "Bevel Download Manager",
+    "artifactName": "BevelDM-Installer-${version}-${os}-${arch}.${ext}",
     "icon": "images/app-icon.png",
     "files": [
       "build/**/*",
@@ -21,14 +22,7 @@
     "win": {
       "target": [
         {
-          "target": "exe",
-          "arch": [
-            "ia32",
-            "x64"
-          ]
-        },
-        {
-          "target": "zip",
+          "target": "nsis",
           "arch": [
             "ia32",
             "x64"
@@ -105,9 +99,10 @@
     "preepack": "yarn build",
     "epack": "electron-builder --dir",
     "predist": "yarn build",
-    "dist": "electron-builder",
+    "dist": "node scripts/build.js",
     "start": "electron --remote-debugging-port=9223 .",
-    "dev": "nodemon --exec \"yarn start\""
+    "dev": "nodemon --exec \"yarn start\"",
+    "postinstall": "electron-builder install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -133,7 +128,6 @@
     "@types/node-notifier": "^6.0.1",
     "electron": "^11.5.0",
     "electron-builder": "^22.9.1",
-    "electron-rebuild": "^3.2.5",
     "file-loader": "^5.0.2",
     "nodemon": "^2.0.15",
     "react-app-rewire-hot-loader": "^2.0.1",
