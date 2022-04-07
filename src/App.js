@@ -1,6 +1,10 @@
 import React, { Component, createRef } from 'react';
 import { ipcRenderer } from 'electron';
-import { loadState, updateDownloadsProgressPeriodically } from './thunks';
+import {
+  addNewDownloadThunk,
+  loadState,
+  updateDownloadsProgressPeriodically,
+} from './thunks';
 import './App.css';
 import { ThemeProvider } from '@material-ui/styles';
 import DownloadPage from './components/DownloadPage';
@@ -49,6 +53,9 @@ class App extends Component {
     ipcRenderer.on('set-window-progress', () =>
       setTaskbarProgress(this.props.reduxState.downloads)
     );
+    ipcRenderer.on('browser-download', (event, data) => {
+      this.props.dispatch(addNewDownloadThunk(data.url));
+    });
   }
 
   componentDidUpdate(prevProps) {

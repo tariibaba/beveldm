@@ -19,6 +19,7 @@ const {
 const notifier = require('node-notifier');
 const when = require('when-expression');
 const remoteMain = require('@electron/remote/main');
+const { env } = require('process');
 
 remoteMain.initialize();
 
@@ -29,12 +30,35 @@ let reactHasLoaded = false;
 let isAppQuiting = false;
 
 const gotTheLock = app.requestSingleInstanceLock();
+const ProtocolPrefix = 'beveldm';
+
+if (process.argv.length >= 2) {
+  app.setAsDefaultProtocolClient(ProtocolPrefix, process.execPath, [
+    process.argv[1],
+    path.resolve(process.argv[2]),
+  ]);
+} else {
+  app.setAsDefaultProtocolClient(ProtocolPrefix);
+}
 
 if (gotTheLock) {
-  app.on('second-instance', () => {
+  app.on('second-instance', (event, argv) => {
     if (mainWindow) mainWindow.show();
+    const lastArg = argv[argv.length - 1];
+    if (lastArg.startsWith(`${ProtocolPrefix}://`)) {
+      handleBeveldmUrl(lastArg);
+    }
   });
   app.whenReady().then(createWindow);
+  app.whenReady().then(() => {
+    const lastArg = process.argv[process.argv.length - 1];
+    if (lastArg.startsWith(`${ProtocolPrefix}://`)) {
+      handleBeveldmUrl(lastArg);
+    }
+  });
+  app.on('open-url', (event, url) => {
+    handleBeveldmUrl(url);
+  });
 } else {
   isAppQuiting = true;
   app.quit();
@@ -172,11 +196,10 @@ function createWindow() {
   mainWindow.loadURL(app.isPackaged ? indexHtmlUrl : 'http://localhost:3000');
 
   if (app.isPackaged) setupForProduction();
-
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
-  installExtensions();
+  // installExtensions();
 
   mainWindow.on('closed', () => (mainWindow = null));
   mainWindow.on('close', windowClose);
@@ -235,4 +258,19 @@ function initTray() {
     mainWindow.show();
   });
   tray.setContextMenu(contextMenu);
+}
+
+function handleBeveldmUrl(url) {
+  const urlObj = new URL(url);
+  if (urlObj.hostname === 'open') {
+    if (/\/download\/?/.exec(urlObj.pathname)) {
+      const downloadUrl = urlObj.searchParams.get('url');
+      mainWindow.webContents.send('browser-download', { url: downloadUrl });
+      if (!ipcMain.listeners.in)
+        ipcMain.on('react-loaded', (event) => {
+          reactHasLoaded = true;
+          event.reply('browser-download', { url: downloadUrl });
+        });
+    }
+  }
 }

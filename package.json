@@ -47,7 +47,16 @@
         "rpm",
         "tar.gz"
       ]
-    }
+    },
+    "protocols": [
+      {
+        "name": "beveldm",
+        "role": "Viewer",
+        "schemes": [
+          "beveldm"
+        ]
+      }
+    ]
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",
@@ -89,14 +98,16 @@
     "ytdl-core": "^4.4.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "rstart": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "preelectron-pack": "yarn build",
-    "electron-pack": "electron-builder --dir",
-    "preelectron-dist": "yarn build",
-    "electron-dist": "electron-builder"
+    "preepack": "yarn build",
+    "epack": "electron-builder --dir",
+    "predist": "yarn build",
+    "dist": "electron-builder",
+    "start": "electron --remote-debugging-port=9223 .",
+    "dev": "nodemon --exec \"yarn start\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -124,6 +135,7 @@
     "electron-builder": "^22.9.1",
     "electron-rebuild": "^3.2.5",
     "file-loader": "^5.0.2",
+    "nodemon": "^2.0.15",
     "react-app-rewire-hot-loader": "^2.0.1",
     "react-app-rewired": "^2.1.8",
     "react-hot-loader": "^4.13.0"
