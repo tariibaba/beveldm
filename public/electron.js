@@ -32,18 +32,23 @@ let isAppQuiting = false;
 const gotTheLock = app.requestSingleInstanceLock();
 const ProtocolPrefix = 'beveldm';
 
-if (process.argv.length >= 2) {
-  app.setAsDefaultProtocolClient(ProtocolPrefix, process.execPath, [
-    process.argv[1],
-    path.resolve(process.argv[2]),
-  ]);
-} else {
-  app.setAsDefaultProtocolClient(ProtocolPrefix);
+function handleBeveldmProtocol() {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient(ProtocolPrefix, process.execPath, [
+      process.argv[1],
+      path.resolve(process.argv[2]),
+    ]);
+  } else {
+    app.setAsDefaultProtocolClient(ProtocolPrefix);
+  }
 }
 
 if (gotTheLock) {
+  handleBeveldmProtocol();
   app.on('second-instance', (event, argv) => {
-    if (mainWindow) mainWindow.show();
+    if (mainWindow) {
+      mainWindow.show();
+    }
     const lastArg = argv[argv.length - 1];
     if (lastArg.startsWith(`${ProtocolPrefix}://`)) {
       handleBeveldmUrl(lastArg);
@@ -266,11 +271,10 @@ function handleBeveldmUrl(url) {
     if (/\/download\/?/.exec(urlObj.pathname)) {
       const downloadUrl = urlObj.searchParams.get('url');
       mainWindow.webContents.send('browser-download', { url: downloadUrl });
-      if (!ipcMain.listeners.in)
-        ipcMain.on('react-loaded', (event) => {
-          reactHasLoaded = true;
-          event.reply('browser-download', { url: downloadUrl });
-        });
+      ipcMain.on('react-loaded', (event) => {
+        reactHasLoaded = true;
+        event.reply('browser-download', { url: downloadUrl });
+      });
     }
   }
 }
